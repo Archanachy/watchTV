@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "pg": "^8.13.1"
+  }
+}

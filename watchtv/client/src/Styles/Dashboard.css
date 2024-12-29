@@ -1,0 +1,241 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #FEFCF5;
+}
+
+.navbar{
+    background-color: #ffffff;
+    height: 4em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1em;
+    
+    
+    box-sizing: border-box;
+    position: relative;
+    
+}
+
+.dashboard-text-overlay {
+    display: flex;
+    align-items: center;
+    top: 17px; 
+    left: 4%; 
+    text-align: left; 
+    font-family: Arial, sans-serif;
+}
+  
+.dashboard-tv-icon {
+    width: 1.8em;
+}
+  
+.dashboard-text-overlay h1 {
+    font-size: 1.7em;
+    margin: 0;
+    padding-top: 6px;
+    padding-left: 15px;
+}
+
+.nav-links{
+    display: flex;
+    list-style: none;
+    margin-right: 1em;
+    align-items: center;
+    position: relative;
+    
+}
+
+.nav-links a{
+    text-decoration: none;
+    color: #000;
+    border: solid 1px #fff;
+    border-radius: 7px;
+    font-size: 1.1em;
+    
+    padding: 0 1em;
+    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+.nav-links a:active {
+    color: #fff;
+    background-color: rgb(183, 186, 189);
+}
+
+.nav-links a.active {
+    color: #fff;
+    background-color: rgb(183, 186, 189);
+}
+
+.nav-links .search{
+    height: 1.5em;
+    display: flex;
+    padding-left: 0.5em;
+    font-size: 1em;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1em;
+    border-radius: 25px;
+    border: none;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+
+}
+.nav-links .search-icon{
+    position: absolute;
+    right: 8.1em;
+    
+    cursor: pointer;
+}
+
+
+.display input{
+    display: none;
+}
+.display{
+    width: 60px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f0f0f0;
+    padding: 0.5em;
+    
+    border-radius: 30px;
+    cursor: pointer;
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.05) inset;
+    position: relative;
+}
+.display label {
+   padding-right: 35px;
+   
+}
+#toggle{
+    display: none;
+}
+
+.circle{
+    
+    width: 27px;
+    height: 27px;
+    border-radius: 99px;
+    background-color: #4a4c4e;
+    box-shadow: 10px 10px 20px rgba(0,0,0,0.05), 
+    -10px -10px 30px rgba(0,0,0,0.05) inset;
+    position: absolute;
+    cursor: pointer;
+    top: 50%;
+    left: -25%;
+    transform: translate(80%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+     
+}
+
+.circle img{
+    width: 1.26em;
+    position: absolute;
+    
+}
+.sun{
+    margin-top: 0%;
+}
+
+.moon{
+    margin-top: -150%;
+    color: white;
+}
+
+.profile{
+    margin-left: 5px;
+    width: 30px;
+    height: 30px;
+    border-radius: 99px;
+    background-color: black;
+    cursor: pointer;
+
+}
+.profile img{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    position: absolute;
+    object-fit: cover;
+    overflow: hidden;
+}
+
+.Banner{
+    
+    margin-left: 10em;
+}
+
+.Mov-Shows{
+    border: solid 1px #000;
+    height: 4em;
+    padding-left: 40px;
+    
+}
+.Mov-Shows p{
+    
+    font-size: 1.4em;
+    padding: 0.5em;
+    
+}
+.Mov-Shows a{
+    
+    position: relative;
+    bottom: 0.18em;
+    padding: 0 0.5em;
+    text-decoration: none;
+    color: #000;
+
+}
+.Mov-Shows img{
+    width: 30px;
+    height: 30px;
+    position: relative;
+    margin-left: 30px;
+    
+    
+}
+
+.View {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.block {
+    height: 300px;
+    width: 230px;
+    margin: 40px 70px;
+    background-color: #000;
+    border: 0.5mm solid black;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+      rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+      rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  }
+
+  @keyframes appear {
+    from {
+      opacity: 0;
+      clip-path: inset(100% 100% 0 0);
+    }
+    to {
+      opacity: 1;
+      clip-path: inset(0 0 0 0);
+    }
+  }
+
+  .block {
+    animation: appear linear;
+    animation-timeline: view();
+    animation-range: entry 0% cover 40%;
+  }
