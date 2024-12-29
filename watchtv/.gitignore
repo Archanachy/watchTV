@@ -18,8 +18,6 @@ build # If applicable
 # Local files
 *.local
 
-# Environment files
-*.env
 
 # IDE and OS files
 .vscode/*
