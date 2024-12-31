@@ -50,23 +50,48 @@ function SignUp() {
     }
   };
 
-  const submitForm = async () => {
+  // Api call to register user
+    const submitForm = async () => {
+    setIsSubmitting(true);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/register`, {
-        username,
-        phone_number: phone,
-        password,
-      });
-      console.log('Response:', response.data);
-      alert('User created successfully!');
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/register`, {
+            username,
+            phone_number: phone,
+            password,
+        });
+        alert('User created successfully!');
+        // Clear form fields after successful submission
+        setUsername('');
+        setPhone('');
+        setPassword('');
     } catch (err) {
-      console.error('Error details:', err.response?.data || err.message);
-      alert('Error creating user. Please try again.');
-    }finally {
-      setIsSubmitting(false); 
+        console.error('Error details:', err.response?.data || err.message);
+
+        // Check if the error is due to validation from the backend
+        if (err.response && err.response.data && err.response.data.message) {
+            const errorMessage = err.response.data.message.toLowerCase();
+
+            if (errorMessage.includes('username')) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    username: 'Username already exists.',
+                }));
+            } else if (errorMessage.includes('phone')) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    phone: 'Phone number already exists.',
+                }));
+            } else {
+                alert('An unexpected error occurred. Please try again.');
+            }
+        } else {
+            alert('An unexpected error occurred. Please try again.');
+        }
+    } finally {
+        setIsSubmitting(false);
     }
   };
-  
+
 
   const handleFocus = (field) => {
     setIsEditing((prev) => ({ ...prev, [field]: true }));
@@ -131,7 +156,7 @@ function SignUp() {
           </div>
 
           <div className="signup-form-control">
-            <input
+          <input
               type="password"
               id="password"
               name="password"
@@ -142,6 +167,7 @@ function SignUp() {
               required
               className={errors.password ? 'signup-input-error' : ''}
             />
+
             <label htmlFor="password">Password</label>
             {errors.password && !isEditing.password && (
               <div className="signup-error-icon">
