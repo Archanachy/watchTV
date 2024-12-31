@@ -4,12 +4,21 @@ const bcrypt=require('bcrypt');
 
 const router=express.Router();
 
+
+router.get('/test', (req, res)=>{
+
+    res.send("Welcome")
+})
 router.post('/register',async(req,res)=>{
+
     try{
         const {username,phone_number,password}=req.body;
-        const hashedpassword=await bcrypt.hash(password,10);
-        const result=await createUser(username,phone_number,hashedpassword);
+
+        // const hashedpassword=await bcrypt.hash(password,10);
+        const result=await createUser(username,phone_number,password);
+        console.log(result);
         res.status(201).json({message: 'User created successfully',userId: result.rows[0].id});
+       
     }catch(err){
         console.error(err.message);
         res.status(500).json({message: 'Server Error'});

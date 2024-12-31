@@ -6,11 +6,19 @@ const bodyparser = require('body-parser');
 const userRoutes = require('./routes/userRoutes');
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+  origin: 'http://localhost:5173', // Frontend URL
+  methods: ['GET', 'POST'], // Add allowed methods
+  credentials: true,
+}));
+
 
 app.use(bodyparser.json());
 
-app.use('/api/users', userRoutes);
+app.use('/api', userRoutes);
+
+
 //start server
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {

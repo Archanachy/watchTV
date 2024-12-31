@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { background, watchtv, errorIcon } from '../assets/Pictures';
 import '../Styles/SignUp.css';
+import axios from "axios";
 
 function SignUp() {
+
   const [username, setUsername] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ username: '', phone: '', password: '' });
   const [isEditing, setIsEditing] = useState({ username: false, phone: false, password: false });
+  const [isSubmitting, setIsSubmitting] = useState(false); // Added state to track submission
 
   const clearErrorAfterTimeout = (field) => {
     setTimeout(() => {
@@ -15,22 +18,24 @@ function SignUp() {
     }, 9000);
   };
 
-  const validateForm = (e) => {
+  const validateForm = async (e) => {
     e.preventDefault();
     let formIsValid = true;
     const newErrors = { username: '', phone: '', password: '' };
 
+    // Validate fields
     if (username.trim().length < 3) {
       newErrors.username = 'Username must be at least 3 characters long.';
       formIsValid = false;
       clearErrorAfterTimeout('username');
     }
 
-    if (!/^\d{10}$/.test(phone)) {
-      newErrors.phone = 'Please enter a valid phone number (10 digits).';
+    if (!/^\+?\d{10,15}$/.test(phone)) {
+      newErrors.phone = 'Please enter a valid phone number (up to 15 digits).';
       formIsValid = false;
       clearErrorAfterTimeout('phone');
     }
+    
 
     if (password.length <= 6) {
       newErrors.password = 'Password must be more than 6 characters.';
@@ -39,8 +44,29 @@ function SignUp() {
     }
 
     setErrors(newErrors);
-    return formIsValid;
+
+    if (formIsValid) {
+      await submitForm(); // Submit form if valid
+    }
   };
+
+  const submitForm = async () => {
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/register`, {
+        username,
+        phone_number: phone,
+        password,
+      });
+      console.log('Response:', response.data);
+      alert('User created successfully!');
+    } catch (err) {
+      console.error('Error details:', err.response?.data || err.message);
+      alert('Error creating user. Please try again.');
+    }finally {
+      setIsSubmitting(false); 
+    }
+  };
+  
 
   const handleFocus = (field) => {
     setIsEditing((prev) => ({ ...prev, [field]: true }));
@@ -125,8 +151,8 @@ function SignUp() {
             )}
           </div>
 
-          <button type="submit">
-            <span>Sign Up</span>
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Signing up...' : 'Sign Up'}
           </button>
           <div className="signup-form-help">
             <p className="signup-already">
