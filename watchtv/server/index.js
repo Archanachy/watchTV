@@ -1,9 +1,9 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const pool = require('./config/database');
 const bodyparser = require('body-parser');
-const userRoutes = require('./routes/userRoutes');
+const userRegisterRoute = require('./routes/userRegisterRoute');
+const userLoginRoute = require('./routes/userLoginRoute');
 
 const app = express();
 
@@ -16,7 +16,8 @@ app.use(cors({
 
 app.use(bodyparser.json());
 
-app.use('/api', userRoutes);
+app.use('/api',userRegisterRoute);
+app.use('/api',userLoginRoute);
 
 
 //start server

@@ -1,6 +1,8 @@
-import React, { useState} from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // For navigation
 import { background, watchtv, errorIcon } from '../assets/Pictures';
 import '../Styles/SignIn.css';
+import axios from "axios";
 
 function SignIn() {
   const [phone, setPhone] = useState('');
@@ -8,6 +10,8 @@ function SignIn() {
   const [errors, setErrors] = useState({ phone: '', password: '' });
   const [isEditingPhone, setIsEditingPhone] = useState(false);
   const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate(); // For redirection
 
   const clearErrorAfterTimeout = (field) => {
     setTimeout(() => {
@@ -33,7 +37,9 @@ function SignIn() {
     }
 
     setErrors(newErrors);
-    return formIsValid;
+    if (formIsValid) {
+      submitForm();
+    }
   };
 
   const handlePhoneFocus = () => {
@@ -45,6 +51,44 @@ function SignIn() {
     setIsEditingPassword(true);
     setErrors((prevErrors) => ({ ...prevErrors, password: '' }));
   };
+
+  const submitForm = async () => {
+    setIsSubmitting(true);
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/login`, {
+        phone_number: phone,
+        password,
+      });
+      navigate('/dashboard'); // Redirect to the dashboard on success
+    } catch (err) {
+      console.error('Error details:', err.response?.data || err.message);
+      if (err.response && err.response.data && err.response.data.message) {
+        const errorMessage = err.response.data.message.toLowerCase();
+  
+        // Update errors and show alert with specific message
+        if (errorMessage.includes('phone')) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            phone: 'Invalid phone number. Please try again.',
+          }));
+          alert('Invalid phone number. Please try again.');
+        } else if (errorMessage.includes('password')) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            password: 'Incorrect password. Please try again.',
+          }));
+          alert('Incorrect password. Please try again.');
+        } else {
+          alert('An unexpected error occurred. Please try again.');
+        }
+      } else {
+        alert('An unexpected error occurred. Please try again.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+  
 
   return (
     <div className="signin-fullscreen-container">
@@ -98,8 +142,8 @@ function SignIn() {
             )}
           </div>
 
-          <button type="submit">
-            <span>Sign In</span>
+          <button type="submit" disabled={isSubmitting}>
+            <span>{isSubmitting ? 'Signing In...' : 'Sign In'}</span>
           </button>
           <div className="signin-form-help">
             <p className="signin-create">
