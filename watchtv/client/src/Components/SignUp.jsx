@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { background, watchtv, errorIcon } from '../assets/Pictures';
+import { Link } from 'react-router-dom';
+import { background, watchtv, errorIcon, eyeIcon, eyeSlashIcon } from '../assets/Pictures';
 import '../Styles/SignUp.css';
 
 function SignUp() {
@@ -7,7 +8,8 @@ function SignUp() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ username: '', phone: '', password: '' });
-  const [isEditing, setIsEditing] = useState({ username: false, phone: false, password: false });
+  const [isEditing, setIsEditing] = useState({ phone: false, password: false });
+  const [showPassword, setShowPassword] = useState(false);
 
   const clearErrorAfterTimeout = (field) => {
     setTimeout(() => {
@@ -36,6 +38,7 @@ function SignUp() {
       newErrors.password = 'Password must be more than 6 characters.';
       formIsValid = false;
       clearErrorAfterTimeout('password');
+      window.alert(newErrors.password); // Show window alert for password error
     }
 
     setErrors(newErrors);
@@ -49,6 +52,10 @@ function SignUp() {
 
   const handleBlur = (field) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   return (
@@ -106,7 +113,7 @@ function SignUp() {
 
           <div className="signup-form-control">
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               value={password}
@@ -117,12 +124,9 @@ function SignUp() {
               className={errors.password ? 'signup-input-error' : ''}
             />
             <label htmlFor="password">Password</label>
-            {errors.password && !isEditing.password && (
-              <div className="signup-error-icon">
-                <img src={errorIcon} alt="error icon" />
-                <span className="signup-error-message">{errors.password}</span>
-              </div>
-            )}
+            <div className="signup-password-icon" onClick={toggleShowPassword}>
+              <img src={showPassword ? eyeSlashIcon : eyeIcon} alt="toggle password visibility" />
+            </div>
           </div>
 
           <button type="submit">
@@ -130,7 +134,7 @@ function SignUp() {
           </button>
           <div className="signup-form-help">
             <p className="signup-already">
-              Already have an account? <a href="/signin">Sign in now</a>
+              Already have an account? <Link to='/signin'>Sign In Now</Link>
             </p>
           </div>
         </form>
