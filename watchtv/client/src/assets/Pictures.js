@@ -5,4 +5,10 @@ import errorIcon from './errorIcon.jpg'
 import Profile from './profile.jpg';
 import RedOne from './red-one.jpg';
 import Movies from './Movies_Icon.png';
-export {background, watchtv_icon,watchtv, errorIcon,Profile,RedOne, Movies};
+import eyeIcon from './eyeIcon.png';
+import eyeSlashIcon from './eyeSlashIcon.png';
+
+
+
+
+export {background, watchtv_icon,watchtv, errorIcon,Profile,RedOne, Movies,eyeIcon,  eyeSlashIcon};
