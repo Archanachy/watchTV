@@ -1,14 +1,18 @@
-import React, { useState} from 'react';
-import { background, watchtv, errorIcon } from '../assets/Pictures';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { background, watchtv, errorIcon, eyeIcon, eyeSlashIcon } from '../assets/Pictures';
 import '../Styles/SignIn.css';
+import axios from "axios";
 
 function SignIn() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ phone: '', password: '' });
-  const [isEditingPhone, setIsEditingPhone] = useState(false);
-  const [isEditingPassword, setIsEditingPassword] = useState(false);
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate(); // For redirection
+  const [isEditing, setIsEditing] = useState({ phone: false, password: false });
+  const [showPassword, setShowPassword] = useState(false);
+  
   const clearErrorAfterTimeout = (field) => {
     setTimeout(() => {
       setErrors((prevErrors) => ({ ...prevErrors, [field]: '' }));
@@ -20,8 +24,8 @@ function SignIn() {
     let formIsValid = true;
     const newErrors = { phone: '', password: '' };
 
-    if (!/^\d{10}$/.test(phone)) {
-      newErrors.phone = 'Please enter a valid phone number (10 digits).';
+    if (!/^\+?\d{10,15}$/.test(phone)) {
+      newErrors.phone = 'Please enter a valid phone number (up to 15 digits).';
       formIsValid = false;
       clearErrorAfterTimeout('phone');
     }
@@ -30,20 +34,63 @@ function SignIn() {
       newErrors.password = 'Password must be more than 6 characters.';
       formIsValid = false;
       clearErrorAfterTimeout('password');
+      window.alert(newErrors.password); // Show window alert for password error
     }
 
     setErrors(newErrors);
-    return formIsValid;
+    if (formIsValid) {
+      submitForm();
+    } // <-- Missing closing brace added here
   };
 
-  const handlePhoneFocus = () => {
-    setIsEditingPhone(true);
-    setErrors((prevErrors) => ({ ...prevErrors, phone: '' }));
+  const handleFocus = (field) => {
+    setIsEditing((prev) => ({ ...prev, [field]: true }));
+    setErrors((prevErrors) => ({ ...prevErrors, [field]: '' }));
   };
 
-  const handlePasswordFocus = () => {
-    setIsEditingPassword(true);
-    setErrors((prevErrors) => ({ ...prevErrors, password: '' }));
+  const handleBlur = (field) => {
+    setIsEditing((prev) => ({ ...prev, [field]: false }));
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
+  };
+
+  const submitForm = async () => {
+    setIsSubmitting(true);
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/login`, {
+        phone_number: phone,
+        password,
+      });
+      navigate('/dashboard'); // Redirect to the dashboard on success
+    } catch (err) {
+      console.error('Error details:', err.response?.data || err.message);
+      if (err.response && err.response.data && err.response.data.message) {
+        const errorMessage = err.response.data.message.toLowerCase();
+
+        // Update errors and show alert with specific message
+        if (errorMessage.includes('phone')) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            phone: 'Invalid phone number. Please try again.',
+          }));
+          alert('Invalid phone number. Please try again.');
+        } else if (errorMessage.includes('password')) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            password: 'Incorrect password. Please try again.',
+          }));
+          alert('Incorrect password. Please try again.');
+        } else {
+          alert('An unexpected error occurred. Please try again.');
+        }
+      } else {
+        alert('An unexpected error occurred. Please try again.');
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -63,13 +110,13 @@ function SignIn() {
               name="phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              onFocus={handlePhoneFocus}
-              onBlur={() => setIsEditingPhone(false)}
+              onFocus={() => handleFocus('phone')}
+              onBlur={() => handleBlur('phone')}
               required
               className={errors.phone ? 'signin-input-error' : ''}
             />
             <label htmlFor="phone">Phone number</label>
-            {errors.phone && !isEditingPhone && (
+            {errors.phone && !isEditing.phone && (
               <div className="signin-error-icon">
                 <img src={errorIcon} alt="error icon" />
                 <span className="signin-error-message">{errors.phone}</span>
@@ -79,31 +126,28 @@ function SignIn() {
 
           <div className="signin-form-control">
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onFocus={handlePasswordFocus}
-              onBlur={() => setIsEditingPassword(false)}
+              onFocus={() => handleFocus('password')}
+              onBlur={() => handleBlur('password')}
               required
               className={errors.password ? 'signin-input-error' : ''}
             />
             <label htmlFor="password">Password</label>
-            {errors.password && !isEditingPassword && (
-              <div className="signin-error-icon">
-                <img src={errorIcon} alt="error icon" />
-                <span className="signin-error-message">{errors.password}</span>
-              </div>
-            )}
+            <div className="signin-password-icon" onClick={toggleShowPassword}>
+              <img src={showPassword ? eyeSlashIcon : eyeIcon} alt="toggle password visibility" />
+            </div>
           </div>
 
-          <button type="submit">
-            <span>Sign In</span>
+          <button type="submit" disabled={isSubmitting}>
+            <span>{isSubmitting ? 'Signing In...' : 'Sign In'}</span>
           </button>
           <div className="signin-form-help">
             <p className="signin-create">
-              Create a new account? <a href="/signup">Sign up now</a>
+              Create a new account? <Link to='/signup'>Sign Up Now</Link>
             </p>
           </div>
         </form>

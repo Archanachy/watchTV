@@ -1,46 +1,100 @@
 import React, { useState } from 'react';
-import { background, watchtv, errorIcon } from '../assets/Pictures';
+import { Link } from 'react-router-dom';
+import { background, watchtv, errorIcon, eyeIcon, eyeSlashIcon } from '../assets/Pictures';
 import '../Styles/SignUp.css';
+import axios from "axios";
 
 function SignUp() {
+
   const [username, setUsername] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ username: '', phone: '', password: '' });
   const [isEditing, setIsEditing] = useState({ username: false, phone: false, password: false });
-
+  const [isSubmitting, setIsSubmitting] = useState(false); // Added state to track submission
+  const [showPassword, setShowPassword] = useState(false);
+  
   const clearErrorAfterTimeout = (field) => {
     setTimeout(() => {
       setErrors((prevErrors) => ({ ...prevErrors, [field]: '' }));
     }, 9000);
   };
 
-  const validateForm = (e) => {
+  const validateForm = async (e) => {
     e.preventDefault();
     let formIsValid = true;
     const newErrors = { username: '', phone: '', password: '' };
 
+    // Validate fields
     if (username.trim().length < 3) {
       newErrors.username = 'Username must be at least 3 characters long.';
       formIsValid = false;
       clearErrorAfterTimeout('username');
     }
 
-    if (!/^\d{10}$/.test(phone)) {
-      newErrors.phone = 'Please enter a valid phone number (10 digits).';
+    if (!/^\+?\d{10,15}$/.test(phone)) {
+      newErrors.phone = 'Please enter a valid phone number (up to 15 digits).';
       formIsValid = false;
       clearErrorAfterTimeout('phone');
     }
+    
 
     if (password.length <= 6) {
       newErrors.password = 'Password must be more than 6 characters.';
       formIsValid = false;
       clearErrorAfterTimeout('password');
+      window.alert(newErrors.password); // Show window alert for password error
     }
 
     setErrors(newErrors);
-    return formIsValid;
+
+    if (formIsValid) {
+      await submitForm(); // Submit form if valid
+    }
   };
+
+  // Api call to register user
+    const submitForm = async () => {
+    setIsSubmitting(true);
+    try {
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/register`, {
+            username,
+            phone_number: phone,
+            password,
+        });
+        alert('User created successfully!');
+        // Clear form fields after successful submission
+        setUsername('');
+        setPhone('');
+        setPassword('');
+    } catch (err) {
+        console.error('Error details:', err.response?.data || err.message);
+
+        // Check if the error is due to validation from the backend
+        if (err.response && err.response.data && err.response.data.message) {
+            const errorMessage = err.response.data.message.toLowerCase();
+
+            if (errorMessage.includes('username')) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    username: 'Username already exists.',
+                }));
+            } else if (errorMessage.includes('phone')) {
+                setErrors((prevErrors) => ({
+                    ...prevErrors,
+                    phone: 'Phone number already exists.',
+                }));
+            } else {
+                alert('An unexpected error occurred. Please try again.');
+            }
+        } else {
+            alert('An unexpected error occurred. Please try again.');
+        }
+    } finally {
+        setIsSubmitting(false);
+    }
+  };
+
 
   const handleFocus = (field) => {
     setIsEditing((prev) => ({ ...prev, [field]: true }));
@@ -49,6 +103,10 @@ function SignUp() {
 
   const handleBlur = (field) => {
     setIsEditing((prev) => ({ ...prev, [field]: false }));
+  };
+
+  const toggleShowPassword = () => {
+    setShowPassword((prevShowPassword) => !prevShowPassword);
   };
 
   return (
@@ -106,7 +164,7 @@ function SignUp() {
 
           <div className="signup-form-control">
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               value={password}
@@ -116,21 +174,19 @@ function SignUp() {
               required
               className={errors.password ? 'signup-input-error' : ''}
             />
+
             <label htmlFor="password">Password</label>
-            {errors.password && !isEditing.password && (
-              <div className="signup-error-icon">
-                <img src={errorIcon} alt="error icon" />
-                <span className="signup-error-message">{errors.password}</span>
-              </div>
-            )}
+            <div className="signup-password-icon" onClick={toggleShowPassword}>
+              <img src={showPassword ? eyeSlashIcon : eyeIcon} alt="toggle password visibility" />
+            </div>
           </div>
 
-          <button type="submit">
-            <span>Sign Up</span>
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Signing up...' : 'Sign Up'}
           </button>
           <div className="signup-form-help">
             <p className="signup-already">
-              Already have an account? <a href="/signin">Sign in now</a>
+              Already have an account? <Link to='/signin'>Sign In Now</Link>
             </p>
           </div>
         </form>
