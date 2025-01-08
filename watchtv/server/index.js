@@ -5,7 +5,6 @@ const bodyparser = require('body-parser');
 const userRegisterRoute = require('./routes/userRegisterRoute');
 const userLoginRoute = require('./routes/userLoginRoute');
 const uploadRoutes = require('./routes/uploadRoutes');
-const fs=require('fs');
 
 const app = express();
 
