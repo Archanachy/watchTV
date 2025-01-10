@@ -4,6 +4,7 @@ import {watchtv} from './assets/Pictures';
 import SignIn from './Components/SignIn';
 import SignUp from './Components/SignUp';
 import Dashboard from './Components/Dashboard';
+import Upload from './Components/Upload';
 
 function App() {
   React.useEffect(() => {
@@ -18,11 +19,12 @@ function App() {
     <Router>
       
         <Routes>
-          <Route path="/" element={<SignIn/>} /> 
+          <Route path="/" element={<Dashboard/>} /> 
           <Route path="/signin" element={<SignIn />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          {/* Future routes like Dashboard can be added here */}
+          <Route path="/upload" element={<Upload />} /> 
+          
         </Routes>
       
     </Router>

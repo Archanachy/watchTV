@@ -11,6 +11,10 @@ body.dark-mode {
   color: #ffffff;
 }
 
+body.dark-mode .invert {
+  filter: invert(1);
+}
+
 .navbar {
   background-color: #ffffff;
   height: 4rem;
@@ -64,6 +68,7 @@ body.dark-mode .navbar {
   padding: 0 1rem;
   transition: background-color 0.3s ease;
 }
+
 .nav-links button {
   text-decoration: none;
   color: #000;
@@ -72,8 +77,9 @@ body.dark-mode .navbar {
   font-size: 1.1rem;
   background-color: #fff;
   padding: 0.5rem 1rem;
-  transition:background-color 0.3s ease;
+  transition: background-color 0.3s ease;
 }
+
 .nav-links .genre-link:hover {
   text-decoration: underline;
 }
@@ -208,16 +214,15 @@ body.dark-mode .nav-links .search {
   display: flex;
   align-items: center;
   position: relative;
-  
 }
-.toggle-container #toggle{
+
+.toggle-container #toggle {
   display: none;
 }
 
 .toggle-label {
   position: relative;
   display: inline-block;
-  
   width: 3rem; /* 60px */
   height: 1.5rem; /* 25px */
   background-color: #f0f0f0;
@@ -292,6 +297,7 @@ body.dark-mode .dropdown-menu {
   background-color: #f0f0f0;
   text-decoration: none;
 }
+
 .dropdown-item a {
   text-decoration: none;
   color: #000;
@@ -302,17 +308,66 @@ body.dark-mode .dropdown-item:hover {
   text-decoration: none;
 }
 
+.dashboard-container{
+  padding: 2%;
+}
+
 .Banner {
-  margin-left: 1rem;
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  margin: auto;
+  overflow: hidden;
+  right: 10%; 
+}
+
+.slider {
+  position: relative;
+  width: 100%;
   display: flex;
-  justify-content: center;
+  transition: transform 0.01s ease-in-out;
 }
 
-.banner-image {
-  max-width: 100%;
-  height: auto;
+.slide {
+  min-width: 100%;
+  box-sizing: border-box;
+  transition: transform 0.5s ease-in-out;
 }
 
+.slide img {
+  width: 100%;
+  display: block;
+  transition: transform 0.5s ease-in-out;
+}
+
+.slide:hover img {
+  transform: scale(1.05);
+}
+
+.prev, .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 1rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: background-color 0.3s ease;
+}
+
+.prev:hover, .next:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.prev {
+  left: 0;
+}
+
+.next {
+  right: 0;
+}
 .Mov-Shows {
   border: solid 1px #000;
   height: 4rem;
@@ -328,10 +383,10 @@ body.dark-mode .dropdown-item:hover {
   display: flex;
   align-items: center;
 }
+
 body.dark-mode .Mov-Shows a {
   color: #ffffff;
 }
-
 
 .Mov-Shows a {
   position: relative;
@@ -353,11 +408,18 @@ body.dark-mode .Mov-Shows a {
   background-color: #007bff;
   color: #ffffff;
   border: none;
-  border-radius: 0.1rem;
+  border-radius: 0.5rem;
   padding: 0.5rem 1rem;
   cursor: pointer;
   margin-right: 4rem;
   transition: background-color 0.3s ease;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.upload-button span {
+  margin-right: 0.5rem;
+  font-size: 1.3rem;
 }
 
 .upload-button:hover {
@@ -372,14 +434,82 @@ body.dark-mode .Mov-Shows a {
 }
 
 .block {
-  height: 18.75rem; /* 300px */
+  height: 23rem; /* 300px */
   width: 14.375rem; /* 230px */
-  margin: 2.5rem 4.375rem; /* 40px 70px */
-  background-color: #000;
-  border: 0.5mm solid black;
+  margin: 1rem 2.5rem; /* 40px 70px */
+  background-color: #333232;
+  /* border: 0.5mm solid black; */
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
     rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
     rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0rem;
+  box-sizing: border-box;
+}
+
+.block-image {
+  width: 100%;
+  height: 70%;
+  max-height: 70%;
+  
+  border-radius: 0.2rem;
+  border: solid 1px #000;
+}
+
+.block-details {
+  top: 2rem;
+  width: 100%;
+  text-align: left;
+  color: #fff;
+}
+
+.block-rating {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 0.5rem;
+  text-align: left;
+}
+.block-rating span {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: left;
+  
+}
+
+.star-icon {
+  color: #ffd700;
+  margin-right: 0.25rem;
+  margin-left: 0.5rem;
+}
+
+.block-date {
+  margin-left: 3rem;
+  font-size: 1.2rem;
+}
+
+.block-name {
+  margin-top: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-left: 0.6rem;
+}
+
+.block-uploader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.uploader-profile-pic {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  margin-right: 0.5rem;
 }
 
 @keyframes appear {

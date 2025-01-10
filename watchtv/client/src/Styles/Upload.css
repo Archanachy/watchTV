@@ -1,0 +1,310 @@
+.upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
+    background-color: #f0f2f5;
+    font-family: Arial, sans-serif; /* Simple font */
+}
+
+.upload-form-container {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    padding: 30px;
+    margin-top: 120px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+}
+
+.upload-header-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.upload-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 200px;
+    height: 250px;
+    background: #e0e0e0;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    position: relative;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.upload-image-container button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    color: #007bff;
+    cursor: pointer;
+}
+
+.crop-container {
+    position: relative;
+    width: 200px; /* Set a fixed width for testing */
+    height: 250px; /* Adjust height as necessary */
+    background: #333;
+    border-radius: 12px;
+    overflow: visible; /* Prevent clipping of the cropper or tools */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto; /* Center the crop container */
+}
+
+.crop-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; /* Display the whole image */
+}
+
+.reactEasyCrop_Container {
+    position: relative;
+    width: 100%; /* Define the container width */
+    height: 100%; /* Define the container height */
+    overflow: hidden; /* Prevent any overflow */
+    display: flex; /* Ensure child elements stretch naturally */
+    align-items: center;
+    justify-content: center;
+}
+
+.reactEasyCrop_CropArea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 200px !important; /* Ensure it adjusts to the container */
+    height: 250px !important; /* Ensure it adjusts to the container */
+    border-radius: inherit; /* Matches the container's border radius */
+    overflow: hidden; /* Ensures no content overflows */
+    object-fit: cover; /* Makes sure the image fills the container proportionally */
+}
+
+.remove-image-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.upload-details-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.upload-details-container label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #333;
+}
+
+.upload-details-container label span {
+    width: 120px;
+    margin-right: 10px;
+}
+
+.upload-details-container input,
+.upload-details-container textarea,
+.upload-details-container select {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    color: #333;
+}
+
+.upload-details-container textarea {
+    resize: none; /* Disable resizing */
+    max-height: 200px; /* Set maximum height */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.upload-controls-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.upload-controls-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 23px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin: 0 60px;
+}
+
+.upload-controls-container button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.upload-controls-container button:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-header {
+    margin-left: 26px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown-arrow {
+    margin-left: 10px;
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    right: 0; /* Align to the right */
+    left: auto; /* Override left alignment */
+    width: 100%; /* Match the width of the dropdown header */
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    z-index: 1000;
+}
+
+.dropdown-option {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.dropdown-option.selected {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.dropdown-option:hover {
+    background-color: #f0f0f0;
+}
+
+body.dark-mode .upload-container {
+    background-color: #121212;
+    color: #ffffff;
+}
+
+body.dark-mode .upload-form-container {
+    background-color: #1f1f1f;
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode .upload-image-container {
+    background: #333;
+    border: 2px dashed #555;
+}
+
+body.dark-mode .upload-image-container button {
+    color: #66b2ff;
+}
+
+body.dark-mode .crop-container {
+    background: #444;
+}
+
+body.dark-mode .remove-image-button {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+body.dark-mode .upload-details-container label {
+    color: #ccc;
+}
+
+body.dark-mode .upload-details-container input,
+body.dark-mode .upload-details-container textarea,
+body.dark-mode .upload-details-container select {
+    background-color: #333;
+    color: #ccc;
+    border: 1px solid #555;
+}
+
+body.dark-mode .upload-controls-container button {
+    background-color: #66b2ff;
+}
+
+body.dark-mode .upload-controls-container button:hover:not(:disabled) {
+    background-color: #3399ff;
+}
+
+body.dark-mode .dropdown-header {
+    background-color: #333;
+    color: #ccc;
+    border: 1px solid #555;
+}
+
+body.dark-mode .dropdown-options {
+    background-color: #333;
+    border: 1px solid #555;
+}
+
+body.dark-mode .dropdown-option {
+    color: #ccc;
+}
+
+body.dark-mode .dropdown-option.selected {
+    background-color: #3399ff;
+    color: #fff;
+}
+
+body.dark-mode .dropdown-option:hover {
+    background-color: #444;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .upload-form-container {
+        padding: 20px;
+        margin-top: 60px;
+    }
+
+    .upload-image-container {
+        width: 150px;
+        height: 200px;
+    }
+
+    .upload-details-container label span {
+        width: 100px;
+    }
+}
