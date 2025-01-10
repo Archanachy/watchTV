@@ -3,7 +3,7 @@ const upload = require('../middleware/uploadMiddleware');
 const fs = require('fs');
 const sharp = require('sharp');
 const FileType = require('file-type');
-
+const { insertContent, insertContentGenres, getGenreIdsByNames } = require('../models/contentModel');
 
 const router = express.Router();
 
@@ -42,20 +42,40 @@ router.post('/content', upload.single('contentImage'), async (req, res) => {
     }
 
     // Access the other form fields
-    const { title, description, duration, kind, genre } = req.body;
+    const { user_id,title, description, releasedDate, duration, kind, genres } = req.body;
+    if (!user_id) {
+      return res.status(400).json({ message: 'User ID is required.' });
+    }
+  
+    const imagePath = `/uploads/${req.file.filename}`;
 
-    // Construct response
-    res.status(200).json({
-      message: 'Movie uploaded successfully',
-      content: {
-        title,
-        description,
-        duration,
-        kind,
-        genre,
-        imagePath: `/uploads/${file.filename}`,
-      },
+   // Validate genres
+   if (typeof genres !== 'string') {
+    return res.status(400).json({ message: 'Genres must be a comma-separated string.' });
+  }
+
+    const genreNames = genres.split(',').map((name) => name.trim());
+    const genreIds = await getGenreIdsByNames(genreNames);
+
+    if (genreIds.length < 1 || genreIds.length > 3) {
+      return res.status(400).json({ message: 'Please select between 1 and 3 genres.' });
+    }
+
+    // Step 2: Insert content into the content table
+    const contentId = await insertContent({
+      userId:user_id,
+      title,
+      description,
+      releasedDate,
+      duration,
+      kind,
+      imagePath,
     });
+    // Step 3: Insert genres into the content_genre table
+    await insertContentGenres(contentId, genreIds);
+
+    res.status(201).json({ message: 'Content uploaded successfully', contentId });
+  
   } catch (error) {
     console.error('Unexpected error:', error.message); // Debugging log for unexpected errors
 
