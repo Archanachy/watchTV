@@ -4,21 +4,29 @@ const cors = require('cors');
 const bodyparser = require('body-parser');
 const userRegisterRoute = require('./routes/userRegisterRoute');
 const userLoginRoute = require('./routes/userLoginRoute');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 const app = express();
 
+// Middleware
 app.use(cors({
   origin: 'http://localhost:5173', // Frontend URL
   methods: ['GET', 'POST'], // Add allowed methods
   credentials: true,
 }));
 
-
 app.use(bodyparser.json());
+app.use(express.urlencoded({ extended: true })); // For handling form-data text fields
+app.use('/api', uploadRoutes);
 
 app.use('/api',userRegisterRoute);
 app.use('/api',userLoginRoute);
 
+// Serve uploaded files statically
+app.use('/uploads', express.static('uploads'));
+
+// Routes
+app.use('/api', uploadRoutes);
 
 //start server
 const PORT = process.env.PORT || 3002;
