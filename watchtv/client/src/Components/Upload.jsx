@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
 import '../Styles/Upload.css';
+import axios from 'axios';
 
 function Upload() {
     const navigate = useNavigate();
@@ -23,15 +24,22 @@ function Upload() {
     const dropdownRef = useRef(null);
 
     useEffect(() => {
-        const availableGenres = ['Action', 'Adventure', 'Comedy', 'Drama', 'Horror', 'Thriller'];
-        setGenres(availableGenres);
+        const fetchGenres = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/genres`);
+                console.log('Fetched genres:', response.data); // Log genres data
+                setGenres(response.data);
+            } catch (error) {
+                console.error('Error fetching genres:', error);
+            }
+        };
 
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setIsDropdownOpen(false);
             }
         };
-
+        fetchGenres();
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
@@ -171,7 +179,7 @@ function Upload() {
                         <span>Kind:</span>
                         <select value={kind} onChange={(e) => setKind(e.target.value)}>
                             <option value="" disabled>
-                                Select Kind
+                                Select Kind(movie or Tv/web series)
                             </option>
                             <option value="Tv/Shows">Shows</option>
                             <option value="Movies">Movies</option>
@@ -183,25 +191,29 @@ function Upload() {
                             <div className="dropdown-header" onClick={toggleDropdown}>
                                 {selectedGenres.length > 0
                                     ? selectedGenres.join(', ')
-                                    : 'Select up to 3 genres'}
+                                    : 'Max 3 genres'}
                                 <span className="dropdown-arrow">{isDropdownOpen ? '▲' : '▼'}</span>
                             </div>
-                            {isDropdownOpen && (
-                                <div className="dropdown-options">
-                                    {genres.map((genre) => (
-                                        <div
-                                            key={genre}
-                                            className={`dropdown-option ${
-                                                selectedGenres.includes(genre) ? 'selected' : ''
-                                            }`}
-                                            onClick={() => handleGenreSelect(genre)}
-                                        >
-                                            {genre}
-                                        </div>
-                                    ))}
-                                </div>
+                        {isDropdownOpen && (
+                        <div className="dropdown-options">
+                            {genres.length > 0 ? (
+                                genres.map((genre) => (
+                                    <div
+                                        key={genre.genre_id}
+                                        className={`dropdown-option ${
+                                            selectedGenres.includes(genre.name) ? 'selected' : ''
+                                        }`}
+                                        onClick={() => handleGenreSelect(genre.name)}
+                                    >
+                                        {genre.name}
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="dropdown-option">No genres available</div>
                             )}
                         </div>
+                         )}
+                     </div>  
                     </label>
                 </div>
                 <div className="upload-controls-container">

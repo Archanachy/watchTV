@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { faSearch, faBars, faTimes, faStar } from '@fortawesome/free-solid-svg-icons';
 import { watchtv, Profile, RedOne, watchtv_icon, Movies } from '../assets/Pictures';
 import '../Styles/Dashboard.css';
+import axios from 'axios';
 
 
 function Dashboard() {
@@ -12,6 +13,7 @@ function Dashboard() {
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
     const [movies, setMovies] = useState([]); // State to hold movie/show data
+    const [genres, setGenres] = useState([]); // State to hold fetched genres
 
     const dropdownRef = useRef(null);
     const genredropdownRef = useRef(null);
@@ -26,6 +28,22 @@ function Dashboard() {
         "https://th.bing.com/th/id/OIP.rdE9srFu8KREbfQaTc_ppwHaE6?rs=1&pid=ImgDetMain",
         "https://images.unsplash.com/photo-1631805249874-3f546d176de4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bW92aWUlMjBwb3N0ZXJ8ZW58MHx8MHx8fDA%3D"    
         ];
+
+    
+    useEffect(() => {
+        // Fetch genres from the backend
+        const fetchGenres = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/genres`); 
+                setGenres(response.data);
+            } catch (error) {
+                console.error('Failed to fetch genres:', error);
+                }
+            };
+        fetchGenres();
+        }, []);
+    
+    
     const toggleGenreDropdown = () => {
         setGenreDropdownVisible((prev) => !prev);
     };
@@ -180,20 +198,9 @@ function Dashboard() {
                         {isGenreDropdownVisible && (
                             <div className="genre-dropdown">
                                 <div className="genre-column">
-                                    <a href="#">Action</a>
-                                    <a href="#">Comedy</a>
-                                    <a href="#">Drama</a>
-                                    <a href="#">Horror</a>
-                                    <a href="#">Romance</a>
-                                    <a href="#">Sci-Fi/Fantasy</a>
-                                </div>
-                                <div className="genre-column">
-                                    <a href="#">Thriller</a>
-                                    <a href="#">Fantasy</a>
-                                    <a href="#">Documentary</a>
-                                    <a href="#">Animation</a>
-                                    <a href="#">Mystery</a>
-                                    <a href="#">Adventure</a>
+                                    {genres.map((genre, index) => (
+                                        <a href="#" key={index}>{genre.name}</a>
+                                    ))}
                                 </div>
                             </div>
                         )}
