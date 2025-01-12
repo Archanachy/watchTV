@@ -23,6 +23,15 @@ function Upload() {
     const fileInputRef = useRef(null);
     const dropdownRef = useRef(null);
 
+    const formatTitle = (title) => {
+        if (!title) return '';
+        return title
+          .split(' ') // Split into words
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter
+          .join(' '); // Rejoin words
+      };
+      
+
     useEffect(() => {
         const fetchGenres = async () => {
             try {
@@ -150,7 +159,7 @@ function Upload() {
                 <div className="upload-details-container">
                     <label>
                         <span>Title:</span>
-                        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+                        <input type="text" value={title}  onChange={(e) => setTitle(formatTitle(e.target.value))} />
                     </label>
                     <label>
                         <span>Description:</span>

@@ -46,6 +46,12 @@ router.post('/content', upload.single('contentImage'), async (req, res) => {
     if (!user_id) {
       return res.status(400).json({ message: 'User ID is required.' });
     }
+
+    // Check if the title already exists
+    const titleExists = await checkIfTitleExists(title);
+    if (titleExists) {
+      return res.status(400).json({ message: 'Title already exists. Please choose a different title.' });
+    }
   
     const imagePath = `/uploads/${req.file.filename}`;
 
