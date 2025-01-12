@@ -14,20 +14,21 @@ function Upload() {
     const [description, setDescription] = useState('');
     const [releasedDate, setReleasedDate] = useState('');
     const [duration, setDuration] = useState('');
-    const [kind, setKind] = useState('');
+    const [kind, setKind] = useState([]);
     const [genres, setGenres] = useState([]);
     const [selectedGenres, setSelectedGenres] = useState([]);
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isKindDropdownOpen, setIsKindDropdownOpen] = useState(false);
+    const [isGenreDropdownOpen, setIsGenreDropdownOpen] = useState(false);
     const [isFormValid, setIsFormValid] = useState(false);
     const [uploading, setUploading] = useState(false);
     const fileInputRef = useRef(null);
-    const dropdownRef = useRef(null);
+    const kindDropdownRef = useRef(null);
+    const genreDropdownRef = useRef(null);
 
     useEffect(() => {
         const fetchGenres = async () => {
             try {
                 const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/genres`);
-                console.log('Fetched genres:', response.data); // Log genres data
                 setGenres(response.data);
             } catch (error) {
                 console.error('Error fetching genres:', error);
@@ -35,10 +36,19 @@ function Upload() {
         };
 
         const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsDropdownOpen(false);
+            if (kindDropdownRef.current && !kindDropdownRef.current.contains(event.target)) {
+                setIsKindDropdownOpen(false);
+            }
+            if (genreDropdownRef.current && !genreDropdownRef.current.contains(event.target)) {
+                setIsGenreDropdownOpen(false);
             }
         };
+
+        const darkMode = localStorage.getItem('darkMode') === 'true';
+        if (darkMode) {
+            document.body.classList.add('dark-mode');
+        }
+
         fetchGenres();
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
@@ -78,8 +88,22 @@ function Upload() {
         validateForm();
     };
 
-    const toggleDropdown = () => {
-        setIsDropdownOpen(!isDropdownOpen);
+    const handleKindSelect = (kindOption) => {
+        if (kind.includes(kindOption)) {
+            setKind(kind.filter((k) => k !== kindOption));
+        } else {
+            setKind([kindOption]); // Only allow one kind to be selected
+        }
+        setIsKindDropdownOpen(false);
+        validateForm();
+    };
+
+    const toggleKindDropdown = () => {
+        setIsKindDropdownOpen(!isKindDropdownOpen);
+    };
+
+    const toggleGenreDropdown = () => {
+        setIsGenreDropdownOpen(!isGenreDropdownOpen);
     };
 
     const validateForm = () => {
@@ -88,7 +112,7 @@ function Upload() {
             !!description &&
             !!releasedDate &&
             !!duration &&
-            !!kind &&
+            kind.length > 0 &&
             selectedGenres.length > 0 &&
             selectedGenres.length <= 3
         );
@@ -171,56 +195,68 @@ function Upload() {
                         <span>Duration (in min):</span>
                         <input
                             type="number"
+                            min="15" 
                             value={duration}
                             onChange={(e) => setDuration(e.target.value)}
                         />
                     </label>
                     <label>
                         <span>Kind:</span>
-                        <select value={kind} onChange={(e) => setKind(e.target.value)}>
-                            <option value="" disabled>
-                                Select Kind(movie or Tv/web series)
-                            </option>
-                            <option value="Tv/Shows">Shows</option>
-                            <option value="Movies">Movies</option>
-                        </select>
+                        <div className="custom-dropdown" ref={kindDropdownRef}>
+                            <div className="dropdown-header" onClick={toggleKindDropdown}>
+                                {kind.length > 0 ? kind.join(', ') : 'Select Kind (movie or Tv/web series)'}
+                                <span className="dropdown-arrow">{isKindDropdownOpen ? '▲' : '▼'}</span>
+                            </div>
+                            {isKindDropdownOpen && (
+                                <div className="dropdown-options">
+                                    <div
+                                        className={`dropdown-option ${kind.includes('Tv/Shows') ? 'selected' : ''}`}
+                                        onClick={() => handleKindSelect('Tv/Shows')}
+                                    >
+                                        Tv/Shows
+                                    </div>
+                                    <div
+                                        className={`dropdown-option ${kind.includes('Movies') ? 'selected' : ''}`}
+                                        onClick={() => handleKindSelect('Movies')}
+                                    >
+                                        Movies
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     </label>
                     <label>
                         <span>Genres:</span>
-                        <div className="custom-dropdown" ref={dropdownRef}>
-                            <div className="dropdown-header" onClick={toggleDropdown}>
-                                {selectedGenres.length > 0
-                                    ? selectedGenres.join(', ')
-                                    : 'Max 3 genres'}
-                                <span className="dropdown-arrow">{isDropdownOpen ? '▲' : '▼'}</span>
+                        <div className="custom-dropdown" ref={genreDropdownRef}>
+                            <div className="dropdown-header" onClick={toggleGenreDropdown}>
+                                {selectedGenres.length > 0 ? selectedGenres.join(', ') : 'Max 3 genres'}
+                                <span className="dropdown-arrow">{isGenreDropdownOpen ? '▲' : '▼'}</span>
                             </div>
-                        {isDropdownOpen && (
-                        <div className="dropdown-options">
-                            {genres.length > 0 ? (
-                                genres.map((genre) => (
-                                    <div
-                                        key={genre.genre_id}
-                                        className={`dropdown-option ${
-                                            selectedGenres.includes(genre.name) ? 'selected' : ''
-                                        }`}
-                                        onClick={() => handleGenreSelect(genre.name)}
-                                    >
-                                        {genre.name}
-                                    </div>
-                                ))
-                            ) : (
-                                <div className="dropdown-option">No genres available</div>
+                            {isGenreDropdownOpen && (
+                                <div className="dropdown-options">
+                                    {genres.length > 0 ? (
+                                        genres.map((genre) => (
+                                            <div
+                                                key={genre.genre_id}
+                                                className={`dropdown-option ${selectedGenres.includes(genre.name) ? 'selected' : ''}`}
+                                                onClick={() => handleGenreSelect(genre.name)}
+                                            >
+                                                {genre.name}
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="dropdown-option">No genres available</div>
+                                    )}
+                                </div>
                             )}
                         </div>
-                         )}
-                     </div>  
                     </label>
                 </div>
                 <div className="upload-controls-container">
-                    <button onClick={handleSave} disabled={!isFormValid || uploading}>
+                    <button id='save' onClick={handleSave} disabled={!isFormValid || uploading}>
                         Save
                     </button>
-                    <button onClick={handleCancel}>Cancel</button>
+                    <button id='cancel' onClick={handleCancel}>Cancel</button>
                 </div>
             </div>
         </div>

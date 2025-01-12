@@ -52,9 +52,21 @@ function Dashboard() {
         setDropdownVisible((prev) => !prev);
     };
 
+    useEffect(() => {
+        const darkMode = localStorage.getItem('darkMode') === 'true';
+        setIsDarkMode(darkMode);
+        if (darkMode) {
+            document.body.classList.add('dark-mode');
+        }
+    }, []);
+    
     const toggleDarkMode = () => {
-        setIsDarkMode((prev) => !prev);
-        document.body.classList.toggle('dark-mode');
+        setIsDarkMode((prev) => {
+            const newDarkMode = !prev;
+            localStorage.setItem('darkMode', newDarkMode);
+            document.body.classList.toggle('dark-mode', newDarkMode);
+            return newDarkMode;
+        });
     };
 
     const toggleMobileMenu = () => {
