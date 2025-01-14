@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { background, watchtv, errorIcon, eyeIcon, eyeSlashIcon } from '../assets/Pictures';
 import '../Styles/SignIn.css';
-import axios from "axios";
+import axios from '../api/axios';
 
 function SignIn() {
   const [phone, setPhone] = useState('');
@@ -63,6 +63,8 @@ function SignIn() {
         phone_number: phone,
         password,
       });
+      const { token, userId } = response.data;
+      localStorage.setItem('authToken', token);
       navigate('/dashboard'); // Redirect to the dashboard on success
     } catch (err) {
       console.error('Error details:', err.response?.data || err.message);

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
 import '../Styles/Upload.css';
-import axios from 'axios';
+import axios from '../api/axios';
 
 function Upload() {
     const navigate = useNavigate();
