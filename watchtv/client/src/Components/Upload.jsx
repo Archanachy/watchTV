@@ -89,11 +89,17 @@ function Upload() {
     }, []);
 
     const handleGenreSelect = (genre) => {
+        console.log('Genre selected:', genre);
         if (selectedGenres.includes(genre)) {
             setSelectedGenres(selectedGenres.filter((g) => g !== genre));
         } else if (selectedGenres.length < 3) {
             setSelectedGenres([...selectedGenres, genre]);
         }
+        validateForm();
+    };
+
+    const handleGenreRemove = (genre) => {
+        setSelectedGenres(selectedGenres.filter((g) => g !== genre));
         validateForm();
     };
 
@@ -112,6 +118,7 @@ function Upload() {
     };
 
     const toggleGenreDropdown = () => {
+        console.log('Toggling genre dropdown');
         setIsGenreDropdownOpen(!isGenreDropdownOpen);
     };
 
@@ -219,10 +226,10 @@ function Upload() {
                             {isKindDropdownOpen && (
                                 <div className="dropdown-options">
                                     <div
-                                        className={`dropdown-option ${kind.includes('Tv/Shows') ? 'selected' : ''}`}
-                                        onClick={() => handleKindSelect('Tv/Shows')}
+                                        className={`dropdown-option ${kind.includes('Shows') ? 'selected' : ''}`}
+                                        onClick={() => handleKindSelect('Shows')}
                                     >
-                                        Tv/Shows
+                                        Shows
                                     </div>
                                     <div
                                         className={`dropdown-option ${kind.includes('Movies') ? 'selected' : ''}`}
@@ -234,24 +241,37 @@ function Upload() {
                             )}
                         </div>
                     </label>
+                 
                     <label>
                         <span>Genres:</span>
                         <div className="custom-dropdown" ref={genreDropdownRef}>
                             <div className="dropdown-header" onClick={toggleGenreDropdown}>
-                                {selectedGenres.length > 0 ? selectedGenres.join(', ') : 'Max 3 genres'}
+                                <div className="selected-genres">
+                                    {selectedGenres.map((genre) => (
+                                        <div key={genre} className="selected-genre">
+                                            {genre}
+                                            <span className="remove-genre" onClick={() => handleGenreRemove(genre)}>✖</span>
+                                        </div>
+                                    ))}
+                                </div>
+                                {selectedGenres.length === 0 && <span className="max-genres-text">Max 3 genres</span>}
                                 <span className="dropdown-arrow">{isGenreDropdownOpen ? '▲' : '▼'}</span>
                             </div>
                             {isGenreDropdownOpen && (
                                 <div className="dropdown-options">
                                     {genres.length > 0 ? (
                                         genres.map((genre) => (
-                                            <div
-                                                key={genre.genre_id}
-                                                className={`dropdown-option ${selectedGenres.includes(genre.name) ? 'selected' : ''}`}
-                                                onClick={() => handleGenreSelect(genre.name)}
-                                            >
+                                            <label key={genre.genre_id} className={`dropdown-option ${selectedGenres.includes(genre.name) ? 'selected' : ''}`}>
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedGenres.includes(genre.name)}
+                                                    onChange={(e) => {
+                                                        e.stopPropagation();
+                                                        handleGenreSelect(genre.name);
+                                                    }}
+                                                />
                                                 {genre.name}
-                                            </div>
+                                            </label>
                                         ))
                                     ) : (
                                         <div className="dropdown-option">No genres available</div>
