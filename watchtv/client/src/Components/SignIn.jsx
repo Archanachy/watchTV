@@ -63,7 +63,7 @@ function SignIn() {
         phone_number: phone,
         password,
       });
-      const { token, userId } = response.data;
+      const { token } = response.data;
       localStorage.setItem('authToken', token);
       navigate('/dashboard'); // Redirect to the dashboard on success
     } catch (err) {
