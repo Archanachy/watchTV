@@ -155,7 +155,7 @@
     font-size: 23px;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin: 0 60px;
+    margin: 0 30px;
 }
 
 .upload-controls-container button#save {

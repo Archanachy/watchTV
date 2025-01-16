@@ -309,16 +309,15 @@ body.dark-mode .dropdown-item:hover {
 }
 
 .dashboard-container {
-  padding: 2%;
+  padding: 0 2%;
 }
 
 .Banner {
   position: relative;
-  width: 100%;
-  max-width: 800px;
-  margin: auto;
+  width: fit-content;
+  height: 540px;
   overflow: hidden;
-  right: 10%;
+  
 }
 
 .slider {
@@ -373,14 +372,6 @@ body.dark-mode .dropdown-item:hover {
 
 
 
-.Banner {
-  position: relative;
-  width: 70%;
-  max-width: 800px;
-  margin: auto;
-  overflow: hidden;
-  right: 10%;
-}
 
 .Popular {
   width: 30%;
@@ -437,7 +428,7 @@ body.dark-mode .dropdown-item:hover {
   width: 0;
   height: 0;
 }
-/* ...existing code... */
+
 
 .Mov-Shows {
   border: solid 1px #000;
@@ -503,6 +494,7 @@ body.dark-mode .Mov-Shows a {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
   align-items: center;
+  margin-top: 1rem;
 }
 
 .block {
@@ -517,6 +509,7 @@ body.dark-mode .Mov-Shows a {
   justify-content: flex-start;
   padding: 0rem;
   box-sizing: border-box;
+  cursor: pointer;
 }
 
 .block-image {
