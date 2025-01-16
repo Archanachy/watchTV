@@ -123,41 +123,17 @@ function Dashboard() {
     }, []);
 
     useEffect(() => {
-        // Dummy data for movies/shows
-        setMovies([
-            {
-                id: 1,
-                image: RedOne, // Dummy image
-                rating: 4.5,
-                date: '2023-10-01',
-                name: 'Red One',
-                
-            },
-            {
-                id: 2,
-                image: watchtv, // Dummy image
-                rating: 4.0,
-                date: '2023-09-15',
-                name: 'WatchTV',
-                
-            },
-            {
-                id: 3,
-                image: Movies, // Dummy image
-                rating: 3.5,
-                date: '2023-08-20',
-                name: 'Movies',
-                
-            },
-            {
-                id: 4,
-                image: watchtv_icon, // Dummy image
-                rating: 3.0,
-                date: '2023-07-10',
-                name: 'Shows',
-                
-            }
-        ]);
+        const dummyData = [];
+        for (let i = 1; i <= 100; i++) {
+            dummyData.push({
+                id: i,
+                image: `https://picsum.photos/200/300?random=${i}`, // Dummy image URL
+                rating: (Math.random() * 5).toFixed(1), // Random rating between 0.0 and 5.0
+                date: '2023',
+                name: `Item ${i}`,
+            });
+        }
+        setMovies(dummyData);
     }, []);
 
     const responsive = {
@@ -210,7 +186,12 @@ function Dashboard() {
                         {isGenreDropdownVisible && (
                             <div className="genre-dropdown">
                                 <div className="genre-column">
-                                    {genres.map((genre, index) => (
+                                    {genres.slice(0, Math.ceil(genres.length / 2)).map((genre, index) => (
+                                        <a href="#" key={index}>{genre.name}</a>
+                                    ))}
+                                </div>
+                                <div className="genre-column">
+                                    {genres.slice(Math.ceil(genres.length / 2)).map((genre, index) => (
                                         <a href="#" key={index}>{genre.name}</a>
                                     ))}
                                 </div>
@@ -257,7 +238,6 @@ function Dashboard() {
             </nav>
             
             <div className="dashboard-container">
-
                 <div className="Banner">
                     <div className="slider" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
                         {images.map((src, index) => (
@@ -269,6 +249,8 @@ function Dashboard() {
                     <button className="prev" onClick={prevSlide}>&#10094;</button>
                     <button className="next" onClick={nextSlide}>&#10095;</button>
                 </div>
+                
+
 
                 <div className="Mov-Shows">
                     <p>
@@ -297,10 +279,6 @@ function Dashboard() {
                             </div>
                         </div>
                     ))}
-                    {/* Empty blocks */}
-                    <div className="block"></div>
-                    <div className="block"></div>
-                    <div className="block"></div>
                 </div>
             </div>
         </div>

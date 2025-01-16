@@ -17,12 +17,13 @@
     padding: 30px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
+    position: relative;
+    z-index: 1;
 }
 
 .upload-header-container {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
 }
 
 .upload-image-container {
@@ -30,13 +31,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 200px;
-    height: 250px;
+    width: 160px;
+    height: 200px;
     background: #f8f9fa;
     border: 2px dashed #ccc;
     border-radius: 12px;
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -51,8 +52,8 @@
 
 .crop-container {
     position: relative;
-    width: 200px;
-    height: 250px;
+    width: 160px;
+    height: 200px;
     background: #333;
     border-radius: 12px;
     overflow: hidden;
@@ -84,6 +85,20 @@
     justify-content: center;
 }
 
+.reactEasyCrop_CropArea {
+    height: 100% !important;
+    width: 100% !important;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-sizing: border-box;
+    box-shadow: 0 0 0 9999em;
+    color: rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
 .upload-details-container {
     width: 100%;
     display: flex;
@@ -104,7 +119,9 @@
     margin-right: 10px;
 }
 
-.upload-details-container input,
+.upload-details-container input[type="text"],
+.upload-details-container input[type="date"],
+.upload-details-container input[type="number"],
 .upload-details-container textarea {
     flex: 1;
     padding: 10px;
@@ -119,6 +136,10 @@
     resize: none;
     max-height: 200px;
     overflow-y: auto;
+}
+
+.upload-details-container input[type="checkbox"] {
+    margin-right: 10px;
 }
 
 .upload-controls-container {
@@ -197,6 +218,34 @@
     background-color: #ffffff;
     z-index: 1000;
 }
+.dropdown-options label{
+    margin: 0 !important;
+}
+
+.selected-genre {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 15px;
+    font-size: 10px;
+    position: relative;
+}
+
+.max-genres-text {
+    position: absolute;
+    color: #6c757d;
+    font-size: 14px;
+    width: 200px !important;
+}
+
+.selected-genre .remove-genre {
+    width: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-weight: bold;
+}
 
 .dropdown-option {
     padding: 10px;
@@ -210,8 +259,12 @@
     color: #fff;
 }
 
-.custom-dropdown .dropdown-header span {
+
+.custom-dropdown .dropdown-header span.dropdown-arrow {
     width: 5px !important;
+}
+.dropdown-option input[type="checkbox"] {
+    margin-right: 10px;
 }
 
 .dropdown-option:hover {
@@ -231,7 +284,9 @@ body.dark-mode .upload-details-container label {
     color: #ededed;
 }
 
-body.dark-mode .upload-details-container input,
+body.dark-mode .upload-details-container input[type="text"],
+body.dark-mode .upload-details-container input[type="date"],
+body.dark-mode .upload-details-container input[type="number"],
 body.dark-mode .upload-details-container textarea {
     background-color: #1c1c1c;
     border: 1px solid #444444;
