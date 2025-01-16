@@ -63,8 +63,11 @@ function SignIn() {
         phone_number: phone,
         password,
       });
-      const { token } = response.data;
-      localStorage.setItem('authToken', token);
+      const { userId, token } = response.data;
+      localStorage.setItem('userId', userId); // Save userId
+      localStorage.setItem('authToken', token); // Save authToken
+      console.log('UserId saved:', userId);
+
       navigate('/dashboard'); // Redirect to the dashboard on success
     } catch (err) {
       console.error('Error details:', err.response?.data || err.message);
