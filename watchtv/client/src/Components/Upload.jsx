@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
 import '../Styles/Upload.css';
-import axios from 'axios';
+import axios from '../api/axios';
 
 function Upload() {
     const navigate = useNavigate();
@@ -127,15 +127,53 @@ function Upload() {
     };
 
     const handleSave = async () => {
+        if (!image) {
+            alert('Please upload an image before saving.');
+            return;
+        }
+    
         setUploading(true);
         try {
-            console.log('Saving data...');
+            // Create FormData for the image and other fields
+            const formData = new FormData();
+            const userId = localStorage.getItem('userId'); // Retrieve userId from localStorage
+    
+            // Append all form data
+            formData.append('userId', userId);
+            formData.append('title', title);
+            formData.append('description', description);
+            formData.append('releasedDate', releasedDate);
+            formData.append('duration', duration);
+            formData.append('kind', kind[0]);
+            formData.append('genres', selectedGenres.join(','));
+    
+            // Convert the cropped image to a file and append
+            if (image) {
+                const response = await fetch(image);
+                const blob = await response.blob();
+                const file = new File([blob], 'uploaded_image.jpg', { type: blob.type });
+                formData.append('contentImage', file);
+            }
+    
+            // Send the form data to the server
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/content`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure token is stored
+                },
+            });
+    
+            alert('Content uploaded successfully!');
+            navigate('/dashboard');
         } catch (error) {
-            console.error(error);
+            console.error('Error uploading content:', error);
+            alert('An error occurred while uploading content. Please try again.');
         } finally {
             setUploading(false);
         }
     };
+    
+    
 
     const handleCancel = () => {
         navigate('/dashboard');
@@ -219,15 +257,15 @@ function Upload() {
                                 <div className="dropdown-options">
                                     <div
                                         className={`dropdown-option ${kind.includes('Shows') ? 'selected' : ''}`}
-                                        onClick={() => handleKindSelect('Shows')}
+                                        onClick={() => handleKindSelect('Show')}
                                     >
-                                        Shows
+                                        Show
                                     </div>
                                     <div
                                         className={`dropdown-option ${kind.includes('Movies') ? 'selected' : ''}`}
-                                        onClick={() => handleKindSelect('Movies')}
+                                        onClick={() => handleKindSelect('Movie')}
                                     >
-                                        Movies
+                                        Movie
                                     </div>
                                 </div>
                             )}

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { faSearch, faBars, faTimes, faStar } from '@fortawesome/free-solid-svg-icons';
 import { watchtv, Profile, RedOne, watchtv_icon, Movies } from '../assets/Pictures';
 import '../Styles/Dashboard.css';
-import axios from 'axios';
+import axios from '../api/axios';
 
 
 function Dashboard() {

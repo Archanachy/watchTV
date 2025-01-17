@@ -1,7 +1,6 @@
 const express = require('express');
 const { createUser, findUserByUsername } = require('../models/UserRegisterModel');
 const bcrypt = require('bcrypt');
-
 const router = express.Router();
 
 router.post('/register', async (req, res) => {

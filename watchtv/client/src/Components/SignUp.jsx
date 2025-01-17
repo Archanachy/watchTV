@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { background, watchtv, errorIcon, eyeIcon, eyeSlashIcon } from '../assets/Pictures';
 import '../Styles/SignUp.css';
-import axios from "axios";
+import axios from '../api/axios';
 
 function SignUp() {
 
