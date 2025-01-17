@@ -32,7 +32,6 @@ function Upload() {
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter
           .join(' '); // Rejoin words
       };
-      
 
     useEffect(() => {
         const fetchGenres = async () => {
@@ -89,17 +88,11 @@ function Upload() {
     }, []);
 
     const handleGenreSelect = (genre) => {
-        console.log('Genre selected:', genre);
         if (selectedGenres.includes(genre)) {
             setSelectedGenres(selectedGenres.filter((g) => g !== genre));
         } else if (selectedGenres.length < 3) {
             setSelectedGenres([...selectedGenres, genre]);
         }
-        validateForm();
-    };
-
-    const handleGenreRemove = (genre) => {
-        setSelectedGenres(selectedGenres.filter((g) => g !== genre));
         validateForm();
     };
 
@@ -118,7 +111,6 @@ function Upload() {
     };
 
     const toggleGenreDropdown = () => {
-        console.log('Toggling genre dropdown');
         setIsGenreDropdownOpen(!isGenreDropdownOpen);
     };
 
@@ -228,7 +220,7 @@ function Upload() {
                 <div className="upload-details-container">
                     <label>
                         <span>Title:</span>
-                        <input type="text" value={title}  onChange={(e) => setTitle(formatTitle(e.target.value))} />
+                        <input type="text" value={title} onChange={(e) => setTitle(formatTitle(e.target.value))} />
                     </label>
                     <label>
                         <span>Description:</span>
@@ -249,7 +241,7 @@ function Upload() {
                         <span>Duration (in min):</span>
                         <input
                             type="number"
-                            min="15" 
+                            min="15"
                             value={duration}
                             onChange={(e) => setDuration(e.target.value)}
                         />
@@ -279,7 +271,6 @@ function Upload() {
                             )}
                         </div>
                     </label>
-                 
                     <label>
                         <span>Genres:</span>
                         <div className="custom-dropdown" ref={genreDropdownRef}>
@@ -288,7 +279,6 @@ function Upload() {
                                     {selectedGenres.map((genre) => (
                                         <div key={genre} className="selected-genre">
                                             {genre}
-                                            <span className="remove-genre" onClick={() => handleGenreRemove(genre)}>✖</span>
                                         </div>
                                     ))}
                                 </div>
@@ -303,12 +293,9 @@ function Upload() {
                                                 <input
                                                     type="checkbox"
                                                     checked={selectedGenres.includes(genre.name)}
-                                                    onChange={(e) => {
-                                                        e.stopPropagation();
-                                                        handleGenreSelect(genre.name);
-                                                    }}
+                                                    onChange={() => handleGenreSelect(genre.name)}
                                                 />
-                                                {genre.name}
+                                                <span onClick={(e) => e.stopPropagation()}>{genre.name}</span>
                                             </label>
                                         ))
                                     ) : (
