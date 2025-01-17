@@ -5,6 +5,7 @@ const bodyparser = require('body-parser');
 const userRegisterRoute = require('./routes/userRegisterRoute');
 const userLoginRoute = require('./routes/userLoginRoute');
 const uploadRoutes = require('./routes/uploadRoutes');
+const genreRoutes = require('./routes/genreRoute');
 
 const app = express();
 
@@ -27,6 +28,8 @@ app.use('/uploads', express.static('uploads'));
 
 // Routes
 app.use('/api', uploadRoutes);
+app.use('/api', genreRoutes);
+
 
 //start server
 const PORT = process.env.PORT || 3002;
