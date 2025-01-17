@@ -32,6 +32,7 @@ function Upload() {
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter
           .join(' '); // Rejoin words
       };
+      
 
     useEffect(() => {
         const fetchGenres = async () => {
@@ -127,53 +128,15 @@ function Upload() {
     };
 
     const handleSave = async () => {
-        if (!image) {
-            alert('Please upload an image before saving.');
-            return;
-        }
-    
         setUploading(true);
         try {
-            // Create FormData for the image and other fields
-            const formData = new FormData();
-            const userId = localStorage.getItem('userId'); // Retrieve userId from localStorage
-    
-            // Append all form data
-            formData.append('userId', userId);
-            formData.append('title', title);
-            formData.append('description', description);
-            formData.append('releasedDate', releasedDate);
-            formData.append('duration', duration);
-            formData.append('kind', kind[0]);
-            formData.append('genres', selectedGenres.join(','));
-    
-            // Convert the cropped image to a file and append
-            if (image) {
-                const response = await fetch(image);
-                const blob = await response.blob();
-                const file = new File([blob], 'uploaded_image.jpg', { type: blob.type });
-                formData.append('contentImage', file);
-            }
-    
-            // Send the form data to the server
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/content`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure token is stored
-                },
-            });
-    
-            alert('Content uploaded successfully!');
-            navigate('/dashboard');
+            console.log('Saving data...');
         } catch (error) {
-            console.error('Error uploading content:', error);
-            alert('An error occurred while uploading content. Please try again.');
+            console.error(error);
         } finally {
             setUploading(false);
         }
     };
-    
-    
 
     const handleCancel = () => {
         navigate('/dashboard');
@@ -220,7 +183,7 @@ function Upload() {
                 <div className="upload-details-container">
                     <label>
                         <span>Title:</span>
-                        <input type="text" value={title} onChange={(e) => setTitle(formatTitle(e.target.value))} />
+                        <input type="text" value={title}  onChange={(e) => setTitle(formatTitle(e.target.value))} />
                     </label>
                     <label>
                         <span>Description:</span>
@@ -241,7 +204,7 @@ function Upload() {
                         <span>Duration (in min):</span>
                         <input
                             type="number"
-                            min="15"
+                            min="15" 
                             value={duration}
                             onChange={(e) => setDuration(e.target.value)}
                         />
@@ -256,16 +219,16 @@ function Upload() {
                             {isKindDropdownOpen && (
                                 <div className="dropdown-options">
                                     <div
-                                        className={`dropdown-option ${kind.includes('Shows') ? 'selected' : ''}`}
-                                        onClick={() => handleKindSelect('Show')}
+                                        className={`dropdown-option ${kind.includes('Tv/Shows') ? 'selected' : ''}`}
+                                        onClick={() => handleKindSelect('Tv/Shows')}
                                     >
-                                        Show
+                                        Tv/Shows
                                     </div>
                                     <div
                                         className={`dropdown-option ${kind.includes('Movies') ? 'selected' : ''}`}
-                                        onClick={() => handleKindSelect('Movie')}
+                                        onClick={() => handleKindSelect('Movies')}
                                     >
-                                        Movie
+                                        Movies
                                     </div>
                                 </div>
                             )}
@@ -275,28 +238,29 @@ function Upload() {
                         <span>Genres:</span>
                         <div className="custom-dropdown" ref={genreDropdownRef}>
                             <div className="dropdown-header" onClick={toggleGenreDropdown}>
-                                <div className="selected-genres">
-                                    {selectedGenres.map((genre) => (
+                                {selectedGenres.length > 0 ? (
+                                    selectedGenres.map((genre) => (
                                         <div key={genre} className="selected-genre">
                                             {genre}
+                                            <span className="remove-genre" onClick={() => handleGenreSelect(genre)}>✖</span>
                                         </div>
-                                    ))}
-                                </div>
-                                {selectedGenres.length === 0 && <span className="max-genres-text">Max 3 genres</span>}
+                                    ))
+                                ) : (
+                                    'Max 3 genres'
+                                )}
                                 <span className="dropdown-arrow">{isGenreDropdownOpen ? '▲' : '▼'}</span>
                             </div>
                             {isGenreDropdownOpen && (
                                 <div className="dropdown-options">
                                     {genres.length > 0 ? (
                                         genres.map((genre) => (
-                                            <label key={genre.genre_id} className={`dropdown-option ${selectedGenres.includes(genre.name) ? 'selected' : ''}`}>
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedGenres.includes(genre.name)}
-                                                    onChange={() => handleGenreSelect(genre.name)}
-                                                />
-                                                <span onClick={(e) => e.stopPropagation()}>{genre.name}</span>
-                                            </label>
+                                            <div
+                                                key={genre.genre_id}
+                                                className={`dropdown-option ${selectedGenres.includes(genre.name) ? 'selected' : ''}`}
+                                                onClick={() => handleGenreSelect(genre.name)}
+                                            >
+                                                {genre.name}
+                                            </div>
                                         ))
                                     ) : (
                                         <div className="dropdown-option">No genres available</div>
