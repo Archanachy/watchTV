@@ -17,15 +17,14 @@ function App() {
 
   return (
     <Router>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/upload" element={<Upload />} />
       
-        <Routes>
-          <Route path="/" element={<Dashboard/>} /> 
-          <Route path="/signin" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/upload" element={<Upload />} /> 
-          
-        </Routes>
+      </Routes>
       
     </Router>
   );

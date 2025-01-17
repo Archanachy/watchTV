@@ -1,5 +1,12 @@
 const pool = require('../config/database');
 
+// Function to check if a title exists in the database
+async function checkIfTitleExists(title) {
+  const query = 'SELECT 1 FROM content WHERE title = $1 LIMIT 1';
+  const result = await pool.query(query, [title]);
+  return result.rowCount > 0;
+}
+
 // Insert content into the content table
 async function insertContent({ userId, title, description, releasedDate, duration, kind, imagePath }) {
   try {
@@ -52,6 +59,7 @@ async function getGenreIdsByNames(genreNames) {
 }
 
 module.exports = {
+  checkIfTitleExists,
   insertContent,
   insertContentGenres,
   getGenreIdsByNames,

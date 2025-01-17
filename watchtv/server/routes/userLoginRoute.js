@@ -1,7 +1,7 @@
 const express = require('express');
 const { findUserByPhoneNumber } = require('../models/UserLoginModel');
 const bcrypt = require('bcrypt');
-
+const { generateToken } = require('../utils/jwt');
 const router = express.Router();
 
 router.post('/login', async (req, res) => {
@@ -22,12 +22,19 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ message: 'Incorrect password' });
         }
 
-        res.status(200).json({ message: 'Login successful', userId: user.id });
+        // Generate a JWT
+        const token = generateToken(user.id); // Only pass the user ID to the token
+
+        // Send the response with the token and userId
+        res.status(200).json({
+            message: 'Login successful',
+            token,
+            userId: user.id,
+        });
     } catch (err) {
         console.error('Error during login:', err.message);
         res.status(500).json({ message: 'Server Error' });
     }
 });
 
-module.exports = router;    
-    
+module.exports = router;

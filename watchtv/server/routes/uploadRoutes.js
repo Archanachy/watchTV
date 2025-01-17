@@ -3,12 +3,13 @@ const upload = require('../middleware/uploadMiddleware');
 const fs = require('fs');
 const sharp = require('sharp');
 const FileType = require('file-type');
-const { insertContent, insertContentGenres, getGenreIdsByNames } = require('../models/contentModel');
+const { insertContent, insertContentGenres, getGenreIdsByNames,checkIfTitleExists } = require('../models/contentModel');
+const { authenticateToken } = require('../middleware/auth');
 
 const router = express.Router();
 
 // Upload movie endpoint
-router.post('/content', upload.single('contentImage'), async (req, res) => {
+router.post('/content', upload.single('contentImage'), authenticateToken,async (req, res) => {
   try {
     const file = req.file;
 
@@ -42,9 +43,12 @@ router.post('/content', upload.single('contentImage'), async (req, res) => {
     }
 
     // Access the other form fields
-    const { user_id,title, description, releasedDate, duration, kind, genres } = req.body;
-    if (!user_id) {
-      return res.status(400).json({ message: 'User ID is required.' });
+    const { title, description, releasedDate, duration, kind, genres } = req.body;
+
+    // Check if the title already exists
+    const titleExists = await checkIfTitleExists(title);
+    if (titleExists) {
+      return res.status(400).json({ message: 'Title already exists. Please choose a different title.' });
     }
   
     const imagePath = `/uploads/${req.file.filename}`;
@@ -60,10 +64,11 @@ router.post('/content', upload.single('contentImage'), async (req, res) => {
     if (genreIds.length < 1 || genreIds.length > 3) {
       return res.status(400).json({ message: 'Please select between 1 and 3 genres.' });
     }
-
+    const userId = req.user.userId;
+    console.log('User ID:', userId); // Debugging log for user ID
     // Step 2: Insert content into the content table
     const contentId = await insertContent({
-      userId:user_id,
+      userId,
       title,
       description,
       releasedDate,

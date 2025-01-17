@@ -3,27 +3,27 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    padding: 20px;
+    min-height: 100vh;
+    padding: 1.25rem;
     background-color: #f0f2f5;
-    font-family: Arial, sans-serif; /* Simple font */
+    font-family: Arial, sans-serif;
 }
 
 .upload-form-container {
     width: 100%;
     max-width: 500px;
-    margin-bottom: 20px;
+    margin: 15px auto;
     background-color: #ffffff;
     padding: 30px;
-    margin-top: 120px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
+    position: relative;
+    z-index: 1;
 }
 
 .upload-header-container {
     display: flex;
     justify-content: center;
-    margin-bottom: 20px;
 }
 
 .upload-image-container {
@@ -31,13 +31,13 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 200px;
-    height: 250px;
-    background: #e0e0e0;
+    width: 160px;
+    height: 200px;
+    background: #f8f9fa;
     border: 2px dashed #ccc;
     border-radius: 12px;
     position: relative;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -46,50 +46,27 @@
     background: none;
     border: none;
     font-size: 16px;
-    color: #007bff;
+    color: #6c757d;
     cursor: pointer;
 }
 
 .crop-container {
     position: relative;
-    width: 200px; /* Set a fixed width for testing */
-    height: 250px; /* Adjust height as necessary */
+    width: 160px;
+    height: 200px;
     background: #333;
     border-radius: 12px;
-    overflow: visible; /* Prevent clipping of the cropper or tools */
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto; /* Center the crop container */
+    margin: 0 auto;
 }
 
 .crop-container img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain; /* Display the whole image */
-}
-
-.reactEasyCrop_Container {
-    position: relative;
-    width: 100%; /* Define the container width */
-    height: 100%; /* Define the container height */
-    overflow: hidden; /* Prevent any overflow */
-    display: flex; /* Ensure child elements stretch naturally */
-    align-items: center;
-    justify-content: center;
-}
-
-.reactEasyCrop_CropArea {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 200px !important; /* Ensure it adjusts to the container */
-    height: 250px !important; /* Ensure it adjusts to the container */
-    border-radius: inherit; /* Matches the container's border radius */
-    overflow: hidden; /* Ensures no content overflows */
-    object-fit: cover; /* Makes sure the image fills the container proportionally */
+    object-fit: contain;
 }
 
 .remove-image-button {
@@ -106,6 +83,20 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.reactEasyCrop_CropArea {
+    height: 100% !important;
+    width: 100% !important;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-sizing: border-box;
+    box-shadow: 0 0 0 9999em;
+    color: rgba(0, 0, 0, 0.5);
+    overflow: hidden;
 }
 
 .upload-details-container {
@@ -128,21 +119,27 @@
     margin-right: 10px;
 }
 
-.upload-details-container input,
-.upload-details-container textarea,
-.upload-details-container select {
+.upload-details-container input[type="text"],
+.upload-details-container input[type="date"],
+.upload-details-container input[type="number"],
+.upload-details-container textarea {
     flex: 1;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
     font-size: 16px;
     color: #333;
+    background-color: #ffffff;
 }
 
 .upload-details-container textarea {
-    resize: none; /* Disable resizing */
-    max-height: 200px; /* Set maximum height */
-    overflow-y: auto; /* Enable vertical scrolling */
+    resize: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.upload-details-container input[type="checkbox"] {
+    margin-right: 10px;
 }
 
 .upload-controls-container {
@@ -155,21 +152,34 @@
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
-    background-color: #007bff;
-    color: #fff;
     font-size: 23px;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin: 0 60px;
+    margin: 0 30px;
 }
 
-.upload-controls-container button:disabled {
-    background-color: #ccc;
+.upload-controls-container button#save {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.upload-controls-container button#save:disabled {
+    background-color: #b0bec5;
+    color: #fff;
     cursor: not-allowed;
 }
 
-.upload-controls-container button:hover:not(:disabled) {
+.upload-controls-container button#save:hover:not(:disabled) {
     background-color: #0056b3;
+}
+
+.upload-controls-container button#cancel {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.upload-controls-container button#cancel:hover {
+    background-color: #a71d2a;
 }
 
 .custom-dropdown {
@@ -182,11 +192,13 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    background-color: #fff;
+    background-color: #ffffff;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-weight: 100;
+    color: #333;
 }
 
 .dropdown-arrow {
@@ -196,20 +208,50 @@
 .dropdown-options {
     position: absolute;
     top: 100%;
-    right: 0; /* Align to the right */
-    left: auto; /* Override left alignment */
-    width: 100%; /* Match the width of the dropdown header */
+    left: 0;
+    width: calc(100% - 26px);
     max-height: 150px;
+    margin-left: 26px;
     overflow-y: auto;
     border: 1px solid #ccc;
     border-radius: 8px;
-    background-color: #fff;
+    background-color: #ffffff;
     z-index: 1000;
+}
+.dropdown-options label{
+    margin: 0 !important;
+}
+
+.selected-genre {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 15px;
+    font-size: 10px;
+    position: relative;
+}
+
+.max-genres-text {
+    position: absolute;
+    color: #6c757d;
+    font-size: 14px;
+    width: 200px !important;
+}
+
+.selected-genre .remove-genre {
+    width: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+    font-weight: bold;
 }
 
 .dropdown-option {
     padding: 10px;
     cursor: pointer;
+    font-weight: normal;
+    color: #333;
 }
 
 .dropdown-option.selected {
@@ -217,88 +259,116 @@
     color: #fff;
 }
 
+
+.custom-dropdown .dropdown-header span.dropdown-arrow {
+    width: 5px !important;
+}
+.dropdown-option input[type="checkbox"] {
+    margin-right: 10px;
+}
+
 .dropdown-option:hover {
-    background-color: #f0f0f0;
+    background-color: #b0bec5;
+    color: #fff;
 }
 
 body.dark-mode .upload-container {
     background-color: #121212;
-    color: #ffffff;
 }
 
 body.dark-mode .upload-form-container {
-    background-color: #1f1f1f;
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+    background-color: #1c1c1c;
+}
+
+body.dark-mode .upload-details-container label {
+    color: #ededed;
+}
+
+body.dark-mode .upload-details-container input[type="text"],
+body.dark-mode .upload-details-container input[type="date"],
+body.dark-mode .upload-details-container input[type="number"],
+body.dark-mode .upload-details-container textarea {
+    background-color: #1c1c1c;
+    border: 1px solid #444444;
+    color: #ededed;
 }
 
 body.dark-mode .upload-image-container {
-    background: #333;
-    border: 2px dashed #555;
+    background-color: #2E2E2E;
+    border-color: #444444;
+    color: #B0BEC5;
 }
 
 body.dark-mode .upload-image-container button {
     color: #66b2ff;
 }
 
-body.dark-mode .crop-container {
-    background: #444;
+body.dark-mode .upload-controls-container button#save {
+    background-color: #007bff;
+    color: #fff;
 }
 
-body.dark-mode .remove-image-button {
-    background: rgba(0, 0, 0, 0.8);
+body.dark-mode .upload-controls-container button#save:disabled {
+    background-color: #555555;
+    color: #fff;
 }
 
-body.dark-mode .upload-details-container label {
-    color: #ccc;
+body.dark-mode .upload-controls-container button#save:hover:not(:disabled) {
+    background-color: #0056b3;
 }
 
-body.dark-mode .upload-details-container input,
-body.dark-mode .upload-details-container textarea,
-body.dark-mode .upload-details-container select {
-    background-color: #333;
-    color: #ccc;
-    border: 1px solid #555;
+body.dark-mode .upload-controls-container button#cancel {
+    background-color: #dc3545;
 }
 
-body.dark-mode .upload-controls-container button {
-    background-color: #66b2ff;
+body.dark-mode .upload-controls-container button#cancel:hover {
+    background-color: #a71d2a;
 }
 
-body.dark-mode .upload-controls-container button:hover:not(:disabled) {
-    background-color: #3399ff;
-}
-
-body.dark-mode .dropdown-header {
-    background-color: #333;
-    color: #ccc;
-    border: 1px solid #555;
+body.dark-mode .custom-dropdown .dropdown-header {
+    background-color: #222222;
+    border: 1px solid #3c3c3c;
+    color: #ffffff;
 }
 
 body.dark-mode .dropdown-options {
-    background-color: #333;
-    border: 1px solid #555;
+    background-color: #222222;
+    border: 1px solid #3c3c3c;
 }
 
 body.dark-mode .dropdown-option {
-    color: #ccc;
+    color: #ffffff;
 }
 
 body.dark-mode .dropdown-option.selected {
-    background-color: #3399ff;
+    background-color: #2d89ef;
     color: #fff;
 }
 
 body.dark-mode .dropdown-option:hover {
-    background-color: #444;
+    background-color: #007bff;
+    color: #fff;
 }
 
-/* Media query for smaller screens */
-@media (max-width: 768px) {
-    .upload-form-container {
-        padding: 20px;
-        margin-top: 60px;
-    }
+body.dark-mode input[type="number"]::-webkit-inner-spin-button,
+body.dark-mode input[type="number"]::-webkit-outer-spin-button {
+    background-color: #333 !important;
+    color: #ededed !important;
+}
 
+body.dark-mode input[type="number"]::-moz-inner-spin-button,
+body.dark-mode input[type="number"]::-moz-outer-spin-button {
+    background-color: #333 !important;
+    color: #ededed !important;
+}
+
+body.dark-mode input[type="number"]::-ms-inner-spin-button,
+body.dark-mode input[type="number"]::-ms-outer-spin-button {
+    background-color: #333 !important;
+    color: #ededed !important;
+}
+
+@media (max-width: 768px) {
     .upload-image-container {
         width: 150px;
         height: 200px;
