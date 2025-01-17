@@ -492,9 +492,9 @@ body.dark-mode .Mov-Shows a {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+  gap: 4rem;
   align-items: center;
-  margin-top: 1rem;
+  margin-top: 3rem;
 }
 
 .block {
@@ -517,7 +517,7 @@ body.dark-mode .Mov-Shows a {
   height: 70%;
   max-height: 70%;
   border-radius: 0.2rem;
-  border: solid 1px #000;
+
 }
 
 .block-details {
