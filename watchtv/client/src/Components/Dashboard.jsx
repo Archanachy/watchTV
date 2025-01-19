@@ -42,6 +42,21 @@ function Dashboard() {
             };
         fetchGenres();
         }, []);
+
+    // Fetch movies from the backend
+    useEffect(() => {
+        const fetchMovies = async () => {
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/movies`);
+            console.log(response.data);
+            setMovies(response.data); // Assuming the response is an array of movie objects
+        } catch (error) {
+            console.error('Failed to fetch movies:', error);
+        }
+        };
+
+        fetchMovies();
+    }, []);
     
     
     const toggleGenreDropdown = () => {
@@ -122,19 +137,6 @@ function Dashboard() {
         return () => clearInterval(slideInterval.current);
     }, []);
 
-    useEffect(() => {
-        const dummyData = [];
-        for (let i = 1; i <= 100; i++) {
-            dummyData.push({
-                id: i,
-                image: `https://picsum.photos/200/300?random=${i}`, // Dummy image URL
-                rating: (Math.random() * 5).toFixed(1), // Random rating between 0.0 and 5.0
-                date: '2023',
-                name: `Item ${i}`,
-            });
-        }
-        setMovies(dummyData);
-    }, []);
 
     const responsive = {
         superLargeDesktop: {
@@ -263,19 +265,16 @@ function Dashboard() {
                 </div>
 
                 <div className="View">
-                    {movies.map((movie) => (
-                        <div key={movie.id} className="block">
-                            <img src={movie.image} alt={movie.name} className="block-image" />
+                    {movies.map((movie,index) => (
+                        <div key={`${movie.id}-${index}`} className="block">
+                             <img src={`${import.meta.env.VITE_API_URL}${movie.image_path}`} alt={movie.title} className="block-image" />
                             <div className="block-details">
                                 <div className="block-rating">
                                     <FontAwesomeIcon icon={faStar} className="star-icon" />
                                     <span>{movie.rating}</span>
-                                    <div className="block-date">{movie.date}</div>
+                                    <div className="block-date"> {new Date(movie.released_date).toISOString().split('T')[0]}</div>
                                 </div>
-                                <div className="block-name">{movie.name}</div>
-                                
-                                
-                                
+                                <div className="block-name">{movie.title}</div>
                             </div>
                         </div>
                     ))}

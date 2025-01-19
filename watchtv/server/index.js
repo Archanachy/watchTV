@@ -6,6 +6,7 @@ const userRegisterRoute = require('./routes/userRegisterRoute');
 const userLoginRoute = require('./routes/userLoginRoute');
 const uploadRoutes = require('./routes/uploadRoutes');
 const genreRoutes = require('./routes/genreRoute');
+const getMovies = require('./routes/getContentroute');
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use('/uploads', express.static('uploads'));
 // Routes
 app.use('/api', uploadRoutes);
 app.use('/api', genreRoutes);
+app.use('/api',getMovies);
 
 
 //start server
