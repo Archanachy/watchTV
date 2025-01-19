@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { faSearch, faBars, faTimes, faStar } from '@fortawesome/free-solid-svg-icons';
 import { watchtv, Profile, RedOne, watchtv_icon, Movies } from '../assets/Pictures';
 import '../Styles/Dashboard.css';
+import axios from '../api/axios';
 
 
 function Dashboard() {
@@ -12,6 +13,7 @@ function Dashboard() {
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
     const [movies, setMovies] = useState([]); // State to hold movie/show data
+    const [genres, setGenres] = useState([]); // State to hold fetched genres
 
     const dropdownRef = useRef(null);
     const genredropdownRef = useRef(null);
@@ -26,6 +28,22 @@ function Dashboard() {
         "https://th.bing.com/th/id/OIP.rdE9srFu8KREbfQaTc_ppwHaE6?rs=1&pid=ImgDetMain",
         "https://images.unsplash.com/photo-1631805249874-3f546d176de4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bW92aWUlMjBwb3N0ZXJ8ZW58MHx8MHx8fDA%3D"    
         ];
+
+    
+    useEffect(() => {
+        // Fetch genres from the backend
+        const fetchGenres = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/genres`); 
+                setGenres(response.data);
+            } catch (error) {
+                console.error('Failed to fetch genres:', error);
+                }
+            };
+        fetchGenres();
+        }, []);
+    
+    
     const toggleGenreDropdown = () => {
         setGenreDropdownVisible((prev) => !prev);
     };
@@ -34,9 +52,21 @@ function Dashboard() {
         setDropdownVisible((prev) => !prev);
     };
 
+    useEffect(() => {
+        const darkMode = localStorage.getItem('darkMode') === 'true';
+        setIsDarkMode(darkMode);
+        if (darkMode) {
+            document.body.classList.add('dark-mode');
+        }
+    }, []);
+    
     const toggleDarkMode = () => {
-        setIsDarkMode((prev) => !prev);
-        document.body.classList.toggle('dark-mode');
+        setIsDarkMode((prev) => {
+            const newDarkMode = !prev;
+            localStorage.setItem('darkMode', newDarkMode);
+            document.body.classList.toggle('dark-mode', newDarkMode);
+            return newDarkMode;
+        });
     };
 
     const toggleMobileMenu = () => {
@@ -93,41 +123,17 @@ function Dashboard() {
     }, []);
 
     useEffect(() => {
-        // Dummy data for movies/shows
-        setMovies([
-            {
-                id: 1,
-                image: RedOne, // Dummy image
-                rating: 4.5,
-                date: '2023-10-01',
-                name: 'Red One',
-                
-            },
-            {
-                id: 2,
-                image: watchtv, // Dummy image
-                rating: 4.0,
-                date: '2023-09-15',
-                name: 'WatchTV',
-                
-            },
-            {
-                id: 3,
-                image: Movies, // Dummy image
-                rating: 3.5,
-                date: '2023-08-20',
-                name: 'Movies',
-                
-            },
-            {
-                id: 4,
-                image: watchtv_icon, // Dummy image
-                rating: 3.0,
-                date: '2023-07-10',
-                name: 'Shows',
-                
-            }
-        ]);
+        const dummyData = [];
+        for (let i = 1; i <= 100; i++) {
+            dummyData.push({
+                id: i,
+                image: `https://picsum.photos/200/300?random=${i}`, // Dummy image URL
+                rating: (Math.random() * 5).toFixed(1), // Random rating between 0.0 and 5.0
+                date: '2023',
+                name: `Item ${i}`,
+            });
+        }
+        setMovies(dummyData);
     }, []);
 
     const responsive = {
@@ -180,20 +186,14 @@ function Dashboard() {
                         {isGenreDropdownVisible && (
                             <div className="genre-dropdown">
                                 <div className="genre-column">
-                                    <a href="#">Action</a>
-                                    <a href="#">Comedy</a>
-                                    <a href="#">Drama</a>
-                                    <a href="#">Horror</a>
-                                    <a href="#">Romance</a>
-                                    <a href="#">Sci-Fi/Fantasy</a>
+                                    {genres.slice(0, Math.ceil(genres.length / 2)).map((genre, index) => (
+                                        <a href="#" key={index}>{genre.name}</a>
+                                    ))}
                                 </div>
                                 <div className="genre-column">
-                                    <a href="#">Thriller</a>
-                                    <a href="#">Fantasy</a>
-                                    <a href="#">Documentary</a>
-                                    <a href="#">Animation</a>
-                                    <a href="#">Mystery</a>
-                                    <a href="#">Adventure</a>
+                                    {genres.slice(Math.ceil(genres.length / 2)).map((genre, index) => (
+                                        <a href="#" key={index}>{genre.name}</a>
+                                    ))}
                                 </div>
                             </div>
                         )}
@@ -238,7 +238,6 @@ function Dashboard() {
             </nav>
             
             <div className="dashboard-container">
-
                 <div className="Banner">
                     <div className="slider" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
                         {images.map((src, index) => (
@@ -250,6 +249,8 @@ function Dashboard() {
                     <button className="prev" onClick={prevSlide}>&#10094;</button>
                     <button className="next" onClick={nextSlide}>&#10095;</button>
                 </div>
+                
+
 
                 <div className="Mov-Shows">
                     <p>
@@ -278,10 +279,6 @@ function Dashboard() {
                             </div>
                         </div>
                     ))}
-                    {/* Empty blocks */}
-                    <div className="block"></div>
-                    <div className="block"></div>
-                    <div className="block"></div>
                 </div>
             </div>
         </div>
