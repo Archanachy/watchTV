@@ -315,7 +315,7 @@ body.dark-mode .dropdown-item:hover {
 .Banner {
   position: relative;
   width: fit-content;
-  height: 540px;
+  height: 700px;
   overflow: hidden;
   
 }
@@ -437,6 +437,7 @@ body.dark-mode .dropdown-item:hover {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-top: 2rem;
 }
 
 .Mov-Shows p {
@@ -444,6 +445,10 @@ body.dark-mode .dropdown-item:hover {
   padding: 0.5rem;
   display: flex;
   align-items: center;
+}
+
+body.dark-mode .Mov-Shows{
+  border-color: #fff;
 }
 
 body.dark-mode .Mov-Shows a {
@@ -462,7 +467,7 @@ body.dark-mode .Mov-Shows a {
   width: 1.875rem; /* 30px */
   height: 1.875rem; /* 30px */
   position: relative;
-  margin-left: 1.875rem; /* 30px */
+  margin-left: 3rem; /* 30px */
   bottom: 0.3rem;
 }
 
@@ -471,9 +476,9 @@ body.dark-mode .Mov-Shows a {
   color: #ffffff;
   border: none;
   border-radius: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.3rem 1rem;
   cursor: pointer;
-  margin-right: 4rem;
+  margin-right: 2rem;
   transition: background-color 0.3s ease;
   justify-content: center;
   font-size: 1.2rem;

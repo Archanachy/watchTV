@@ -14,7 +14,7 @@
     max-width: 500px;
     margin: 15px auto;
     background-color: #ffffff;
-    padding: 30px;
+    padding: 2rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
     position: relative;
@@ -31,8 +31,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 160px;
-    height: 200px;
+    width: 100%;
+    max-width: 160px;
+    height: auto;
+    aspect-ratio: 4 / 5;
     background: #f8f9fa;
     border: 2px dashed #ccc;
     border-radius: 12px;
@@ -45,15 +47,17 @@
 .upload-image-container button {
     background: none;
     border: none;
-    font-size: 16px;
+    font-size: 1rem;
     color: #6c757d;
     cursor: pointer;
 }
 
 .crop-container {
     position: relative;
-    width: 160px;
-    height: 200px;
+    width: 100%;
+    max-width: 160px;
+    height: auto;
+    aspect-ratio: 4 / 5;
     background: #333;
     border-radius: 12px;
     overflow: hidden;
@@ -115,8 +119,12 @@
 }
 
 .upload-details-container label span {
-    width: 120px;
+    width: 140px;
     margin-right: 10px;
+}
+
+.box-label {
+    min-width: 100px;
 }
 
 .upload-details-container input[type="text"],
@@ -127,9 +135,15 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    font-size: 16px;
+    font-size: 1rem;
     color: #333;
     background-color: #ffffff;
+    max-width: 100%; /* Ensure inputs do not exceed container width */
+}
+
+.upload-details-container input[type="text"],
+.upload-details-container input[type="number"] {
+    max-width: 400px; /* Set a maximum width for text and number inputs */
 }
 
 .upload-details-container textarea {
@@ -144,7 +158,7 @@
 
 .upload-controls-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     width: 100%;
 }
 
@@ -152,10 +166,10 @@
     padding: 10px 20px;
     border: none;
     border-radius: 8px;
-    font-size: 23px;
+    font-size: 1.3rem;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin: 0 30px;
+    margin: 0;
 }
 
 .upload-controls-container button#save {
@@ -176,6 +190,8 @@
 .upload-controls-container button#cancel {
     background-color: #dc3545;
     color: #fff;
+    margin-left: 4rem;
+    padding: 0 1rem;
 }
 
 .upload-controls-container button#cancel:hover {
@@ -185,10 +201,10 @@
 .custom-dropdown {
     position: relative;
     width: 100%;
+    max-width: 350px;
 }
 
 .dropdown-header {
-    margin-left: 26px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -209,16 +225,16 @@
     position: absolute;
     top: 100%;
     left: 0;
-    width: calc(100% - 26px);
+    width: 100%;
     max-height: 150px;
-    margin-left: 26px;
     overflow-y: auto;
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #ffffff;
     z-index: 1000;
 }
-.dropdown-options label{
+
+.dropdown-options label {
     margin: 0 !important;
 }
 
@@ -259,10 +275,10 @@
     color: #fff;
 }
 
-
 .custom-dropdown .dropdown-header span.dropdown-arrow {
     width: 5px !important;
 }
+
 .dropdown-option input[type="checkbox"] {
     margin-right: 10px;
 }
@@ -278,6 +294,10 @@ body.dark-mode .upload-container {
 
 body.dark-mode .upload-form-container {
     background-color: #1c1c1c;
+}
+
+body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
 }
 
 body.dark-mode .upload-details-container label {
@@ -326,7 +346,7 @@ body.dark-mode .upload-controls-container button#cancel:hover {
 }
 
 body.dark-mode .custom-dropdown .dropdown-header {
-    background-color: #222222;
+    background-color: #1c1c1c;
     border: 1px solid #3c3c3c;
     color: #ffffff;
 }
@@ -362,6 +382,11 @@ body.dark-mode input[type="number"]::-moz-outer-spin-button {
     color: #ededed !important;
 }
 
+body.dark-mode input[type="number"]::-webkit-inner-spin-button,
+    body.dark-mode input[type="number"]::-webkit-outer-spin-button {
+      filter: invert(1); /* Invert color of arrows */
+}
+
 body.dark-mode input[type="number"]::-ms-inner-spin-button,
 body.dark-mode input[type="number"]::-ms-outer-spin-button {
     background-color: #333 !important;
@@ -369,12 +394,83 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
 }
 
 @media (max-width: 768px) {
+    .upload-form-container {
+        padding: 1.5rem;
+    }
+
     .upload-image-container {
-        width: 150px;
-        height: 200px;
+        width: 100%;
+        max-width: 150px;
+        height: auto;
+        aspect-ratio: 4 / 5;
     }
 
     .upload-details-container label span {
         width: 100px;
+    }
+
+    .custom-dropdown {
+        max-width: 400px;
+    }
+
+    .dropdown-options {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .upload-controls-container button#cancel {
+        margin-left: 1.4rem;
+        
+    }
+
+}
+
+@media (max-width: 480px) {
+    .upload-form-container {
+        padding: 1rem;
+    }
+
+    .upload-details-container label span {
+        width: 80px;
+    }
+
+    
+
+    .upload-controls-container button {
+        font-size: 1rem;
+        padding: 8px 16px;
+    }
+
+    .upload-controls-container button#cancel {
+        margin-left: 2.4rem;
+        padding: 0 8px;
+    }
+
+}
+
+@media (max-width: 320px) {
+    .upload-form-container {
+        padding: 0.75rem;
+    }
+
+    .upload-details-container label span {
+        width: 70px;
+    }
+    
+
+    .upload-controls-container button {
+        font-size: 0.9rem;
+        padding: 6px 12px;
+    }
+
+    .upload-container input{
+        font-size: 0.6rem;
+        width: 100%;
+        max-width: 100px !important;
+    }
+
+    .upload-controls-container button#cancel {
+        margin-left: 3.3rem;
+        padding: 0 6px;
     }
 }
