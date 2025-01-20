@@ -31,8 +31,7 @@ const fileFilter = async (req, file, cb) => {
 // Multer instance
 const upload = multer({
   storage,
-  fileFilter,
-  limits: { fileSize: 2 * 1024 * 1024 }, // Limit file size to 2MB
+  fileFilter, 
 });
 
 module.exports = upload;

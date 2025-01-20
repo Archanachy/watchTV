@@ -48,7 +48,6 @@ function Dashboard() {
         const fetchMovies = async () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/movies`);
-            console.log(response.data);
             setMovies(response.data); // Assuming the response is an array of movie objects
         } catch (error) {
             console.error('Failed to fetch movies:', error);
@@ -271,7 +270,7 @@ function Dashboard() {
                             <div className="block-details">
                                 <div className="block-rating">
                                     <FontAwesomeIcon icon={faStar} className="star-icon" />
-                                    <span>{movie.rating}</span>
+                                    <span>{movie.rating || "N/A"}</span>
                                     <div className="block-date"> {new Date(movie.released_date).toISOString().split('T')[0]}</div>
                                 </div>
                                 <div className="block-name">{movie.title}</div>
