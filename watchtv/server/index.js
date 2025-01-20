@@ -6,34 +6,31 @@ const userRegisterRoute = require('./routes/userRegisterRoute');
 const userLoginRoute = require('./routes/userLoginRoute');
 const uploadRoutes = require('./routes/uploadRoutes');
 const genreRoutes = require('./routes/genreRoute');
-const getMovies = require('./routes/getContentroute');
+const getContentRoutes = require('./routes/getContentroute'); // Import router
 
 const app = express();
 
 // Middleware
 app.use(cors({
   origin: 'http://localhost:5173', // Frontend URL
-  methods: ['GET', 'POST'], // Add allowed methods
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Add all necessary methods
   credentials: true,
 }));
 
 app.use(bodyparser.json());
 app.use(express.urlencoded({ extended: true })); // For handling form-data text fields
-app.use('/api', uploadRoutes);
-
-app.use('/api',userRegisterRoute);
-app.use('/api',userLoginRoute);
 
 // Serve uploaded files statically
 app.use('/uploads', express.static('uploads'));
 
 // Routes
+app.use('/api', userRegisterRoute);
+app.use('/api', userLoginRoute);
 app.use('/api', uploadRoutes);
 app.use('/api', genreRoutes);
-app.use('/api',getMovies);
+app.use('/api', getContentRoutes); // Use the router for movie and show routes
 
-
-//start server
+// Start server
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

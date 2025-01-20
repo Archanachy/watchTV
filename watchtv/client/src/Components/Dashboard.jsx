@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import { faSearch, faBars, faTimes, faStar } from '@fortawesome/free-solid-svg-icons';
-import { watchtv, Profile, RedOne, watchtv_icon, Movies } from '../assets/Pictures';
+import { watchtv, Profile, watchtv_icon, Movies } from '../assets/Pictures';
 import '../Styles/Dashboard.css';
 import axios from '../api/axios';
 
@@ -12,9 +12,9 @@ function Dashboard() {
     const [isGenreDropdownVisible, setGenreDropdownVisible] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
-    const [movies, setMovies] = useState([]); // State to hold movie/show data
+    const [content, setContent] = useState([]);// State to hold filtered content
     const [genres, setGenres] = useState([]); // State to hold fetched genres
-
+    const [filterType, setFilterType] = useState('movies'); // State to hold the current filter type
     const dropdownRef = useRef(null);
     const genredropdownRef = useRef(null);
     const mobileMenuRef = useRef(null);
@@ -43,21 +43,25 @@ function Dashboard() {
         fetchGenres();
         }, []);
 
-    // Fetch movies from the backend
-    useEffect(() => {
-        const fetchMovies = async () => {
-        try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/movies`);
-            setMovies(response.data); // Assuming the response is an array of movie objects
-        } catch (error) {
-            console.error('Failed to fetch movies:', error);
-        }
-        };
+        useEffect(() => {
+            const fetchContent = async () => {
+                try {
+                    const endpoint = filterType === 'movies' ? '/api/movies' : '/api/shows';
+                    const response = await axios.get(`${import.meta.env.VITE_API_URL}${endpoint}`);
+                    setContent(response.data);
+                } catch (error) {
+                    console.error(`Failed to fetch ${filterType}:`, error);
+                }
+            };
+    
+            // Fetch content based on current filter type
+            fetchContent();
+        }, [filterType]);
+    
+     const handleFilterChange = (type) => {
+        setFilterType(type);
+    };
 
-        fetchMovies();
-    }, []);
-    
-    
     const toggleGenreDropdown = () => {
         setGenreDropdownVisible((prev) => !prev);
     };
@@ -251,29 +255,53 @@ function Dashboard() {
                     <button className="next" onClick={nextSlide}>&#10095;</button>
                 </div>
                 
-
-
                 <div className="Mov-Shows">
                     <p>
-                        <img src={Movies} alt="Movie Icon" className={isDarkMode ? 'invert' : ''} />
-                        <a href="#">Movies</a>
-                        <img src={watchtv_icon} alt="Show Icon" className={isDarkMode ? 'invert' : ''}/>
-                        <a href="#">Shows</a>
+                        <img
+                            src={Movies}
+                            alt="Movie Icon"
+                            className={isDarkMode ? 'invert' : ''}
+                            onClick={() => handleFilterChange('movies')}
+                        />
+                        <a
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleFilterChange('movies');
+                            }}
+                        >
+                            Movies
+                        </a>
+                        <img
+                            src={watchtv_icon}
+                            alt="Show Icon"
+                            className={isDarkMode ? 'invert' : ''}
+                            onClick={() => handleFilterChange('shows')}
+                        />
+                        <a
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleFilterChange('shows');
+                            }}
+                        >
+                            Shows
+                        </a>
                     </p>
                     <button className="upload-button" onClick={handleupload}><span>+   </span>Upload</button>
                 </div>
 
                 <div className="View">
-                    {movies.map((movie,index) => (
-                        <div key={`${movie.id}-${index}`} className="block">
-                             <img src={`${import.meta.env.VITE_API_URL}${movie.image_path}`} alt={movie.title} className="block-image" />
+                    {content.map((item,index) => (
+                        <div key={`${item.id}-${index}`} className="block">
+                             <img src={`${import.meta.env.VITE_API_URL}${item.image_path}`} alt={item.title} className="block-image" />
                             <div className="block-details">
                                 <div className="block-rating">
                                     <FontAwesomeIcon icon={faStar} className="star-icon" />
-                                    <span>{movie.rating || "N/A"}</span>
-                                    <div className="block-date"> {new Date(movie.released_date).toISOString().split('T')[0]}</div>
+                                    <span>{item.rating || "N/A"}</span>
+                                    <div className="block-date"> {new Date(item.released_date).toISOString().split('T')[0]}</div>
                                 </div>
-                                <div className="block-name">{movie.title}</div>
+                                <div className="block-name">{item.title}</div>
                             </div>
                         </div>
                     ))}
