@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllGenres } = require('../models/genreModel');
+const { getAllGenres,sortContentByGenre } = require('../models/genreModel');
 
 const router = express.Router();
 
@@ -13,5 +13,17 @@ router.get('/genres', async (req, res) => {
     res.status(500).json({ message: 'Failed to fetch genres' });
   }
 });
+
+
+router.get('/genres/:genre', async (req, res) => {
+  const genre = req.params.genre;
+  try {
+    const content = await sortContentByGenre(genre);
+    res.status(200).json(content);
+  } catch (error) {
+    console.error('Error fetching content:', error);
+    res.status(500).json({ message: 'Failed to fetch content' });
+  }
+}); 
 
 module.exports = router;

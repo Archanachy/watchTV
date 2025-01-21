@@ -14,6 +14,7 @@ function Dashboard() {
     const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
     const [content, setContent] = useState([]);// State to hold filtered content
     const [genres, setGenres] = useState([]); // State to hold fetched genres
+    const [selectedGenre, setSelectedGenre] = useState(null); // Default to null
     const [filterType, setFilterType] = useState('movies'); // State to hold the current filter type
     const dropdownRef = useRef(null);
     const genredropdownRef = useRef(null);
@@ -163,6 +164,22 @@ function Dashboard() {
             items: 1
         }
     };
+    const handleGenreClick = async (genre) => {
+        setSelectedGenre(genre);
+    
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/genres/${genre}`, {
+                params: {
+                    genre,
+                },
+            });
+    
+            setContent(response.data);
+        } catch (error) {
+            console.error(`Failed to fetch content for genre ${genre}:`, error);
+        }
+    };
+    
 
     return (
         <div className="dashboard-fullscreen-container">
@@ -192,12 +209,23 @@ function Dashboard() {
                             <div className="genre-dropdown">
                                 <div className="genre-column">
                                     {genres.slice(0, Math.ceil(genres.length / 2)).map((genre, index) => (
-                                        <a href="#" key={index}>{genre.name}</a>
+                                        <a href="#" 
+                                        key={index}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleGenreClick(genre.name);
+                                        }}  
+                                        >{genre.name}</a>
                                     ))}
                                 </div>
                                 <div className="genre-column">
                                     {genres.slice(Math.ceil(genres.length / 2)).map((genre, index) => (
-                                        <a href="#" key={index}>{genre.name}</a>
+                                        <a href="#" key={index}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleGenreClick(genre.name);
+                                        }}
+                                        >{genre.name}</a>
                                     ))}
                                 </div>
                             </div>
