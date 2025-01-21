@@ -114,13 +114,19 @@ function Dashboard() {
         }
     };
 
+    const handleProfile = () => {
+        if(handleProfile){
+            navigate('/profile');
+        }
+    };
+
     const handleupload = () => {
         // Simulate file upload
         if(handleupload){
             navigate('/upload');
         }
     };
-
+    
     useEffect(() => {
         document.addEventListener('click', handleClickOutside);
         return () => {
@@ -257,7 +263,9 @@ function Dashboard() {
                         />
                         {isDropdownVisible && (
                             <div className="dropdown-menu">
-                                <button className="dropdown-item">Profile</button>
+                                <button className="dropdown-item" onClick={handleProfile}>
+                                    Profile
+                                </button>
                                 <button className="dropdown-item" onClick={handleLogout}>
                                     Log Out
                                 </button>
