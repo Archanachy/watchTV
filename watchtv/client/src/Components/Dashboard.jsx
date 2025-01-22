@@ -15,6 +15,7 @@ function Dashboard() {
     const [content, setContent] = useState([]);// State to hold filtered content
     const [genres, setGenres] = useState([]); // State to hold fetched genres
     const [filterType, setFilterType] = useState('movies'); // State to hold the current filter type
+    const [selectedGenre, setSelectedGenre] = useState(null);
     const dropdownRef = useRef(null);
     const genredropdownRef = useRef(null);
     const mobileMenuRef = useRef(null);
@@ -46,17 +47,25 @@ function Dashboard() {
         useEffect(() => {
             const fetchContent = async () => {
                 try {
-                    const endpoint = filterType === 'movies' ? '/api/movies' : '/api/shows';
-                    const response = await axios.get(`${import.meta.env.VITE_API_URL}${endpoint}`);
-                    setContent(response.data);
+                    let endpoint = filterType === 'movies' ? '/api/movies' : '/api/shows';
+                    let url = `${import.meta.env.VITE_API_URL}${endpoint}`;
+        
+                    // Add genre filter if a genre is selected
+                    if (selectedGenre) {
+                        url += `?genre_id=${selectedGenre}`; // Add genre filter to the URL
+                    }
+        
+                    const response = await axios.get(url);
+                    setContent(response.data);  // Set fetched content
                 } catch (error) {
-                    console.error(`Failed to fetch ${filterType}:`, error);
+                    console.error(`Failed to fetch ${filterType} content:`, error);
                 }
             };
-    
-            // Fetch content based on current filter type
+        
             fetchContent();
-        }, [filterType]);
+        }, [selectedGenre, filterType]);  // Fetch content whenever the selected genre or filter type changes
+        
+        
     
      const handleFilterChange = (type) => {
         setFilterType(type);
@@ -104,6 +113,11 @@ function Dashboard() {
             setIsMobileMenuVisible(false);
         }
     };
+    const handleGenreSelect = (genre) => {
+        setSelectedGenre(genre.genre_id);
+        setGenreDropdownVisible(false); // Close dropdown after selection
+    };
+    
 
     const handleLogout = () => {
         const confirmLogout = window.confirm("Are you sure you want to log out?");
@@ -198,15 +212,25 @@ function Dashboard() {
                         {isGenreDropdownVisible && (
                             <div className="genre-dropdown">
                                 <div className="genre-column">
-                                    {genres.slice(0, Math.ceil(genres.length / 2)).map((genre, index) => (
+                                    {genres.slice(0, Math.ceil(genres.length / 2)).map((genre) => (
                                         <a href="#" 
-                                        key={index}
+                                        key={genre.genre_id}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleGenreSelect(genre);
+                                        }}
+                                        className={selectedGenre === genre.genre_id ? 'selected' : ''}
                                         >{genre.name}</a>
                                     ))}
                                 </div>
                                 <div className="genre-column">
-                                    {genres.slice(Math.ceil(genres.length / 2)).map((genre, index) => (
-                                        <a href="#" key={index}
+                                    {genres.slice(Math.ceil(genres.length / 2)).map((genre) => (
+                                        <a href="#" key={genre.genre_id}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleGenreSelect(genre);
+                                        }}
+                                        className={selectedGenre === genre.genre_id ? 'selected' : ''}
                                         >{genre.name}</a>
                                     ))}
                                 </div>
@@ -304,7 +328,7 @@ function Dashboard() {
                 </div>
 
                 <div className="View">
-                    {content.map((item,index) => (
+                {content.map((item,index) => (
                         <div key={`${item.id}-${index}`} className="block">
                              <img src={`${import.meta.env.VITE_API_URL}${item.image_path}`} alt={item.title} className="block-image" />
                             <div className="block-details">
