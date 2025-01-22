@@ -8,7 +8,7 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Dependencies
-node_modules
+*node_modules
 
 # Build outputs
 dist
@@ -35,3 +35,7 @@ Thumbs.db
 *.lock 
 
 .env
+.DS_Store
+.tailwindcss-config.js
+yarn.lock
+yarn-error.log

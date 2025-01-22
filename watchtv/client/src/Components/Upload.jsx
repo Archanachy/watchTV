@@ -171,7 +171,11 @@ function Upload() {
             navigate('/dashboard');
         } catch (error) {
             console.error('Error uploading content:', error);
-            alert('An error occurred while uploading content. Please try again.');
+            if (error.response && error.response.data && error.response.data.message) {
+                alert(error.response.data.message); // Display server error message
+            } else {
+                alert('An error occurred while uploading content. Please try again.');
+            }
         } finally {
             setUploading(false);
         }
