@@ -56,7 +56,8 @@ function Dashboard() {
                     }
         
                     const response = await axios.get(url);
-                    setContent(response.data);  // Set fetched content
+                    const uniqueContent = Array.from(new Map(response.data.map(item => [item.content_id, item])).values());
+                    setContent(uniqueContent);  // Set fetched content
                 } catch (error) {
                     console.error(`Failed to fetch ${filterType} content:`, error);
                 }
@@ -139,6 +140,13 @@ function Dashboard() {
             navigate('/upload');
         }
     };
+
+    const handleHomeClick = (e) => {
+        e.preventDefault();
+        setSelectedGenre(null); // Reset genre to null
+        setFilterType('movies'); // Default filter to movies
+    };
+    
     
     useEffect(() => {
         document.addEventListener('click', handleClickOutside);
@@ -193,7 +201,12 @@ function Dashboard() {
                     <h1>WatchTV</h1>
                 </div>
                 <div className={`nav-links ${isMobileMenuVisible ? 'mobile-menu' : ''}`} ref={mobileMenuRef}>
-                    <a href="#">Home</a>
+                        <a
+                        href="#"
+                        onClick={handleHomeClick}
+                    >
+                        Home
+                    </a>
 
                     {/* Genre Dropdown */}
                     <div className="genre-container" ref={genredropdownRef}>
