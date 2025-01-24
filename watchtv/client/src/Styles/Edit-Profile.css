@@ -1,0 +1,59 @@
+.edit-profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.upload-container {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    position: relative;
+    z-index: 1;
+    margin-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
+.crop-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reactEasyCrop_CropArea {
+    height: 100% !important;
+}
+
+.upload-details-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+}
+
+.upload-details-container textarea {
+    resize: none;
+}
+
+.upload-controls-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.upload-controls-container button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
