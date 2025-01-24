@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import { faSearch, faBars, faTimes, faStar } from '@fortawesome/free-solid-svg-icons';
-import { watchtv, Profile, RedOne, watchtv_icon, Movies } from '../assets/Pictures';
+import { watchtv, Profile, watchtv_icon, Movies } from '../assets/Pictures';
 import '../Styles/Dashboard.css';
 import axios from '../api/axios';
 
@@ -12,9 +12,10 @@ function Dashboard() {
     const [isGenreDropdownVisible, setGenreDropdownVisible] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
-    const [movies, setMovies] = useState([]); // State to hold movie/show data
+    const [content, setContent] = useState([]);// State to hold filtered content
     const [genres, setGenres] = useState([]); // State to hold fetched genres
-
+    const [filterType, setFilterType] = useState('movies'); // State to hold the current filter type
+    const [selectedGenre, setSelectedGenre] = useState(null);
     const dropdownRef = useRef(null);
     const genredropdownRef = useRef(null);
     const mobileMenuRef = useRef(null);
@@ -42,8 +43,35 @@ function Dashboard() {
             };
         fetchGenres();
         }, []);
+
+        useEffect(() => {
+            const fetchContent = async () => {
+                try {
+                    let endpoint = filterType === 'movies' ? '/api/movies' : '/api/shows';
+                    let url = `${import.meta.env.VITE_API_URL}${endpoint}`;
+        
+                    // Add genre filter if a genre is selected
+                    if (selectedGenre) {
+                        url += `?genre_id=${selectedGenre}`; // Add genre filter to the URL
+                    }
+        
+                    const response = await axios.get(url);
+                    const uniqueContent = Array.from(new Map(response.data.map(item => [item.content_id, item])).values());
+                    setContent(uniqueContent);  // Set fetched content
+                } catch (error) {
+                    console.error(`Failed to fetch ${filterType} content:`, error);
+                }
+            };
+        
+            fetchContent();
+        }, [selectedGenre, filterType]);  // Fetch content whenever the selected genre or filter type changes
+        
+        
     
-    
+     const handleFilterChange = (type) => {
+        setFilterType(type);
+    };
+
     const toggleGenreDropdown = () => {
         setGenreDropdownVisible((prev) => !prev);
     };
@@ -86,12 +114,23 @@ function Dashboard() {
             setIsMobileMenuVisible(false);
         }
     };
+    const handleGenreSelect = (genre) => {
+        setSelectedGenre(genre.genre_id);
+        setGenreDropdownVisible(false); // Close dropdown after selection
+    };
+    
 
     const handleLogout = () => {
         const confirmLogout = window.confirm("Are you sure you want to log out?");
         if (confirmLogout) {
             console.log("User logged out");
             navigate('/signin');
+        }
+    };
+
+    const handleProfile = () => {
+        if(handleProfile){
+            navigate('/profile');
         }
     };
 
@@ -102,6 +141,13 @@ function Dashboard() {
         }
     };
 
+    const handleHomeClick = (e) => {
+        e.preventDefault();
+        setSelectedGenre(null); // Reset genre to null
+        setFilterType('movies'); // Default filter to movies
+    };
+    
+    
     useEffect(() => {
         document.addEventListener('click', handleClickOutside);
         return () => {
@@ -122,19 +168,6 @@ function Dashboard() {
         return () => clearInterval(slideInterval.current);
     }, []);
 
-    useEffect(() => {
-        const dummyData = [];
-        for (let i = 1; i <= 100; i++) {
-            dummyData.push({
-                id: i,
-                image: `https://picsum.photos/200/300?random=${i}`, // Dummy image URL
-                rating: (Math.random() * 5).toFixed(1), // Random rating between 0.0 and 5.0
-                date: '2023',
-                name: `Item ${i}`,
-            });
-        }
-        setMovies(dummyData);
-    }, []);
 
     const responsive = {
         superLargeDesktop: {
@@ -158,6 +191,7 @@ function Dashboard() {
             items: 1
         }
     };
+    
 
     return (
         <div className="dashboard-fullscreen-container">
@@ -167,7 +201,12 @@ function Dashboard() {
                     <h1>WatchTV</h1>
                 </div>
                 <div className={`nav-links ${isMobileMenuVisible ? 'mobile-menu' : ''}`} ref={mobileMenuRef}>
-                    <a href="#">Home</a>
+                        <a
+                        href="#"
+                        onClick={handleHomeClick}
+                    >
+                        Home
+                    </a>
 
                     {/* Genre Dropdown */}
                     <div className="genre-container" ref={genredropdownRef}>
@@ -186,13 +225,26 @@ function Dashboard() {
                         {isGenreDropdownVisible && (
                             <div className="genre-dropdown">
                                 <div className="genre-column">
-                                    {genres.slice(0, Math.ceil(genres.length / 2)).map((genre, index) => (
-                                        <a href="#" key={index}>{genre.name}</a>
+                                    {genres.slice(0, Math.ceil(genres.length / 2)).map((genre) => (
+                                        <a href="#" 
+                                        key={genre.genre_id}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleGenreSelect(genre);
+                                        }}
+                                        className={selectedGenre === genre.genre_id ? 'selected' : ''}
+                                        >{genre.name}</a>
                                     ))}
                                 </div>
                                 <div className="genre-column">
-                                    {genres.slice(Math.ceil(genres.length / 2)).map((genre, index) => (
-                                        <a href="#" key={index}>{genre.name}</a>
+                                    {genres.slice(Math.ceil(genres.length / 2)).map((genre) => (
+                                        <a href="#" key={genre.genre_id}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            handleGenreSelect(genre);
+                                        }}
+                                        className={selectedGenre === genre.genre_id ? 'selected' : ''}
+                                        >{genre.name}</a>
                                     ))}
                                 </div>
                             </div>
@@ -224,7 +276,9 @@ function Dashboard() {
                         />
                         {isDropdownVisible && (
                             <div className="dropdown-menu">
-                                <button className="dropdown-item">Profile</button>
+                                <button className="dropdown-item" onClick={handleProfile}>
+                                    Profile
+                                </button>
                                 <button className="dropdown-item" onClick={handleLogout}>
                                     Log Out
                                 </button>
@@ -250,32 +304,53 @@ function Dashboard() {
                     <button className="next" onClick={nextSlide}>&#10095;</button>
                 </div>
                 
-
-
                 <div className="Mov-Shows">
                     <p>
-                        <img src={Movies} alt="Movie Icon" className={isDarkMode ? 'invert' : ''} />
-                        <a href="#">Movies</a>
-                        <img src={watchtv_icon} alt="Show Icon" className={isDarkMode ? 'invert' : ''}/>
-                        <a href="#">Shows</a>
+                        <img
+                            src={Movies}
+                            alt="Movie Icon"
+                            className={isDarkMode ? 'invert' : ''}
+                            onClick={() => handleFilterChange('movies')}
+                        />
+                        <a
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleFilterChange('movies');
+                            }}
+                        >
+                            Movies
+                        </a>
+                        <img
+                            src={watchtv_icon}
+                            alt="Show Icon"
+                            className={isDarkMode ? 'invert' : ''}
+                            onClick={() => handleFilterChange('shows')}
+                        />
+                        <a
+                            href="#"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                handleFilterChange('shows');
+                            }}
+                        >
+                            Shows
+                        </a>
                     </p>
                     <button className="upload-button" onClick={handleupload}><span>+   </span>Upload</button>
                 </div>
 
                 <div className="View">
-                    {movies.map((movie) => (
-                        <div key={movie.id} className="block">
-                            <img src={movie.image} alt={movie.name} className="block-image" />
+                {content.map((item,index) => (
+                        <div key={`${item.id}-${index}`} className="block">
+                             <img src={`${import.meta.env.VITE_API_URL}${item.image_path}`} alt={item.title} className="block-image" />
                             <div className="block-details">
                                 <div className="block-rating">
                                     <FontAwesomeIcon icon={faStar} className="star-icon" />
-                                    <span>{movie.rating}</span>
-                                    <div className="block-date">{movie.date}</div>
+                                    <span>{item.rating || "N/A"}</span>
+                                    <div className="block-date"> {new Date(item.released_date).toISOString().split('T')[0]}</div>
                                 </div>
-                                <div className="block-name">{movie.name}</div>
-                                
-                                
-                                
+                                <div className="block-name">{item.title}</div>
                             </div>
                         </div>
                     ))}
