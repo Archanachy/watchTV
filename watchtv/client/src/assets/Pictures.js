@@ -7,8 +7,8 @@ import RedOne from './red-one.jpg';
 import Movies from './Movies_Icon.png';
 import eyeIcon from './eyeIcon.png';
 import eyeSlashIcon from './eyeSlashIcon.png';
+import defaultAvatar from './defaultAvatar.jpg';
 
 
 
-
-export {background, watchtv_icon,watchtv, errorIcon,Profile,RedOne, Movies,eyeIcon,  eyeSlashIcon};
+export {background, watchtv_icon,watchtv, errorIcon,Profile,RedOne, Movies,eyeIcon,  eyeSlashIcon, defaultAvatar};
