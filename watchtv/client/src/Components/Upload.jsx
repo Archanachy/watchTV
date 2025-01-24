@@ -32,7 +32,6 @@ function Upload() {
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter
           .join(' '); // Rejoin words
       };
-      
 
     useEffect(() => {
         const fetchGenres = async () => {
@@ -127,18 +126,22 @@ function Upload() {
         );
     };
 
+    useEffect(() => {
+        validateForm();
+    }, [title, description, releasedDate, duration, kind, selectedGenres]);
+
     const handleSave = async () => {
         if (!image) {
             alert('Please upload an image before saving.');
             return;
         }
-    
+
         setUploading(true);
         try {
             // Create FormData for the image and other fields
             const formData = new FormData();
             const userId = localStorage.getItem('userId'); // Retrieve userId from localStorage
-    
+
             // Append all form data
             formData.append('userId', userId);
             formData.append('title', title);
@@ -147,7 +150,7 @@ function Upload() {
             formData.append('duration', duration);
             formData.append('kind', kind[0]);
             formData.append('genres', selectedGenres.join(','));
-    
+
             // Convert the cropped image to a file and append
             if (image) {
                 const response = await fetch(image);
@@ -155,7 +158,7 @@ function Upload() {
                 const file = new File([blob], 'uploaded_image.jpg', { type: blob.type });
                 formData.append('contentImage', file);
             }
-    
+
             // Send the form data to the server
             await axios.post(`${import.meta.env.VITE_API_URL}/api/content`, formData, {
                 headers: {
@@ -163,12 +166,16 @@ function Upload() {
                     Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure token is stored
                 },
             });
-    
+
             alert('Content uploaded successfully!');
             navigate('/dashboard');
         } catch (error) {
             console.error('Error uploading content:', error);
-            alert('An error occurred while uploading content. Please try again.');
+            if (error.response && error.response.data && error.response.data.message) {
+                alert(error.response.data.message); // Display server error message
+            } else {
+                alert('An error occurred while uploading content. Please try again.');
+            }
         } finally {
             setUploading(false);
         }
@@ -218,18 +225,18 @@ function Upload() {
                 </div>
                 <div className="upload-details-container">
                     <label>
-                        <span>Title:</span>
-                        <input type="text" value={title}  onChange={(e) => setTitle(formatTitle(e.target.value))} />
+                        <span className='box-label'>Title:</span>
+                        <input type="text" value={title} onChange={(e) => setTitle(formatTitle(e.target.value))} />
                     </label>
                     <label>
-                        <span>Description:</span>
+                        <span className='box-label'>Description:</span>
                         <textarea
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                         />
                     </label>
                     <label>
-                        <span>Release Date:</span>
+                        <span className='box-label'>Release Date:</span>
                         <input
                             type="date"
                             value={releasedDate}
@@ -237,16 +244,16 @@ function Upload() {
                         />
                     </label>
                     <label>
-                        <span>Duration (in min):</span>
+                        <span className='box-label'>Duration (in min):</span>
                         <input
                             type="number"
-                            min="15" 
+                            min="15"
                             value={duration}
                             onChange={(e) => setDuration(e.target.value)}
                         />
                     </label>
                     <label>
-                        <span>Kind:</span>
+                        <span className='box-label'>Kind:</span>
                         <div className="custom-dropdown" ref={kindDropdownRef}>
                             <div className="dropdown-header" onClick={toggleKindDropdown}>
                                 {kind.length > 0 ? kind.join(', ') : 'Select Kind (movie or Tv/web series)'}
@@ -271,14 +278,14 @@ function Upload() {
                         </div>
                     </label>
                     <label>
-                        <span>Genres:</span>
+                        <span className='box-label'>Genres:</span>
                         <div className="custom-dropdown" ref={genreDropdownRef}>
                             <div className="dropdown-header" onClick={toggleGenreDropdown}>
                                 {selectedGenres.length > 0 ? (
                                     selectedGenres.map((genre) => (
                                         <div key={genre} className="selected-genre">
                                             {genre}
-                                            <span className="remove-genre" onClick={() => handleGenreSelect(genre)}>✖</span>
+                                            <span className="remove-genre" onClick={(e) => { e.stopPropagation(); handleGenreSelect(genre); }}>✖</span>
                                         </div>
                                     ))
                                 ) : (
@@ -310,7 +317,9 @@ function Upload() {
                     <button id='save' onClick={handleSave} disabled={!isFormValid || uploading}>
                         Save
                     </button>
-                    <button id='cancel' onClick={handleCancel}>Cancel</button>
+                    <button id='cancel' onClick={handleCancel}>
+                        Cancel
+                    </button>
                 </div>
             </div>
         </div>

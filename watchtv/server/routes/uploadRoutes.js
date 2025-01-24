@@ -3,13 +3,22 @@ const upload = require('../middleware/uploadMiddleware');
 const fs = require('fs');
 const sharp = require('sharp');
 const FileType = require('file-type');
-const { insertContent, insertContentGenres, getGenreIdsByNames,checkIfTitleExists } = require('../models/contentModel');
+const { insertContent, insertContentGenres, getGenreIdsByNames, checkIfTitleExists } = require('../models/contentModel');
 const { authenticateToken } = require('../middleware/auth');
 
 const router = express.Router();
 
+// Helper function to delete a file
+const deleteFile = (filePath) => {
+  if (fs.existsSync(filePath)) {
+    fs.unlinkSync(filePath);
+  }
+};
+
 // Upload movie endpoint
-router.post('/content', upload.single('contentImage'), authenticateToken,async (req, res) => {
+router.post('/content', upload.single('contentImage'), authenticateToken, async (req, res) => {
+  let filePath = null;
+
   try {
     const file = req.file;
 
@@ -17,30 +26,19 @@ router.post('/content', upload.single('contentImage'), authenticateToken,async (
       return res.status(400).json({ message: 'No file uploaded' });
     }
 
-    const { path: filePath } = file;
+    filePath = file.path;
 
     // Validate the file's actual content
-    try {
-      console.log('File path:', filePath); // Debugging log for file path
-      const buffer = fs.readFileSync(filePath);
+    const buffer = fs.readFileSync(filePath);
 
-      // Validate MIME type 
-      const type = await FileType.fromBuffer(buffer);
-      console.log('File type:', type); // Debugging log for MIME type
-
-      if (!type || !['image/jpeg', 'image/png', 'image/jpg'].includes(type.mime)) {
-        fs.unlinkSync(filePath); // Delete invalid file
-        return res.status(400).json({ message: 'Invalid file content. Please upload a JPEG, PNG, or JPG image.' });
-      }
-
-      // Additional validation using sharp
-      const metadata = await sharp(filePath).metadata();
-      console.log('Image metadata:', metadata); // Debugging log for sharp metadata
-    } catch (error) {
-      console.error('Validation error:', error.message); // Debugging log for validation error
-      fs.unlinkSync(filePath); // Delete invalid file
-      return res.status(400).json({ message: 'Invalid image file content.' });
+    // Validate MIME type
+    const type = await FileType.fromBuffer(buffer);
+    if (!type || !['image/jpeg', 'image/png', 'image/jpg'].includes(type.mime)) {
+      throw new Error('Invalid file content. Please upload a JPEG, PNG, or JPG image.');
     }
+
+    // Additional validation using sharp
+    await sharp(filePath).metadata();
 
     // Access the other form fields
     const { title, description, releasedDate, duration, kind, genres } = req.body;
@@ -48,25 +46,26 @@ router.post('/content', upload.single('contentImage'), authenticateToken,async (
     // Check if the title already exists
     const titleExists = await checkIfTitleExists(title);
     if (titleExists) {
-      return res.status(400).json({ message: 'Title already exists. Please choose a different title.' });
+      throw new Error('Title already exists. Please choose a different title.');
     }
-  
-    const imagePath = `/uploads/${req.file.filename}`;
 
-   // Validate genres
-   if (typeof genres !== 'string') {
-    return res.status(400).json({ message: 'Genres must be a comma-separated string.' });
-  }
+    const imagePath = `/uploads/${file.filename}`;
+
+    // Validate genres
+    if (typeof genres !== 'string') {
+      throw new Error('Genres must be a comma-separated string.');
+    }
 
     const genreNames = genres.split(',').map((name) => name.trim());
     const genreIds = await getGenreIdsByNames(genreNames);
 
     if (genreIds.length < 1 || genreIds.length > 3) {
-      return res.status(400).json({ message: 'Please select between 1 and 3 genres.' });
+      throw new Error('Please select between 1 and 3 genres.');
     }
+
     const userId = req.user.userId;
-    console.log('User ID:', userId); // Debugging log for user ID
-    // Step 2: Insert content into the content table
+
+    // Insert content into the content table
     const contentId = await insertContent({
       userId,
       title,
@@ -76,20 +75,23 @@ router.post('/content', upload.single('contentImage'), authenticateToken,async (
       kind,
       imagePath,
     });
-    // Step 3: Insert genres into the content_genre table
+
+    // Insert genres into the content_genre table
     await insertContentGenres(contentId, genreIds);
 
     res.status(201).json({ message: 'Content uploaded successfully', contentId });
-  
-  } catch (error) {
-    console.error('Unexpected error:', error.message); // Debugging log for unexpected errors
 
-    // Clean up the file if any error occurs
-    if (req.file && fs.existsSync(req.file.path)) {
-      fs.unlinkSync(req.file.path);
+  } catch (error) {
+    console.error('Error:', error.message);
+
+    // Return appropriate error response
+    res.status(400).json({ message: error.message });
+  } finally {
+    // Always attempt to clean up the uploaded file
+    if (filePath && res.statusCode !== 201) {
+      deleteFile(filePath);
     }
-    res.status(500).json({ message: 'Failed to upload content', error: error.message });
   }
-});
+}); 
 
 module.exports = router;
