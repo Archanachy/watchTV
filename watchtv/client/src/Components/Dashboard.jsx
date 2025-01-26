@@ -22,6 +22,10 @@ function Dashboard() {
     const navigate = useNavigate();
     const [currentSlide, setCurrentSlide] = useState(0);
     const slideInterval = useRef(null);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const debounceTimeout = useRef(null);
+
 
 
     const images = [
@@ -66,7 +70,32 @@ function Dashboard() {
             fetchContent();
         }, [selectedGenre, filterType]);  // Fetch content whenever the selected genre or filter type changes
         
-        
+     // Handle real-time search
+     const handleSearchChange = (e) => {
+        const query = e.target.value;
+        setSearchQuery(query.charAt(0).toUpperCase() + query.slice(1)); // Capitalize the first letter
+        if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+
+        debounceTimeout.current = setTimeout(() => {
+            if (query.trim()) {
+                performSearch(query.trim());
+            } else {
+                setSearchResults([]); // Clear results if query is empty
+            }
+        }, 1500); // Debounce time
+    };
+
+    const performSearch = async (query) => {
+        console.log("Performing search for:", query);
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/search?searchTerm=${query}`);
+            console.log("Search results:", response.data);
+            setSearchResults(response.data);
+        } catch (error) {
+            console.error('Search request failed:', error);
+        }
+    };
+
     
      const handleFilterChange = (type) => {
         setFilterType(type);
@@ -253,10 +282,40 @@ function Dashboard() {
 
                     <a href="#">WatchList</a>
                     <div className="search-container">
-                        <input type="text" placeholder="Search.." className="search" />
+                    <input
+                    type="text"
+                    placeholder="Search..."
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    className="search-input"
+                />
                         <FontAwesomeIcon icon={faSearch} className="search-icon" />
                     </div>
-                    <div className="toggle-container">
+                    {searchResults.length > 0 && (
+                        <div className="search-container-result">
+                            {searchResults.map((result, index) => (
+                                <div key={`${result.id}-${index}`} className="search-container-result-item">
+                                    <img
+                                        src={`${import.meta.env.VITE_API_URL}${result.image_path}`}
+                                        alt={result.title}
+                                        className="result-image"
+                                    />
+                                    <div className="result-details">
+                                        <h3 className="result-title">{result.title}</h3>
+                                        <p className="result-info">
+                                            {result.type} &middot; {result.year} &middot; {result.duration || 'N/A'}
+                                        </p>
+                                        <div className="result-rating">
+                                            <FontAwesomeIcon icon={faStar} className="star-icon" />
+                                            <span>{result.rating || 'N/A'}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                                                <div className="toggle-container">
                         <input type="checkbox" id="toggle" onChange={toggleDarkMode} checked={isDarkMode} />
                         <label htmlFor="toggle" className="toggle-label">
                             <span className="toggle-slider"></span>

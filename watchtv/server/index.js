@@ -7,7 +7,8 @@ const userLoginRoute = require('./routes/userLoginRoute');
 const uploadRoutes = require('./routes/uploadRoutes');
 const genreRoutes = require('./routes/genreRoute');
 const getContentRoutes = require('./routes/getContentroute'); // Import router
-const updateProfileRoute=require('./routes/updateProfileRoute')
+const updateProfileRoute=require('./routes/updateProfileRoute');
+const searchRoute = require('./routes/searchRoute');
 
 const app = express();
 
@@ -30,7 +31,8 @@ app.use('/api', userLoginRoute);
 app.use('/api', uploadRoutes);
 app.use('/api', genreRoutes);
 app.use('/api', getContentRoutes); 
-app.use('/api',updateProfileRoute)
+app.use('/api',updateProfileRoute);
+app.use('/api', searchRoute);
 
 // Start server
 const PORT = process.env.PORT || 3002;
