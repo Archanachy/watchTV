@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import { faSearch, faBars, faTimes, faStar } from '@fortawesome/free-solid-svg-icons';
 import { watchtv, Profile, watchtv_icon, Movies } from '../assets/Pictures';
+import Search from './Search'
 import '../Styles/Dashboard.css';
 import axios from '../api/axios';
 
@@ -22,10 +23,12 @@ function Dashboard() {
     const navigate = useNavigate();
     const [currentSlide, setCurrentSlide] = useState(0);
     const slideInterval = useRef(null);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState([]);
-    const debounceTimeout = useRef(null);
+    // const [searchQuery, setSearchQuery] = useState('');
+    // const [searchResults, setSearchResults] = useState([]);
+    // const debounceTimeout = useRef(null);
+    // const [searchResultsVisible, setSearchResultsVisible] = useState(false);
 
+    
 
 
     const images = [
@@ -69,35 +72,9 @@ function Dashboard() {
         
             fetchContent();
         }, [selectedGenre, filterType]);  // Fetch content whenever the selected genre or filter type changes
-        
-     // Handle real-time search
-     const handleSearchChange = (e) => {
-        const query = e.target.value;
-        setSearchQuery(query.charAt(0).toUpperCase() + query.slice(1)); // Capitalize the first letter
-        if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
-
-        debounceTimeout.current = setTimeout(() => {
-            if (query.trim()) {
-                performSearch(query.trim());
-            } else {
-                setSearchResults([]); // Clear results if query is empty
-            }
-        }, 1500); // Debounce time
-    };
-
-    const performSearch = async (query) => {
-        console.log("Performing search for:", query);
-        try {
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/search?searchTerm=${query}`);
-            console.log("Search results:", response.data);
-            setSearchResults(response.data);
-        } catch (error) {
-            console.error('Search request failed:', error);
-        }
-    };
-
     
-     const handleFilterChange = (type) => {
+    
+    const handleFilterChange = (type) => {
         setFilterType(type);
     };
 
@@ -229,7 +206,11 @@ function Dashboard() {
                     <img src={watchtv} alt="TV icon" className={`dashboard-tv-icon`} />
                     <h1>WatchTV</h1>
                 </div>
+
+                <div><Search/> </div>
+
                 <div className={`nav-links ${isMobileMenuVisible ? 'mobile-menu' : ''}`} ref={mobileMenuRef}>
+                    
                         <a
                         href="#"
                         onClick={handleHomeClick}
@@ -281,41 +262,9 @@ function Dashboard() {
                     </div>
 
                     <a href="#">WatchList</a>
-                    <div className="search-container">
-                    <input
-                    type="text"
-                    placeholder="Search..."
-                    value={searchQuery}
-                    onChange={handleSearchChange}
-                    className="search-input"
-                />
-                        <FontAwesomeIcon icon={faSearch} className="search-icon" />
-                    </div>
-                    {searchResults.length > 0 && (
-                        <div className="search-container-result">
-                            {searchResults.map((result, index) => (
-                                <div key={`${result.id}-${index}`} className="search-container-result-item">
-                                    <img
-                                        src={`${import.meta.env.VITE_API_URL}${result.image_path}`}
-                                        alt={result.title}
-                                        className="result-image"
-                                    />
-                                    <div className="result-details">
-                                        <h3 className="result-title">{result.title}</h3>
-                                        <p className="result-info">
-                                            {result.type} &middot; {result.year} &middot; {result.duration || 'N/A'}
-                                        </p>
-                                        <div className="result-rating">
-                                            <FontAwesomeIcon icon={faStar} className="star-icon" />
-                                            <span>{result.rating || 'N/A'}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                    
 
-                                                <div className="toggle-container">
+                    <div className="toggle-container">
                         <input type="checkbox" id="toggle" onChange={toggleDarkMode} checked={isDarkMode} />
                         <label htmlFor="toggle" className="toggle-label">
                             <span className="toggle-slider"></span>
