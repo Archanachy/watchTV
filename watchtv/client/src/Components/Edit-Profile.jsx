@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Cropper from 'react-easy-crop';
 import '../Styles/Edit-Profile.css';
 
 function EditProfile() {
@@ -9,7 +10,8 @@ function EditProfile() {
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [realName, setRealName] = useState('');
-    const [location, setLocation] = useState('');
+    const [country, setCountry] = useState('');
+    const [city, setCity] = useState('');
     const [bio, setBio] = useState('');
     const fileInputRef = useRef(null);
 
@@ -34,33 +36,70 @@ function EditProfile() {
 
     const handleSave = () => {
         // Save profile changes logic here
-        // For example, you can update the profile state in a global store or make an API call
-        // After saving, navigate back to the profile page
         navigate('/profile');
     };
 
     const handleCancel = () => {
-        navigate('/profile'); // Navigate back to profile page
+        navigate('/profile');
     };
 
     return (
         <div className="edit-profile-container">
-            <div className="upload-container">
-                <input type="file" onChange={handleImageChange} style={{ display: 'none' }} ref={fileInputRef} />
-                <button onClick={handleFileUpload}>Upload Image</button>
-                {image && (
-                    <div className="crop-container">
-                        {/* Crop component logic here */}
-                    </div>
-                )}
-            </div>
-            <div className="upload-details-container">
-                <input type="text" value={realName} onChange={(e) => setRealName(e.target.value)} placeholder="Real Name" />
-                <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Location" />
-                <textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Bio"></textarea>
-                <div className="upload-controls-container">
-                    <button onClick={handleSave}>Save</button>
-                    <button onClick={handleCancel}>Cancel</button>
+            <div className="edit-profile-form-container">
+                <div className="edit-profile-header-container">
+                    <h1>Edit Profile</h1>
+                </div>
+                <div className="edit-profile-image-container" onClick={handleFileUpload}>
+                    {image ? (
+                        <div className="crop-container">
+                            <Cropper
+                                image={image}
+                                crop={crop}
+                                zoom={zoom}
+                                aspect={1}
+                                onCropChange={setCrop}
+                                onZoomChange={setZoom}
+                                onCropComplete={onCropComplete}
+                            />
+                        </div>
+                    ) : (
+                        <button>
+                            <span onChange={handleImageChange}>Upload Image</span>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                ref={fileInputRef}
+                                style={{ display: 'none' }}
+                                
+                            />
+                        </button>
+                    )}
+                </div>
+                <div className="edit-profile-details-container">
+                    <label>
+                        <span className="box-label">Full Name:</span>
+                        <input type="text" value={realName} onChange={(e) => setRealName(e.target.value)} />
+                    </label>
+                    <label>
+                        <span className="box-label">Country:</span>
+                        <input type="text" value={country} onChange={(e) => setCountry(e.target.value)} />
+                    </label>
+                    <label>
+                        <span className="box-label">City:</span>
+                        <input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
+                    </label>
+                    <label>
+                        <span className="box-label">Bio:</span>
+                        <textarea value={bio} onChange={(e) => setBio(e.target.value)} />
+                    </label>
+                </div>
+                <div className="edit-profile-controls-container">
+                    <button id="save" onClick={handleSave}>
+                        Save
+                    </button>
+                    <button id="cancel" onClick={handleCancel}>
+                        Cancel
+                    </button>
                 </div>
             </div>
         </div>

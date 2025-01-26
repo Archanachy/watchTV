@@ -57,7 +57,7 @@ body.dark-mode .breadcrumb {
 }
 
 body.dark-mode .profile-card {
-    background-color: #1f1f1f;
+    background-color: #111111;
 }
 
 .left-section {
@@ -208,8 +208,8 @@ body.dark-mode .edit-section textarea {
 .stats {
     display: flex;
     justify-content: flex-start;
-    margin: 20px;
-    gap: 100px;
+    margin-left: 40px;
+    gap: 190px;
     padding: 10px 60px;
     color: #222;
     font-size: 19px;
