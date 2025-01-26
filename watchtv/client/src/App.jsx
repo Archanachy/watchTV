@@ -5,7 +5,7 @@ import SignIn from './Components/SignIn';
 import SignUp from './Components/SignUp';
 import Dashboard from './Components/Dashboard';
 import Upload from './Components/Upload';
-
+import Profile from './Components/Profile';
 function App() {
   React.useEffect(() => {
     document.title = "Watch TV"; // Dynamically set the title
@@ -23,6 +23,7 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/upload" element={<Upload />} />
+        <Route path="/profile" element={<Profile />} />
       
       </Routes>
       
