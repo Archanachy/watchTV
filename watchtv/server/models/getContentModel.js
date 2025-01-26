@@ -1,19 +1,30 @@
 const pool = require('../config/database');
 
-async function getMovies() {
-    const query = 'SELECT * FROM content WHERE kind = $1';
-    const result = await pool.query(query, ['Movie']);
-    return result.rows;
-}
+async function getContent(kind, genreId) {
+    try {
+        let query = `
+            SELECT c.*
+            FROM content c
+            JOIN content_genre cg ON c.content_id = cg.content_id
+            JOIN genre g ON cg.genre_id = g.genre_id
+            WHERE c.kind = $1`;
 
-async function getShows() {
-    const query = 'SELECT * FROM content WHERE kind = $1';
-    const result = await pool.query(query, ['Show']);
-    return result.rows;
-}
+        let queryParams = [kind]; // Add content type (Movie/Show)
 
+        // Filter by genre_id if provided
+        if (genreId) {
+            query += ' AND g.genre_id = $2';
+            queryParams.push(genreId);
+        }
+
+        const result = await pool.query(query, queryParams);
+        return result.rows;
+    } catch (error) {
+        console.error(`Error fetching ${kind.toLowerCase()} content:`, error);
+        throw error;
+    }
+}
 
 module.exports = {
-    getMovies,
-    getShows
-};  
+    getContent,
+};

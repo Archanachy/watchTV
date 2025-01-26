@@ -7,13 +7,14 @@ const userLoginRoute = require('./routes/userLoginRoute');
 const uploadRoutes = require('./routes/uploadRoutes');
 const genreRoutes = require('./routes/genreRoute');
 const getContentRoutes = require('./routes/getContentroute'); // Import router
+const updateProfileRoute=require('./routes/updateProfileRoute')
 
 const app = express();
 
 // Middleware
 app.use(cors({
   origin: 'http://localhost:5173', // Frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Add all necessary methods
+  methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE'], // Add all necessary methods
   credentials: true,
 }));
 
@@ -28,7 +29,8 @@ app.use('/api', userRegisterRoute);
 app.use('/api', userLoginRoute);
 app.use('/api', uploadRoutes);
 app.use('/api', genreRoutes);
-app.use('/api', getContentRoutes); // Use the router for movie and show routes
+app.use('/api', getContentRoutes); 
+app.use('/api',updateProfileRoute)
 
 // Start server
 const PORT = process.env.PORT || 3002;
