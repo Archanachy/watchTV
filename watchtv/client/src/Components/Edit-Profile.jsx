@@ -14,7 +14,7 @@ function EditProfile() {
     const [city, setCity] = useState('');
     const [bio, setBio] = useState('');
     const fileInputRef = useRef(null);
-
+    const [bioCount, setBioCount] = useState(0);
     const handleFileUpload = () => {
         fileInputRef.current.click();
     };
@@ -34,7 +34,16 @@ function EditProfile() {
         setCroppedArea(croppedAreaPixels);
     }, []);
 
-    const handleSave = () => {
+    const removeImage =() => {
+        setImage(null);
+    }
+
+    const handleBioChange = (e) => {
+        setBio(e.target.value);
+        setBioCount(e.target.value.length);
+    };
+
+    const handleUpdate = () => {
         // Save profile changes logic here
         navigate('/profile');
     };
@@ -49,9 +58,9 @@ function EditProfile() {
                 <div className="edit-profile-header-container">
                     <h1>Edit Profile</h1>
                 </div>
-                <div className="edit-profile-image-container" onClick={handleFileUpload}>
+                <div className="edit-profile-image-container" >
                     {image ? (
-                        <div className="crop-container">
+                        <div className="profile-crop-container">
                             <Cropper
                                 image={image}
                                 crop={crop}
@@ -60,16 +69,21 @@ function EditProfile() {
                                 onCropChange={setCrop}
                                 onZoomChange={setZoom}
                                 onCropComplete={onCropComplete}
+                                style={{ containerStyle: { width: '100%', height: '100%' } }}
                             />
+                            <button className="remove-profile-image-button" onClick={removeImage}>
+                               <span>✖</span> 
+                            </button>
                         </div>
                     ) : (
-                        <button>
-                            <span onChange={handleImageChange}>Upload Image</span>
+                        <button onClick={handleFileUpload}>
+                            <span >Upload Image</span>
                             <input
                                 type="file"
                                 accept="image/*"
                                 ref={fileInputRef}
                                 style={{ display: 'none' }}
+                                onChange={handleImageChange}
                                 
                             />
                         </button>
@@ -77,25 +91,30 @@ function EditProfile() {
                 </div>
                 <div className="edit-profile-details-container">
                     <label>
-                        <span className="box-label">Full Name:</span>
+                        <span className="profile-box-label">Full Name:</span>
                         <input type="text" value={realName} onChange={(e) => setRealName(e.target.value)} />
                     </label>
                     <label>
-                        <span className="box-label">Country:</span>
-                        <input type="text" value={country} onChange={(e) => setCountry(e.target.value)} />
-                    </label>
-                    <label>
-                        <span className="box-label">City:</span>
+                        <span className="profile-box-label">City:</span>
                         <input type="text" value={city} onChange={(e) => setCity(e.target.value)} />
                     </label>
                     <label>
-                        <span className="box-label">Bio:</span>
-                        <textarea value={bio} onChange={(e) => setBio(e.target.value)} />
+                        <span className="profile-box-label">Country:</span>
+                        <input type="text" value={country} onChange={(e) => setCountry(e.target.value)} />
                     </label>
+                    <label>
+                        <span className="profile-box-label">Bio:</span>
+                        <textarea  
+                        maxLength={500}
+                        value={bio}
+                        onChange={handleBioChange}
+                         />
+                    </label>
+                    <div className='profile-bio-count'>{bioCount}/500</div>
                 </div>
                 <div className="edit-profile-controls-container">
-                    <button id="save" onClick={handleSave}>
-                        Save
+                    <button id="update" onClick={handleUpdate}>
+                        Update
                     </button>
                     <button id="cancel" onClick={handleCancel}>
                         Cancel
