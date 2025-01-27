@@ -49,7 +49,7 @@
   .search-container-result-item {
     display: flex;
     align-items: center;
-    padding: 0.5rem;
+    padding: 0rem;
     border-bottom: 1px solid #eee;
     cursor: pointer;
   }
@@ -100,19 +100,10 @@
     width: 8px;
     border-radius: 0.5rem;
   }
-
-  body.dark-mode .search-container-result::-webkit-scrollbar {
-    filter: invert(1);
-  }
   
   .search-container-result::-webkit-scrollbar-thumb {
     background-color: #ccc;
     border-radius: 3px;
-
-  }
-
-  body.dark-mode .search-container-result::-webkit-scrollbar-thumb {
-    background-color: #333333;
   }
   
   .search-container-result::-webkit-scrollbar-track {

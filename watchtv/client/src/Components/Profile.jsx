@@ -71,45 +71,20 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
-      <div className="breadcrumb" ><span onClick={handleHome}>Home</span></div>
+      
       <div className="profile-about-container">
         <div className="profile-card">
           <div className="left-section">
+            <div className="breadcrumb" ><span onClick={handleHome}>Home</span></div>
             <div className="avatar">
               <img src={avatar} alt="Avatar" className="avatar-image" />
-              {/* <input
-                // type="file"
-                // accept="image/*"
-                // onChange={handleAvatarChange}
-                className="avatar-input"
-              /> */}
+              
             </div>
             <div className="real-name">{realName}</div>
           </div>
           <div className="right-section">
-            {/* {isEditing ? (
-              <div className="edit-section">
-                <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter Username"
-                />
-                <input
-                  type="text"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="Enter Location"
-                />
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  placeholder="Enter Bio"
-                />
-                <button onClick={handleSaveClick}>Save</button>
-              </div>
-            ) : ( )}*/}
-              <div className="info-section">
+            
+              <div className="profile-info-section">
                 <div className="username-edit-container">
                   <h2 className="username">{username}</h2>
                   <button className="edit-button" onClick={handleEditClick}>
@@ -129,7 +104,15 @@ const Profile = () => {
           </div>
           <div>
             <p>Total Content Rated</p>
-            <p>12</p>
+            <p>{0}</p>
+          </div>
+          <div>
+            <p>Number of Ratings</p>
+            <p>0</p>
+          </div>
+          <div>
+            <p>Number of Uploads</p>
+            <p>0</p>
           </div>
         </div>
       </div>
@@ -142,24 +125,25 @@ const Profile = () => {
           Post
         </a>
         <a
-          className={activeTab === "Watchlist" ? "active-tab" : ""}
-          onClick={() => setActiveTab("Watchlist")}
+          className={activeTab === "Content-Rated" ? "active-tab" : ""}
+          onClick={() => setActiveTab("Content-Rated")}
         >
-          Watchlist
+          Content Rated
         </a>
+        
       </div>
 
-      <div className="View">
+      <div className="profile-View">
         {content.map((item, index) => (
           <div key={`${item.id}-${index}`} className="block">
             <img src={item.image_path} alt={item.title} className="block-image" />
-            <div className="block-details">
-              <div className="block-rating">
-                <FontAwesomeIcon icon={faStar} className="star-icon" />
+            <div className="profile-block-details">
+              <div className="profile-block-rating">
+                <FontAwesomeIcon icon={faStar} className="profile-star-icon" />
                 <span>{item.rating || "N/A"}</span>
-                <div className="block-date">{new Date(item.released_date).toISOString().split('T')[0]}</div>
+                <div className="profile-block-date">{new Date(item.released_date).toISOString().split('T')[0]}</div>
               </div>
-              <div className="block-name">{item.title}</div>
+              <div className="profile-block-name">{item.title}</div>
             </div>
           </div>
         ))}

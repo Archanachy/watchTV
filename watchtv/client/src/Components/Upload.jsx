@@ -12,6 +12,7 @@ function Upload() {
     const [zoom, setZoom] = useState(1);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [descriptionCount, setDescriptionCount] = useState(0);
     const [releasedDate, setReleasedDate] = useState('');
     const [duration, setDuration] = useState('');
     const [kind, setKind] = useState([]);
@@ -24,6 +25,8 @@ function Upload() {
     const fileInputRef = useRef(null);
     const kindDropdownRef = useRef(null);
     const genreDropdownRef = useRef(null);
+
+
 
     const formatTitle = (title) => {
         if (!title) return '';
@@ -87,6 +90,11 @@ function Upload() {
         setCroppedArea(croppedAreaPixels);
     }, []);
 
+    const handleDescriptionChange = (e) => {
+        setDescription(e.target.value);
+        setDescriptionCount(e.target.value.length);
+    };
+
     const handleGenreSelect = (genre) => {
         if (selectedGenres.includes(genre)) {
             setSelectedGenres(selectedGenres.filter((g) => g !== genre));
@@ -117,7 +125,8 @@ function Upload() {
     const validateForm = () => {
         setIsFormValid(
             !!title &&
-            !!description &&
+            description.length>10 &&
+            description.length<700 &&
             !!releasedDate &&
             !!duration &&
             kind.length > 0 &&
@@ -232,14 +241,20 @@ function Upload() {
                         <span className='box-label'>Description:</span>
                         <textarea
                             value={description}
-                            onChange={(e) => setDescription(e.target.value)}
+                            onChange={handleDescriptionChange}
+                            maxLength={700}
+                            placeholder="Describe the content in 10-700 words"
+                            onInput={(e) => setDescriptionCount(e.target.value.length)}
+                            
                         />
+                        <div className='description-count'>{descriptionCount}/700</div>
                     </label>
                     <label>
                         <span className='box-label'>Release Date:</span>
                         <input
                             type="date"
                             value={releasedDate}
+                            max={new Date().toISOString().split('T')[0]}
                             onChange={(e) => setReleasedDate(e.target.value)}
                         />
                     </label>
@@ -262,17 +277,18 @@ function Upload() {
                             {isKindDropdownOpen && (
                                 <div className="dropdown-options">
                                     <div
-                                        className={`dropdown-option ${kind.includes('Show') ? 'selected' : ''}`}
-                                        onClick={() => handleKindSelect('Show')}
-                                    >
-                                        Show
-                                    </div>
-                                    <div
                                         className={`dropdown-option ${kind.includes('Movie') ? 'selected' : ''}`}
                                         onClick={() => handleKindSelect('Movie')}
                                     >
                                         Movie
                                     </div>
+                                    <div
+                                        className={`dropdown-option ${kind.includes('Show') ? 'selected' : ''}`}
+                                        onClick={() => handleKindSelect('Show')}
+                                    >
+                                        Show
+                                    </div>
+                                    
                                 </div>
                             )}
                         </div>
