@@ -9,6 +9,7 @@ const genreRoutes = require('./routes/genreRoute');
 const getContentRoutes = require('./routes/getContentroute'); // Import router
 const updateProfileRoute=require('./routes/updateProfileRoute');
 const searchRoute = require('./routes/searchRoute');
+const getProfileRoute = require('./routes/getProfileRoute');
 
 const app = express();
 
@@ -33,6 +34,7 @@ app.use('/api', genreRoutes);
 app.use('/api', getContentRoutes); 
 app.use('/api',updateProfileRoute);
 app.use('/api', searchRoute);
+app.use('/api', getProfileRoute);
 
 // Start server
 const PORT = process.env.PORT || 3002;

@@ -4,70 +4,57 @@ import "../Styles/Profile.css";
 import { defaultAvatar } from "../assets/Pictures";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
+import axios from "../api/axios";  // Make sure axios is correctly set up
 
 const Profile = () => {
   const [username, setUsername] = useState("Username");
-  const [location, setLocation] = useState("Location");
+  const [location, setLocation] = useState("Location"); // Will now combine city and country
   const [bio, setBio] = useState("Biography");
-  const [isEditing, setIsEditing] = useState(false);
   const [avatar, setAvatar] = useState(defaultAvatar);
   const [realName, setRealName] = useState("Real Name");
   const [activeTab, setActiveTab] = useState("Post");
-  const [content, setContent] = useState([]); // State to hold content
+  const [content, setContent] = useState([]);
   const navigate = useNavigate();
 
+  // Fetch user profile and content data on component mount
   useEffect(() => {
-    const darkMode = localStorage.getItem("darkMode") === "true";
-    if (darkMode) {
-      document.body.classList.add("dark-mode");
-    } else {
-      document.body.classList.remove("dark-mode");
-    }
-  }, []);
+    const fetchProfileData = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Make sure to pass the token
+          },
+        });
+
+        // const { profiles } = response.data;
+
+        // Set the profile data from the response
+        setUsername("Username");
+        setBio("Biography");
+        setAvatar(defaultAvatar);
+        setRealName("Real Name");
+
+        // Combine city and country into location
+        const locationString = `${""}, ${""}`;
+        setLocation(locationString.trim()); // Trim in case any values are missing
+
+        // Set the content data (e.g., movies, posts)
+        setContent([]);
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    };
+
+    fetchProfileData();
+  }, []); // This will run only once when the component mounts
 
   const handleEditClick = () => {
-    navigate('/edit-profile'); // Navigate to the new edit profile page
-};
-  const handleSaveClick = () => setIsEditing(false);
-
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setAvatar(e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
+    navigate('/edit-profile'); // Navigate to the edit profile page
   };
 
   const handleHome = () => {
     navigate('/dashboard');
   };
-
-  useEffect(() => {
-    // Simulate fetching content
-    const fetchContent = async () => {
-      const simulatedContent = [
-        {
-          id: 1,
-          title: "Sample Movie 1",
-          rating: 4.5,
-          released_date: "2023-01-01",
-          image_path: "/path/to/image1.jpg"
-        },
-        {
-          id: 2,
-          title: "Sample Movie 2",
-          rating: 3.8,
-          released_date: "2023-02-01",
-          image_path: "/path/to/image2.jpg"
-        }
-      ];
-      setContent(simulatedContent);
-    };
-    fetchContent();
-  }, []);
 
   return (
     <div className="profile-container">
@@ -78,29 +65,27 @@ const Profile = () => {
             <div className="breadcrumb" ><span onClick={handleHome}>Home</span></div>
             <div className="avatar">
               <img src={avatar} alt="Avatar" className="avatar-image" />
-              
             </div>
             <div className="real-name">{realName}</div>
           </div>
           <div className="right-section">
-            
-              <div className="profile-info-section">
-                <div className="username-edit-container">
-                  <h2 className="username">{username}</h2>
-                  <button className="edit-button" onClick={handleEditClick}>
-                    Edit Profile
-                  </button>
-                </div>
-                <p className="location">{location}</p>
-                <p className="bio">{bio}</p>
+            <div className="profile-info-section">
+              <div className="username-edit-container">
+                <h2 className="username">{username}</h2>
+                <button className="edit-button" onClick={handleEditClick}>
+                  Edit Profile
+                </button>
               </div>
-            
+              <p className="location">{location}</p> {/* Location will show city, country */}
+              <p className="bio">{bio}</p>
+            </div>
           </div>
         </div>
+
         <div className="stats">
           <div>
             <p>Joined on WatchTV</p>
-            <p>Date</p>
+            <p>{"Date"}</p>
           </div>
           <div>
             <p>Total Content Rated</p>
@@ -108,11 +93,11 @@ const Profile = () => {
           </div>
           <div>
             <p>Number of Ratings</p>
-            <p>0</p>
+            <p>{0}</p>
           </div>
           <div>
             <p>Number of Uploads</p>
-            <p>0</p>
+            <p>{0}</p>
           </div>
         </div>
       </div>
@@ -130,7 +115,6 @@ const Profile = () => {
         >
           Content Rated
         </a>
-        
       </div>
 
       <div className="profile-View">
