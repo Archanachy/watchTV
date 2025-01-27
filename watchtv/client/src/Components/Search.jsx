@@ -12,18 +12,31 @@ const Search = () => {
 
     const handleSearchChange = (e) => {
         const query = e.target.value;
-        console.log('Search query:', query);
-        setSearchQuery(query.charAt(0).toUpperCase() + query.slice(1)); // Capitalize the first letter
+    
+        // Capitalize the first letter of each word
+        const capitalizeWords = (str) => {
+            return str
+                .split(' ')
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(' ');
+        };
+    
+        const formattedQuery = capitalizeWords(query);
+    
+        console.log('Search query:', formattedQuery);
+        setSearchQuery(formattedQuery); // Set the formatted query
+    
         if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
-
+    
         debounceTimeout.current = setTimeout(() => {
-            if (query.trim()) {
-                performSearch(query.trim());
+            if (formattedQuery.trim()) {
+                performSearch(formattedQuery.trim());
             } else {
                 setSearchResults([]); // Clear results if query is empty
             }
-        }, 1500); // Debounce time
+        }, 1000); // Debounce time
     };
+    
 
     const performSearch = async (query) => {
         console.log("Performing search for:", query);

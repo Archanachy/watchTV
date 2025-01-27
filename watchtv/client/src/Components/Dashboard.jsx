@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
-import { faSearch, faBars, faTimes, faStar } from '@fortawesome/free-solid-svg-icons';
+import {  faBars, faTimes, faStar } from '@fortawesome/free-solid-svg-icons';
 import { watchtv, Profile, watchtv_icon, Movies } from '../assets/Pictures';
 import Search from './Search'
 import '../Styles/Dashboard.css';
@@ -23,13 +23,6 @@ function Dashboard() {
     const navigate = useNavigate();
     const [currentSlide, setCurrentSlide] = useState(0);
     const slideInterval = useRef(null);
-    // const [searchQuery, setSearchQuery] = useState('');
-    // const [searchResults, setSearchResults] = useState([]);
-    // const debounceTimeout = useRef(null);
-    // const [searchResultsVisible, setSearchResultsVisible] = useState(false);
-
-    
-
 
     const images = [
         "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
