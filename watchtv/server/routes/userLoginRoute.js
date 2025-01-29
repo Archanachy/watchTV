@@ -1,5 +1,5 @@
 const express = require('express');
-const { findUserByPhoneNumber } = require('../models/UserLoginModel');
+const { findUserByPhoneNumber,findUserProfile,createDefaultProfile } = require('../models/UserLoginModel');
 const bcrypt = require('bcrypt');
 const { generateToken } = require('../utils/jwt');
 const router = express.Router();
@@ -20,6 +20,12 @@ router.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(400).json({ message: 'Incorrect password' });
+        }
+
+        // Check if profile exists
+        const profileResult = await findUserProfile(user.id);
+        if (profileResult.rows.length === 0) {
+        await createDefaultProfile(user.id); // Create a default profile if not found
         }
 
         // Generate a JWT
