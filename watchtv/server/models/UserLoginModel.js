@@ -18,7 +18,7 @@ const findUserProfile = async (userId) => {
 const createDefaultProfile = async (userId) => {
     const query = `
         INSERT INTO user_profile (user_id, fullname, city, country, bio, image_path)
-        VALUES ($1, 'Real Name', 'city', 'country', 'biography', '/Users/aryanshah/Developer/watchTV/watchtv/server/uploads/defaultAvatar.jpg')`;
+        VALUES ($1, 'Real Name', 'city', 'country', 'biography', '/uploads/defaultAvatar.jpg')`;
     return await pool.query(query, [userId]);
 };
 

@@ -38,14 +38,6 @@ const Profile = () => {
         setDateJoined(new Date(profile.created_at).toISOString().split('T')[0]);
         setAvatar(profile.image_path ? `${import.meta.env.VITE_API_URL}${profile.image_path}` : defaultAvatar);
 
-
-        console.log(`${import.meta.env.VITE_API_URL}${profile.image_path}`);
-        console.log(profile.image_path); // Check if it's correct or undefined
-    
-
-
-
-        
       } catch (error) {
         console.error("Error fetching profile:", error);
       }

@@ -48,7 +48,7 @@ router.patch('/profile', upload.single('profileAvatar'), authenticateToken, asyn
             await sharp(filePath).metadata();
 
             // Update imagePath with new file path
-            imagePath = `/uploads${req.file.filename}`;
+            imagePath = `/uploads/${req.file.filename}`;
         }
 
         // Update profile in DB
