@@ -4,6 +4,7 @@ import "../Styles/Profile.css";
 import { defaultAvatar } from "../assets/Pictures";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
+import axios from '../api/axios';
 
 const Profile = () => {
   const [username, setUsername] = useState("Username");
@@ -13,8 +14,47 @@ const Profile = () => {
   const [avatar, setAvatar] = useState(defaultAvatar);
   const [realName, setRealName] = useState("Real Name");
   const [activeTab, setActiveTab] = useState("Post");
+  const [dateJoined, setDateJoined] = useState("Date");
   const [content, setContent] = useState([]); // State to hold content
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token"); // Ensure the token is sent for authentication
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
+          headers: {
+            "Authorization": `Bearer ${token}`, // Send token for authentication
+            "Content-Type": "application/json"
+          }
+        });
+  
+        const profile = response.data.profile;
+  
+        setUsername(profile.username || "Username");
+        setRealName(profile.fullname || "Real Name");
+        setLocation(`${profile.city || "City"}, ${profile.country || "Country"}`);
+        setBio(profile.bio || "Biography");
+        setDateJoined(new Date(profile.created_at).toISOString().split('T')[0]);
+        setAvatar(profile.image_path ? `${import.meta.env.VITE_API_URL}${profile.image_path}` : defaultAvatar);
+
+
+        console.log(`${import.meta.env.VITE_API_URL}${profile.image_path}`);
+        console.log(profile.image_path); // Check if it's correct or undefined
+    
+
+
+
+        
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+  
+    fetchProfile();
+  }, []);
+  
+  
 
   useEffect(() => {
     const darkMode = localStorage.getItem("darkMode") === "true";
@@ -100,7 +140,7 @@ const Profile = () => {
         <div className="stats">
           <div>
             <p>Joined on WatchTV</p>
-            <p>Date</p>
+            <p>{dateJoined}</p>
           </div>
           <div>
             <p>Total Content Rated</p>

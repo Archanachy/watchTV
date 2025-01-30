@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const bodyparser = require('body-parser');
 const userRegisterRoute = require('./routes/userRegisterRoute');
 const userLoginRoute = require('./routes/userLoginRoute');
@@ -16,15 +17,19 @@ const app = express();
 // Middleware
 app.use(cors({
   origin: 'http://localhost:5173', // Frontend URL
-  methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE'], // Add all necessary methods
+  methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE','OPTIONS'], // Add all necessary methods
   credentials: true,
 }));
+app.use('/uploads', cors({
+  origin: 'http://localhost:5173', // Allow your frontend URL to access the uploads folder
+  methods: ['GET'],
+}), express.static(path.join(__dirname, 'uploads')));
 
 app.use(bodyparser.json());
 app.use(express.urlencoded({ extended: true })); // For handling form-data text fields
+app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Serve uploaded files statically
-app.use('/uploads', express.static('uploads'));
 
 // Routes
 app.use('/api', userRegisterRoute);

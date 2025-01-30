@@ -1,11 +1,13 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
 import '../Styles/Edit-Profile.css';
+import axios from '../api/axios';
 
 function EditProfile() {
     const navigate = useNavigate();
     const [image, setImage] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
     const [croppedArea, setCroppedArea] = useState(null);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
@@ -15,20 +17,54 @@ function EditProfile() {
     const [bio, setBio] = useState('');
     const fileInputRef = useRef(null);
     const [bioCount, setBioCount] = useState(0);
+    const [existingImage, setExistingImage] = useState(null);
+    const [loading, setLoading] = useState(false);
+
+
+    // Fetch the current user profile when the component mounts
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const token = localStorage.getItem('token'); 
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+
+                const profile = response.data;
+
+                setRealName(profile.fullname || '');
+                setCountry(profile.country || '');
+                setCity(profile.city || '');
+                setBio(profile.bio || '');
+                setBioCount(profile.bio ? profile.bio.length : 0);
+                setExistingImage(profile.image_path || null); // Set existing image
+            } catch (error) {
+                console.error('Error fetching profile:', error);
+            }
+        };
+
+        fetchProfile();
+    }, []);
+
     const handleFileUpload = () => {
         fileInputRef.current.click();
     };
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImage(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+  
+const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        setSelectedFile(file); // Store file for upload
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImage(reader.result); // Display preview
+        };
+        reader.readAsDataURL(file);
+    }
+};
 
     const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
         setCroppedArea(croppedAreaPixels);
@@ -43,9 +79,35 @@ function EditProfile() {
         setBioCount(e.target.value.length);
     };
 
-    const handleUpdate = () => {
-        // Save profile changes logic here
-        navigate('/profile');
+    const handleUpdate = async () => {
+        setLoading(true);
+
+        try {
+            const userId = localStorage.getItem('userId');
+            const formData = new FormData();
+            formData.append('userId', userId);
+            formData.append('fullname', realName || '');
+            formData.append('city', city || '');
+            formData.append('country', country || '');
+            formData.append('bio', bio || '');
+
+            if (selectedFile) {
+                formData.append('profileAvatar', selectedFile);
+            }            
+
+            await axios.patch(`${import.meta.env.VITE_API_URL}/api/profile`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`, 
+                },
+            });
+
+            navigate('/profile'); // Navigate back to profile after update
+        } catch (error) {
+            console.error('Error updating profile:', error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleCancel = () => {
@@ -75,6 +137,13 @@ function EditProfile() {
                                <span>✖</span> 
                             </button>
                         </div>
+                    ) : existingImage ? (
+                            <div className="existing-profile-image">
+                                <img src={existingImage} alt="Profile" />
+                                <button className="remove-profile-image-button" onClick={() => setExistingImage(null)}>
+                                    <span>✖</span>
+                                </button>
+                            </div>
                     ) : (
                         <button onClick={handleFileUpload}>
                             <span >Upload Image</span>
@@ -113,8 +182,8 @@ function EditProfile() {
                     <div className='profile-bio-count'>{bioCount}/500</div>
                 </div>
                 <div className="edit-profile-controls-container">
-                    <button id="update" onClick={handleUpdate}>
-                        Update
+                    <button id="update" onClick={handleUpdate} disabled={loading}>
+                    {loading ? 'Updating...' : 'Update'}
                     </button>
                     <button id="cancel" onClick={handleCancel}>
                         Cancel

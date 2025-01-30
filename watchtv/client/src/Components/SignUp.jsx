@@ -54,7 +54,7 @@ function SignUp() {
   };
 
   // Api call to register user
-    const submitForm = async () => {
+  const submitForm = async () => {
     setIsSubmitting(true);
     try {
         const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/register`, {
@@ -79,11 +79,12 @@ function SignUp() {
                     ...prevErrors,
                     username: 'Username already exists.',
                 }));
-            } else if (errorMessage.includes('phone')) {
+            } else if (errorMessage.includes('phone') || errorMessage.includes('phone number')) {
                 setErrors((prevErrors) => ({
                     ...prevErrors,
                     phone: 'Phone number already exists.',
                 }));
+                alert('Phone number already exists. Please use a different phone number.'); // Show alert
             } else {
                 alert('An unexpected error occurred. Please try again.');
             }
@@ -93,7 +94,8 @@ function SignUp() {
     } finally {
         setIsSubmitting(false);
     }
-  };
+};
+
 
 
   const handleFocus = (field) => {

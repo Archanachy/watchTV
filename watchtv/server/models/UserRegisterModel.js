@@ -15,4 +15,9 @@ const findUserByUsername = async (username) => {
     return pool.query(query, values);
 };
 
-module.exports={ createUser,findUserByUsername };
+const findUserByPhone = async (phone_number) => {
+    const query = `SELECT * FROM users_registration WHERE phone_number = $1;`;
+    return pool.query(query, [phone_number]);
+};
+
+module.exports={ createUser,findUserByUsername,findUserByPhone}; 
