@@ -85,9 +85,16 @@ async function countTotalUpload(userId){
     return result.rows[0].count;
 }
 
+async function getProfilePic(userId){
+    const query=`SELECT image_path FROM user_profile WHERE user_id=$1`;
+    const result=await pool.query(query,[userId]);
+    return result.rows[0].image_path; 
+}
+
 module.exports = {
   updateProfile,
   getProfileById,
   getContentByUser,
   countTotalUpload,
+  getProfilePic,
 };

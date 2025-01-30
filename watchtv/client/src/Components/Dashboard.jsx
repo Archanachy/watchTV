@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import {  faBars, faTimes, faStar } from '@fortawesome/free-solid-svg-icons';
-import { watchtv, Profile, watchtv_icon, Movies } from '../assets/Pictures';
+import { watchtv, defaultAvatar, watchtv_icon, Movies } from '../assets/Pictures';
 import Search from './Search'
 import '../Styles/Dashboard.css';
 import axios from '../api/axios';
@@ -10,6 +10,7 @@ import axios from '../api/axios';
 
 function Dashboard() {
     const [isDropdownVisible, setDropdownVisible] = useState(false);
+    const [profilePic, setProfilePic] = useState(defaultAvatar);
     const [isGenreDropdownVisible, setGenreDropdownVisible] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
@@ -65,7 +66,33 @@ function Dashboard() {
         
             fetchContent();
         }, [selectedGenre, filterType]);  // Fetch content whenever the selected genre or filter type changes
-    
+
+
+        useEffect(() => {
+            // Fetch user profile data
+            const fetchUserProfile = async () => {
+                try {
+                    const token = localStorage.getItem("token"); 
+                    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile_Pic`, {
+                      headers: {
+                        "Authorization": `Bearer ${token}`, 
+                        "Content-Type": "application/json"
+                      }
+                    });
+                    const profilePicture = response.data.profilePicture;
+                    console.log("Profile API Response:", response.data);
+
+                   setProfilePic(profilePicture?`${import.meta.env.VITE_API_URL}${profilePicture}`: defaultAvatar);
+                   console.log("Fetched Profile Picture Path:", profilePicture.image_path);
+
+                } catch (error) {
+                    console.error('Error fetching user profile:', error);
+                }
+            };
+
+            fetchUserProfile();
+        }, []);
+        
     
     const handleFilterChange = (type) => {
         setFilterType(type);
@@ -267,7 +294,7 @@ function Dashboard() {
                     {/* Profile Dropdown */}
                     <div className="profile" ref={dropdownRef}>
                         <img
-                            src={Profile}
+                          src={profilePic}
                             alt="Profile"
                             className="profile-picture"
                             onClick={(e) => {
