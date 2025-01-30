@@ -1,4 +1,5 @@
 const pool = require('../config/database');
+const { get } = require('../routes/userRegisterRoute');
 
 /**
  * Get the profile of a user by userId
@@ -9,7 +10,7 @@ async function getProfileById(userId) {
     try {
         const query = `SELECT 
         p.profile_id, p.fullname, p.city, p.country, p.bio, p.image_path, p.created_at,
-        u.id AS user_id, u.username 
+        u.id AS user_id, u.username ,u.created_at
         FROM user_profile p
         JOIN users_registration u ON p.user_id = u.id
         WHERE p.user_id = $1;`;  
@@ -25,6 +26,19 @@ async function getProfileById(userId) {
         console.error('Error fetching profile:', error.message);
         throw new Error('Could not fetch profile');
     }
+}
+
+async function getContentByUser(userId) {
+
+    const query=`Select * from content where id=$1`;
+
+    const result=await pool.query(query,[userId]);
+
+    if(result.rows.length===0){
+      throw new Error('No content uploaded!');
+    }
+    return result.rows;
+
 }
 
 /**
@@ -65,7 +79,15 @@ async function updateProfile({ userId, fullname, city, country, bio, imagePath }
     }
 }
 
+async function countTotalUpload(userId){
+    const query=`SELECT COUNT(*) FROM content WHERE id=$1`;
+    const result=await pool.query(query,[userId]);
+    return result.rows[0].count;
+}
+
 module.exports = {
   updateProfile,
   getProfileById,
+  getContentByUser,
+  countTotalUpload,
 };

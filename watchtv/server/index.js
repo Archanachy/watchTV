@@ -11,6 +11,8 @@ const getContentRoutes = require('./routes/getContentroute');
 const updateProfileRoute=require('./routes/updateProfileRoute');
 const searchRoute = require('./routes/searchRoute');
 const getProfileRoute = require('./routes/getProfileRoute');
+const getContentUploadedByUser = require('./routes/getContentUploadedByUser');
+const totalUploadRoute = require('./routes/countTotalUpload');
 
 const app = express();
 
@@ -20,6 +22,7 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE','OPTIONS'], // Add all necessary methods
   credentials: true,
 }));
+
 app.use('/uploads', cors({
   origin: 'http://localhost:5173', // Allow your frontend URL to access the uploads folder
   methods: ['GET'],
@@ -40,6 +43,8 @@ app.use('/api', getContentRoutes);
 app.use('/api',updateProfileRoute);
 app.use('/api', searchRoute);
 app.use('/api', getProfileRoute);
+app.use('/api', getContentUploadedByUser);
+app.use('/api', totalUploadRoute);
 
 // Start server
 const PORT = process.env.PORT || 3002;
