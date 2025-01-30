@@ -14,6 +14,7 @@ body.dark-mode {
 .profile-container {
     border: solid 1px #000;
     margin: 0 30px;
+    overflow-x: hidden;
 }
 
 body.dark-mode .profile-container {
@@ -260,11 +261,14 @@ body.dark-mode .active-tab {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 4rem;
     align-items: center;
-    
     padding: 2rem;
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    overflow-y: auto; /* Allow vertical scrolling */
 }
 
 .profile-block {
+    width: 100%; /* Ensure the profile block takes full width */
+    max-width: 100%; /* Prevent overflow */
     height: 23rem;
     background-color: #333232;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
