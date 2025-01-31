@@ -40,7 +40,7 @@ function SignIn() {
     setErrors(newErrors);
     if (formIsValid) {
       submitForm();
-    } // <-- Missing closing brace added here
+    } 
   };
 
   const handleFocus = (field) => {

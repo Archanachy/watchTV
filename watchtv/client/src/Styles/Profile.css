@@ -14,6 +14,7 @@ body.dark-mode {
 .profile-container {
     border: solid 1px #000;
     margin: 0 30px;
+    overflow-x: hidden;
 }
 
 body.dark-mode .profile-container {
@@ -26,9 +27,9 @@ body.dark-mode .profile-container {
 
 /* Breadcrumb */
 .breadcrumb {
-    font-size: 30px;
+    font-size: 27px;
     color: #888;
-    margin: 30px 0 0 230px;
+    margin: 35px 0;
 }
 
 body.dark-mode .breadcrumb {
@@ -57,7 +58,7 @@ body.dark-mode .breadcrumb {
 }
 
 body.dark-mode .profile-card {
-    background-color: #1f1f1f;
+    background-color: #111111;
 }
 
 .left-section {
@@ -114,6 +115,7 @@ body.dark-mode .real-name {
 }
 
 .right-section {
+    margin-top: 60px;
     flex: 2;
     padding-left: 20px;
 }
@@ -206,11 +208,9 @@ body.dark-mode .edit-section textarea {
 
 /* Stats Section */
 .stats {
+    margin-top: 65px;
     display: flex;
-    justify-content: flex-start;
-    margin: 20px;
-    gap: 100px;
-    padding: 10px 60px;
+    justify-content: space-evenly;
     color: #222;
     font-size: 19px;
 }
@@ -235,17 +235,16 @@ body.dark-mode .tabs {
 
 .tabs a {
     padding: 10px 20px;
+    font-weight: 600;
     background: none;
     border: none;
     font-size: 19px;
-    color: #000;
+    color: #007bff;
     cursor: pointer;
     text-decoration: none;
 }
 
-body.dark-mode .tabs a {
-    color: #ffffff;
-}
+
 
 .active-tab {
     border-bottom: 2px solid #000;
@@ -256,16 +255,20 @@ body.dark-mode .active-tab {
 }
 
 /* Content Section */
-.View {
-    width: 100%;
+.profile-View {
+    width: 95%;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 4rem;
+    gap: 3rem;
     align-items: center;
-    margin-top: 3rem;
+    padding: 2rem;
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+    overflow-y: auto; /* Allow vertical scrolling */
 }
 
-.block {
+.profile-block {
+    width: 100%; /* Ensure the profile block takes full width */
+    max-width: 100%; /* Prevent overflow */
     height: 23rem;
     background-color: #333232;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
@@ -283,19 +286,19 @@ body.dark-mode .active-tab {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.block:hover {
+.profile-block:hover {
     transform: scale(1.05);
     box-shadow: rgba(0, 0, 0, 0.3) 0px 20px 30px;
 }
 
-.block-image {
+.profile-block-image {
     width: 100%;
     height: 70%;
     object-fit: cover;
     border-radius: 0.2rem 0.2rem 0 0;
 }
 
-.block-details {
+.profile-block-details {
     padding: 1rem;
     width: 100%;
     text-align: left;
@@ -305,32 +308,32 @@ body.dark-mode .active-tab {
     flex-grow: 1;
 }
 
-.block-rating {
+.profile-block-rating {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     margin-bottom: 0.5rem;
 }
 
-.block-rating span {
+.profile-block-rating span {
     font-size: 15px;
     margin-top: 1%;
     color: #ccc;
 }
 
-.star-icon {
+.profile-star-icon {
     color: #ffd700;
     margin-right: 0.5rem;
     font-size: 15px;
 }
 
-.block-date {
+.profile-block-date {
     margin-left: auto;
     font-size: 80%;
     color: #ccc;
 }
 
-.block-name {
+.profile-block-name {
     margin-top: 0.5rem;
     font-size: 80%;
     font-weight: bold;

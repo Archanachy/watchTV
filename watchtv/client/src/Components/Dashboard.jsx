@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
-import { faSearch, faBars, faTimes, faStar } from '@fortawesome/free-solid-svg-icons';
-import { watchtv, Profile, watchtv_icon, Movies } from '../assets/Pictures';
+import {  faBars, faTimes, faStar } from '@fortawesome/free-solid-svg-icons';
+import { watchtv, defaultAvatar, watchtv_icon, Movies } from '../assets/Pictures';
+import Search from './Search'
 import '../Styles/Dashboard.css';
 import axios from '../api/axios';
 
 
 function Dashboard() {
     const [isDropdownVisible, setDropdownVisible] = useState(false);
+    const [profilePic, setProfilePic] = useState(defaultAvatar);
     const [isGenreDropdownVisible, setGenreDropdownVisible] = useState(false);
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
@@ -22,7 +24,6 @@ function Dashboard() {
     const navigate = useNavigate();
     const [currentSlide, setCurrentSlide] = useState(0);
     const slideInterval = useRef(null);
-
 
     const images = [
         "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -65,10 +66,35 @@ function Dashboard() {
         
             fetchContent();
         }, [selectedGenre, filterType]);  // Fetch content whenever the selected genre or filter type changes
-        
+
+
+        useEffect(() => {
+            // Fetch user profile data
+            const fetchUserProfile = async () => {
+                try {
+                    const token = localStorage.getItem("token"); 
+                    const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile_Pic`, {
+                      headers: {
+                        "Authorization": `Bearer ${token}`, 
+                        "Content-Type": "application/json"
+                      }
+                    });
+                    const profilePicture = response.data.profilePicture;
+                    console.log("Profile API Response:", response.data);
+
+                   setProfilePic(profilePicture?`${import.meta.env.VITE_API_URL}${profilePicture}`: defaultAvatar);
+                   console.log("Fetched Profile Picture Path:", profilePicture.image_path);
+
+                } catch (error) {
+                    console.error('Error fetching user profile:', error);
+                }
+            };
+
+            fetchUserProfile();
+        }, []);
         
     
-     const handleFilterChange = (type) => {
+    const handleFilterChange = (type) => {
         setFilterType(type);
     };
 
@@ -200,7 +226,11 @@ function Dashboard() {
                     <img src={watchtv} alt="TV icon" className={`dashboard-tv-icon`} />
                     <h1>WatchTV</h1>
                 </div>
+
+                <div><Search/> </div>
+
                 <div className={`nav-links ${isMobileMenuVisible ? 'mobile-menu' : ''}`} ref={mobileMenuRef}>
+                    
                         <a
                         href="#"
                         onClick={handleHomeClick}
@@ -252,10 +282,8 @@ function Dashboard() {
                     </div>
 
                     <a href="#">WatchList</a>
-                    <div className="search-container">
-                        <input type="text" placeholder="Search.." className="search" />
-                        <FontAwesomeIcon icon={faSearch} className="search-icon" />
-                    </div>
+                    
+
                     <div className="toggle-container">
                         <input type="checkbox" id="toggle" onChange={toggleDarkMode} checked={isDarkMode} />
                         <label htmlFor="toggle" className="toggle-label">
@@ -266,7 +294,7 @@ function Dashboard() {
                     {/* Profile Dropdown */}
                     <div className="profile" ref={dropdownRef}>
                         <img
-                            src={Profile}
+                          src={profilePic}
                             alt="Profile"
                             className="profile-picture"
                             onClick={(e) => {
