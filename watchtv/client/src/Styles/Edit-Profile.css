@@ -1,59 +1,210 @@
-/* .edit-profile-container {
+.edit-profile-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 1.25rem;
+    background-color: #f0f2f5;
+    font-family: Arial, sans-serif;
 }
 
-.upload-container {
+.edit-profile-form-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 15px auto;
+    background-color: #ffffff;
+    padding: 0 2rem 2rem 2rem;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
     position: relative;
     z-index: 1;
+}
+
+.edit-profile-header-container {
+    display: flex;
+    justify-content: center;
+}
+
+.edit-profile-image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 160px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    background: #f8f9fa;
+    border: 2px dashed #ccc;
+    border-radius: 50%;
+    position: relative;
     margin-bottom: 15px;
     margin-left: auto;
     margin-right: auto;
 }
 
+.edit-profile-image-container button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    color: #007bff;
+    cursor: pointer;
+    top: 18px;
+    right: 15px;
+    font-weight: 600;
+}
 
-
-.crop-container {
+.profile-crop-container {
     position: relative;
     width: 100%;
+    max-width: 160px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    background: #333;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.profile-crop-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.remove-profile-image-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.reactEasyCrop_CropArea {
-    height: 100% !important;
-}
-
-.upload-details-container {
+.edit-profile-details-container {
     width: 100%;
     display: flex;
     flex-direction: column;
+    margin-bottom: 20px;
+}
+
+.edit-profile-details-container label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #333;
+}
+
+.edit-profile-details-container label span {
+    width: 140px;
+    margin-right: 10px;
+}
+
+.profile-box-label {
+    font-size: 16.5px;
+    min-width: 100px;
+}
+
+.edit-profile-details-container input[type="text"],
+.edit-profile-details-container textarea {
     flex: 1;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 15px;
     color: #333;
+    background-color: #ffffff;
+    max-width: 100%;
 }
 
-.upload-details-container textarea {
+.edit-profile-details-container textarea {
     resize: none;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
-.upload-controls-container {
+.profile-bio-count{
+    position: absolute;
+    right: 57px;
+    bottom: 125px;
+    opacity: 0.55;
+    font-size: 13px;
+}
+
+.edit-profile-controls-container {
     display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+    justify-content: flex-start;
+    width: 100%;
+    gap: 42px;
 }
 
-.upload-controls-container button {
+.edit-profile-controls-container button {
     padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
+    font-size: 1.3rem;
     cursor: pointer;
-} */
+    transition: background-color 0.3s;
+    margin: 0;
+}
+
+.edit-profile-controls-container button#update {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.edit-profile-controls-container button#update:hover {
+    background-color: #0056b3;
+}
+
+.edit-profile-controls-container button#cancel {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 0 0.46rem;
+}
+
+.edit-profile-controls-container button#cancel:hover {
+    background-color: #a71d2a;
+}
+
+body.dark-mode .edit-profile-container {
+    background-color: #121212;
+}
+
+body.dark-mode .edit-profile-form-container {
+    background-color: #1c1c1c;
+}
+body.dark-mode .edit-profile-details-container label {
+    color: #ededed;
+}
+
+body.dark-mode .edit-profile-details-container input[type="text"],
+body.dark-mode .edit-profile-details-container input[type="date"],
+body.dark-mode .edit-profile-details-container input[type="number"],
+body.dark-mode .edit-profile-details-container textarea {
+    background-color: #1c1c1c;
+    border: 1px solid #444444;
+    color: #ededed;
+}
+
+body.dark-mode .edit-profile-image-container {
+    background-color: #2E2E2E;
+    border-color: #444444;
+    color: #B0BEC5;
+}
+body.dark-mode .edit-profile-image-container button {
+    color: #66b2ff;
+}
