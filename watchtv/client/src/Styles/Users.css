@@ -1,0 +1,72 @@
+.users {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+td a {
+  text-decoration: none;
+  color: black;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.delete-users {
+  color: red; /* Set the "Delete Users" text color to red */
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+td button {
+  background: none;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.delete img {
+  max-height: 20px;
+  padding: 3px 10px 0 10px;
+  filter: invert(0); /* Default to black in light mode */
+}
+
+.dark-mode {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.dark-mode th {
+  background-color: #333333;
+}
+
+.dark-mode tr:nth-child(even) {
+  background-color: #1f1f1f;
+}
+
+.dark-mode td a {
+  color: #ffffff;
+}
+
+.dark-mode .delete img {
+  filter: invert(1); /* Invert to white in dark mode */
+}
