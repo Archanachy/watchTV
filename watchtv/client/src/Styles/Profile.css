@@ -256,10 +256,10 @@ body.dark-mode .active-tab {
 
 /* Content Section */
 .profile-View {
-    width: 100%;
+    width: 95%;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 4rem;
+    gap: 3rem;
     align-items: center;
     padding: 2rem;
     overflow-x: hidden; /* Hide horizontal scrollbar */
