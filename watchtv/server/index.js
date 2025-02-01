@@ -14,6 +14,8 @@ const getProfileRoute = require('./routes/getProfileRoute');
 const getContentUploadedByUser = require('./routes/getContentUploadedByUser');
 const totalUploadRoute = require('./routes/countTotalUpload');
 const ProfilePictureRoute = require('./routes/getProfiePic');
+const UpdateContentRoute = require('./routes/UpdateContentRoute');
+const DeleteContentRoute = require('./routes/DeleteContentRoute');
 
 const app = express();
 
@@ -47,6 +49,9 @@ app.use('/api', getProfileRoute);
 app.use('/api', getContentUploadedByUser);
 app.use('/api', totalUploadRoute);
 app.use('/api', ProfilePictureRoute);
+app.use('/api', UpdateContentRoute);
+app.use('/api', DeleteContentRoute);
+
 // Start server
 const PORT = process.env.PORT || 3002;
 app.listen(PORT, () => {
