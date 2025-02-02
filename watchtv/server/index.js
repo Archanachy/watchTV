@@ -16,6 +16,9 @@ const totalUploadRoute = require('./routes/countTotalUpload');
 const ProfilePictureRoute = require('./routes/getProfiePic');
 const UpdateContentRoute = require('./routes/UpdateContentRoute');
 const DeleteContentRoute = require('./routes/DeleteContentRoute');
+const watchlistRoute = require('./routes/watchlistRoute');
+const removeWatchlistRoute = require('./routes/removeWatchlistRoute');
+const getWatchlistRoute = require('./routes/getWatchlistRoute');
 
 const app = express();
 
@@ -51,6 +54,9 @@ app.use('/api', totalUploadRoute);
 app.use('/api', ProfilePictureRoute);
 app.use('/api', UpdateContentRoute);
 app.use('/api', DeleteContentRoute);
+app.use('/api', watchlistRoute);
+app.use('/api', removeWatchlistRoute);
+app.use('/api', getWatchlistRoute);
 
 // Start server
 const PORT = process.env.PORT || 3002;
