@@ -12,6 +12,7 @@ import Users from './Components/Users';
 import Content from './Components/Content';
 import Rating from './Components/Rating';
 import EditContent from './Components/Edit-Content';
+
 function App() {
   React.useEffect(() => {
     document.title = "Watch TV"; // Dynamically set the title

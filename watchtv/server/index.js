@@ -19,7 +19,7 @@ const DeleteContentRoute = require('./routes/DeleteContentRoute');
 const watchlistRoute = require('./routes/watchlistRoute');
 const removeWatchlistRoute = require('./routes/removeWatchlistRoute');
 const getWatchlistRoute = require('./routes/getWatchlistRoute');
-
+const getParticularContentRoute = require('./routes/getParticularContentRoute');
 const app = express();
 
 // Middleware
@@ -57,6 +57,7 @@ app.use('/api', DeleteContentRoute);
 app.use('/api', watchlistRoute);
 app.use('/api', removeWatchlistRoute);
 app.use('/api', getWatchlistRoute);
+app.use('/api', getParticularContentRoute);
 
 // Start server
 const PORT = process.env.PORT || 3002;
