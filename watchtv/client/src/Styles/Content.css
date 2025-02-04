@@ -14,7 +14,7 @@ body.dark-mode {
 }
 
 .content-container {
-    border: solid 1px #000;
+    
     margin: 0 30px;
     overflow-x: hidden;
 }
@@ -44,17 +44,18 @@ body.dark-mode .content-card {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
     flex: 1;
+    
 }
 
 .content-poster {
+    margin-left: 90px;
     width: 200px;
     height: 250px;
     background-color: #ccc;
     display: flex;
     justify-content: center;
-    align-items: center;
+    
     font-size: 14px;
     font-weight: bold;
     color: #666;
@@ -108,19 +109,21 @@ p #home{
 }
 
 .content-name {
+    margin-right: 17px;
     font-size: 25px;
-    font-weight: bold;
-    margin: 0;
+    font-weight: bold
 }
 
 .watchlist-btn {
+    margin-left: 95px;
+    width: fit-content;
     padding: 8px 15px;
     background-color: white;
     color: black;
     border: solid 2px #007bff;
     border-radius: 8px;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 70px;
     font-size: 18px;
 }
 
@@ -149,16 +152,26 @@ body.dark-mode .description {
 }
 
 .content-stats {
-    margin-left: 135px;
+    margin-left: 90px;
+    
     margin-top: 65px;
     display: flex;
     justify-content: flex-start;
     color: #222;
     font-size: 19px;
     margin-bottom: 40px;
+    flex-direction: column;
 }
 
-body.dark-mode .stats {
+.rating span{
+    color: #ccc;
+}
+
+.votes span{
+    color: #ccc;
+}
+
+body.dark-mode .content-stats {
     color: #dddddd;
 }
 
@@ -204,8 +217,8 @@ body.dark-mode .stats {
 }
 
 .content-profile-picture {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     margin-right: 10px;
     object-fit: cover;
@@ -214,6 +227,8 @@ body.dark-mode .stats {
 }
 
 .content-username {
+    margin-left: 90px;
+    font-size: 20px;
     display: flex;
     align-items: center;
     margin-top: 10px;

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import '../Styles/Content.css';
-import axios from 'axios';
+import axios from '../api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark as faBookmarkSolid } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark as faBookmarkSolid, faStar } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as faBookmarkRegular } from '@fortawesome/free-regular-svg-icons';
 
 const Content = () => {
@@ -115,7 +115,15 @@ const Content = () => {
   
 
   // ✅ Redirects
-  const handleEditContent = () => navigate('/edit-content');
+  const handleEditContent = (contentId) => {
+    if (typeof contentId === 'object') {
+      console.error('Invalid contentId:', contentId);
+      return;
+    }
+    navigate(`/edit-content/${contentId.toString()}`);
+  };
+  
+  
   const handleHome = () => navigate('/dashboard');
 
   // ✅ Show loading state while fetching content
@@ -152,6 +160,26 @@ const Content = () => {
               <FontAwesomeIcon icon={inWatchlist ? faBookmarkSolid : faBookmarkRegular} /> 
               {inWatchlist ? ' Remove from Watchlist' : ' Add to Watchlist'}
             </button>
+            
+            <div className='content-stats'>
+          <p>Released Date: {new Date(content.released_date).toISOString().split('T')[0]}</p>
+          <p>Duration: {content.duration_minutes} minutes</p>
+          <p>Genres: {Array.isArray(content.genres) ? content.genres.map(g => g.name).join(', ') : 'N/A'}</p>
+          <span>Rate: </span>
+          <div className="rating-section">
+            {[1, 2, 3, 4, 5].map((value) => (
+              <span
+                key={value}
+                className={`star ${value <= (hover || rating) ? 'selected' : ''}`}
+                onClick={() => setRating(value)}
+                onMouseEnter={() => setHover(value)}
+                onMouseLeave={() => setHover(null)}
+              >
+                ★
+              </span>
+            ))}
+          </div>
+        </div>
           </div>
           <div className="content-right-section">
             <div className="content-info-section">
@@ -159,19 +187,20 @@ const Content = () => {
                 <span id="home-kind">
                   <span className="home" onClick={handleHome}>Home</span>&middot;<span>{content.kind}</span>
                 </span>
-                <button className="edit-content" onClick={handleEditContent}>Edit Content</button>
+                {/* <button  onClick={handleEditContent}>Edit Content</button> */}
+                <button className="edit-content" onClick={() => handleEditContent(contentId)}>Edit Content</button>
               </div>
             </div>
             <span>
               <span className="content-name">{content.title}</span>
-              <span className="rating">⭐ {content.rating || "N/A"}</span>
+              <span className="rating"> <FontAwesomeIcon icon={faStar} className="star-icon"/>{content.rating || "N/A"} </span>
               <span className="votes">({content.rates || "0"} people rated)</span>
             </span>
             <p className="description">{content.description}</p>
           </div>
         </div>
       </div>
-      <div className="content-stats">
+      {/* <div className="content-stats">
         <div>
           <p>Released Date: {new Date(content.released_date).toISOString().split('T')[0]}</p>
           <p>Duration: {content.duration_minutes} minutes</p>
@@ -191,7 +220,7 @@ const Content = () => {
             ))}
           </div>
         </div>
-      </div>
+      </div> */}
       {message && <div className="message">{message}</div>}
     </div>
   );

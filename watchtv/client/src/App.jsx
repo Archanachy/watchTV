@@ -36,7 +36,7 @@ function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/content/:contentId" element={<Content />} />
         <Route path="/rating" element={<Rating />} />
-        <Route path="/edit-content" element={<EditContent />} />
+        <Route path="/edit-content/:contentId" element={<EditContent />} />
 
 
       
