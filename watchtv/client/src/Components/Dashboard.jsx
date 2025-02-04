@@ -374,7 +374,7 @@ function Dashboard() {
                 <div className="View">
                 {content.map((item) => (
                     <div key={item.content_id} className="block" onClick={() => handleContentClick(item.content_id)}>
-                    <img src={item.image_path} alt={item.title} className="block-image" />
+                    <img src={`${import.meta.env.VITE_API_URL}${item.image_path}`} alt={item.title} className="block-image" />
                     <div className="block-details">
                         <div className="block-rating">
                         <FontAwesomeIcon icon={faStar} className="star-icon" />

@@ -6,56 +6,127 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBookmark as faBookmarkSolid } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as faBookmarkRegular } from '@fortawesome/free-regular-svg-icons';
 
-const Content = ({  }) => {
+const Content = () => {
   const { contentId } = useParams();
   const [content, setContent] = useState(null);
-
   const [rating, setRating] = useState(null);
   const [hover, setHover] = useState(null);
   const [message, setMessage] = useState('');
   const [inWatchlist, setInWatchlist] = useState(false);
+  const [loading, setLoading] = useState(true); // ✅ Added loading state
+
   const navigate = useNavigate();
 
-  const handleWatchlist = () => {
-    if (inWatchlist) {
-      setMessage('Removed from Watchlist');
-    } else {
-      setMessage('Added to Watchlist');
-    }
-    setInWatchlist(!inWatchlist);
-    setTimeout(() => setMessage(''), 3000);
-  };
-
-  const fetchContent = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/content/${contentId}`);
-      setContent(response.data);
-    } catch (error) {
-      console.error('Error fetching content:', error);
-    }
-  };
-
+  // ✅ Fetch content data
   useEffect(() => {
-    const darkMode = localStorage.getItem('darkMode') === 'true';
-        if (darkMode) {
-            document.body.classList.add('dark-mode');
-        }
-        fetchContent();
-    
+    const fetchContent = async () => {
+      if (!contentId) return; // ✅ Prevents unnecessary API calls
+
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/content/${contentId}`);
+        setContent(response.data);
+      } catch (error) {
+        console.error('Error fetching content:', error);
+      } finally {
+        setLoading(false); // ✅ Set loading to false after API call
+      }
+    };
+    fetchContent();
   }, [contentId]);
 
-  if (!content) {
-    return <div>Loading...</div>;
-  }
+  // ✅ Apply Dark Mode (Runs once)
+  useEffect(() => {
+    if (localStorage.getItem('darkMode') === 'true') {
+      document.body.classList.add('dark-mode');
+    }
+  }, []);
+
+  // ✅ Check if content is in the watchlist
+  // useEffect(() => {
+  //   const checkWatchlistStatus = async () => {
+  //     try {
+  //       const token = localStorage.getItem("token");
+  //       if (!token) return;
+
+  //       const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/watchlist`, {
+  //         headers: { Authorization: `Bearer ${token}` }
+  //       });
+
+  //       const watchlist = response.data.watchlist || [];
+  //       setInWatchlist(watchlist.some(item => item.content_id === parseInt(contentId)));
+  //     } catch (error) {
+  //       console.error("Error checking watchlist status:", error);
+  //     }
+  //   };
+
+  //   if (contentId) {
+  //     checkWatchlistStatus();
+  //   }
+  // }, [contentId]);
+
+  // ✅ Handle watchlist actions
+  const handleWatchlist = async () => {
+    try {
+      const token = localStorage.getItem("token");
+  
+      if (!token) {
+        console.log("No token found in localStorage.");
+        setMessage("Please log in to manage your watchlist.");
+        return;
+      }
+  
+      console.log("Token found:", token); // Debugging
+  
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+  
+      let response;
+      if (inWatchlist) {
+        response = await axios.delete(
+          `${import.meta.env.VITE_API_URL}/api/watchlist/${contentId}`,
+          { headers }
+        );
+  
+        if (response.status === 200) {
+          setInWatchlist(false);
+          setMessage("Removed from Watchlist");
+        }
+      } else {
+        response = await axios.post(
+          `${import.meta.env.VITE_API_URL}/api/watchlist/${contentId}`,
+          {},
+          { headers }
+        );
+  
+        if (response.status === 201) {
+          setInWatchlist(true);
+          setMessage("Added to Watchlist");
+        }
+      }
+    } catch (error) {
+      console.error("Error updating watchlist:", error.response?.data || error);
+      setMessage("Could not update watchlist. Please try again.");
+    } finally {
+      setTimeout(() => setMessage(''), 3000);
+    }
+  };
   
 
-  const handleEditContent = () => {
-    navigate('/edit-content');
-  };
+  // ✅ Redirects
+  const handleEditContent = () => navigate('/edit-content');
+  const handleHome = () => navigate('/dashboard');
 
-  const handleHome = () => {
-    navigate('/dashboard');
-  };
+  // ✅ Show loading state while fetching content
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  // ✅ Prevents accessing `content` properties before data is loaded
+  if (!content) {
+    return <p>Content not found.</p>;
+  }
 
   return (
     <div className="content-container">
@@ -63,35 +134,48 @@ const Content = ({  }) => {
         <div className="content-card">
           <div className="content-left-section">
             <div className="content-poster">
-              <img src={content.poster} alt={`${content.name} Poster`} className="content-image" />
+              <img 
+                src={`${import.meta.env.VITE_API_URL}${content.image_path}`} 
+                alt={content.title} 
+                className="content-image" 
+              />
             </div>
             <div className="content-username">
-              <img src="https://picsum.photos/30" alt="Profile" className="content-profile-picture" />
-              <span>{content.uploaded_by}</span>
+              <img 
+                src={content.profile_picture ? `${import.meta.env.VITE_API_URL}${content.profile_picture}` : "https://picsum.photos/30"} 
+                alt="Profile" 
+                className="content-profile-picture" 
+              />
+              <span>{content.username}</span>
             </div>
             <button className="watchlist-btn" onClick={handleWatchlist}>
-              <FontAwesomeIcon icon={inWatchlist ? faBookmarkSolid : faBookmarkRegular} /> Add to Watchlist
+              <FontAwesomeIcon icon={inWatchlist ? faBookmarkSolid : faBookmarkRegular} /> 
+              {inWatchlist ? ' Remove from Watchlist' : ' Add to Watchlist'}
             </button>
           </div>
           <div className="content-right-section">
             <div className="content-info-section">
-              <div className='home-edit-content'>
-                <span id='home-kind'><span className='home' onClick={handleHome}>Home</span>&middot;<span>Kind</span></span>
-                <button className='edit-content' onClick={handleEditContent}>Edit Content</button>
+              <div className="home-edit-content">
+                <span id="home-kind">
+                  <span className="home" onClick={handleHome}>Home</span>&middot;<span>{content.kind}</span>
+                </span>
+                <button className="edit-content" onClick={handleEditContent}>Edit Content</button>
               </div>
             </div>
-            <span><span className="content-name">{content.name}</span>
-              <span className="rating">⭐ {content.rating}</span>
-              <span className="votes">({content.rates} people rated)</span></span>
+            <span>
+              <span className="content-name">{content.title}</span>
+              <span className="rating">⭐ {content.rating || "N/A"}</span>
+              <span className="votes">({content.rates || "0"} people rated)</span>
+            </span>
             <p className="description">{content.description}</p>
           </div>
         </div>
       </div>
       <div className="content-stats">
         <div>
-          <p>Released Date: {content.releaseDate}</p>
-          <p>Duration: {content.duration}</p>
-          <p>Genres: {content.genres ? content.genres.join(', ') : 'N/A'}</p>
+          <p>Released Date: {new Date(content.released_date).toISOString().split('T')[0]}</p>
+          <p>Duration: {content.duration_minutes} minutes</p>
+          <p>Genres: {Array.isArray(content.genres) ? content.genres.map(g => g.name).join(', ') : 'N/A'}</p>
           <span>Rate: </span>
           <div className="rating-section">
             {[1, 2, 3, 4, 5].map((value) => (
@@ -112,9 +196,5 @@ const Content = ({  }) => {
     </div>
   );
 };
-
-
-
-
 
 export default Content;
