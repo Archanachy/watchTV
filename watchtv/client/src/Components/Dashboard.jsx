@@ -29,8 +29,11 @@ function Dashboard() {
         "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
         "https://th.bing.com/th/id/OIP.rdE9srFu8KREbfQaTc_ppwHaE6?rs=1&pid=ImgDetMain",
         "https://images.unsplash.com/photo-1631805249874-3f546d176de4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bW92aWUlMjBwb3N0ZXJ8ZW58MHx8MHx8fDA%3D"    
-        ];
+    ];
 
+    const handleContentClick = (contentId) => {
+        navigate(`/content/${contentId}`);
+      };
     
     useEffect(() => {
         // Fetch genres from the backend
@@ -369,23 +372,23 @@ function Dashboard() {
                 </div>
 
                 <div className="View">
-                {content.map((item,index) => (
-                        <div key={`${item.id}-${index}`} className="block">
-                             <img src={`${import.meta.env.VITE_API_URL}${item.image_path}`} alt={item.title} className="block-image" />
-                            <div className="block-details">
-                                <div className="block-rating">
-                                    <FontAwesomeIcon icon={faStar} className="star-icon" />
-                                    <span>{item.rating || "N/A"}</span>
-                                    <div className="block-date"> {new Date(item.released_date).toISOString().split('T')[0]}</div>
-                                </div>
-                                <div className="block-name">{item.title}</div>
-                            </div>
+                {content.map((item) => (
+                    <div key={item.content_id} className="block" onClick={() => handleContentClick(item.content_id)}>
+                    <img src={item.image_path} alt={item.title} className="block-image" />
+                    <div className="block-details">
+                        <div className="block-rating">
+                        <FontAwesomeIcon icon={faStar} className="star-icon" />
+                        <span>{item.rating || "N/A"}</span>
+                        <div className="block-date">{new Date(item.released_date).toISOString().split('T')[0]}</div>
                         </div>
-                    ))}
+                        <div className="block-name">{item.title}</div>
+                    </div>
+                    </div>
+                ))}
                 </div>
             </div>
         </div>
     );
-}
+} 
 
 export default Dashboard;
