@@ -5,15 +5,14 @@ import '../Styles/SignUp.css';
 import axios from '../api/axios';
 
 function SignUp() {
-
   const [username, setUsername] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ username: '', phone: '', password: '' });
   const [isEditing, setIsEditing] = useState({ username: false, phone: false, password: false });
-  const [isSubmitting, setIsSubmitting] = useState(false); // Added state to track submission
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const clearErrorAfterTimeout = (field) => {
     setTimeout(() => {
       setErrors((prevErrors) => ({ ...prevErrors, [field]: '' }));
@@ -25,7 +24,6 @@ function SignUp() {
     let formIsValid = true;
     const newErrors = { username: '', phone: '', password: '' };
 
-    // Validate fields
     if (username.trim().length < 3) {
       newErrors.username = 'Username must be at least 3 characters long.';
       formIsValid = false;
@@ -37,66 +35,60 @@ function SignUp() {
       formIsValid = false;
       clearErrorAfterTimeout('phone');
     }
-    
 
     if (password.length <= 6) {
       newErrors.password = 'Password must be more than 6 characters.';
       formIsValid = false;
       clearErrorAfterTimeout('password');
-      window.alert(newErrors.password); // Show window alert for password error
+      window.alert(newErrors.password);
     }
 
     setErrors(newErrors);
 
     if (formIsValid) {
-      await submitForm(); // Submit form if valid
+      await submitForm();
     }
   };
 
-  // Api call to register user
   const submitForm = async () => {
     setIsSubmitting(true);
     try {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/register`, {
-            username,
-            phone_number: phone,
-            password,
-        });
-        alert('User created successfully!');
-        // Clear form fields after successful submission
-        setUsername('');
-        setPhone('');
-        setPassword('');
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/register`, {
+        username,
+        phone_number: phone,
+        password,
+      });
+      alert('User created successfully!');
+      setUsername('');
+      setPhone('');
+      setPassword('');
     } catch (err) {
-        console.error('Error details:', err.response?.data || err.message);
+      console.error('Error details:', err.response?.data || err.message);
 
-        // Check if the error is due to validation from the backend
-        if (err.response && err.response.data && err.response.data.message) {
-            const errorMessage = err.response.data.message.toLowerCase();
+      if (err.response && err.response.data && err.response.data.message) {
+        const errorMessage = err.response.data.message.toLowerCase();
 
-            if (errorMessage.includes('username')) {
-                setErrors((prevErrors) => ({
-                    ...prevErrors,
-                    username: 'Username already exists.',
-                }));
-            } else if (errorMessage.includes('phone') || errorMessage.includes('phone number')) {
-                setErrors((prevErrors) => ({
-                    ...prevErrors,
-                    phone: 'Phone number already exists.',
-                }));
-                alert('Phone number already exists. Please use a different phone number.'); // Show alert
-            } else {
-                alert('An unexpected error occurred. Please try again.');
-            }
+        if (errorMessage.includes('username')) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            username: 'Username already exists.',
+          }));
+        } else if (errorMessage.includes('phone') || errorMessage.includes('phone number')) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            phone: 'Phone number already exists.',
+          }));
+          alert('Phone number already exists. Please use a different phone number.');
         } else {
-            alert('An unexpected error occurred. Please try again.');
+          alert('An unexpected error occurred. Please try again.');
         }
+      } else {
+        alert('An unexpected error occurred. Please try again.');
+      }
     } finally {
-        setIsSubmitting(false);
+      setIsSubmitting(false);
     }
-};
-
-
+  };
 
   const handleFocus = (field) => {
     setIsEditing((prev) => ({ ...prev, [field]: true }));
@@ -133,6 +125,7 @@ function SignUp() {
               onBlur={() => handleBlur('username')}
               required
               className={errors.username ? 'signup-input-error' : ''}
+              placeholder=" "
             />
             <label htmlFor="username">Username</label>
             {errors.username && !isEditing.username && (
@@ -154,6 +147,8 @@ function SignUp() {
               onBlur={() => handleBlur('phone')}
               required
               className={errors.phone ? 'signup-input-error' : ''}
+              placeholder=" "
+              inputMode="numeric"
             />
             <label htmlFor="phone">Phone Number</label>
             {errors.phone && !isEditing.phone && (
@@ -175,8 +170,9 @@ function SignUp() {
               onBlur={() => handleBlur('password')}
               required
               className={errors.password ? 'signup-input-error' : ''}
+              placeholder=" "
+              autoComplete="new-password"
             />
-
             <label htmlFor="password">Password</label>
             <div className="signup-password-icon" onClick={toggleShowPassword}>
               <img src={showPassword ? eyeSlashIcon : eyeIcon} alt="toggle password visibility" />
