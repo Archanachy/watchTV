@@ -500,11 +500,10 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
 }
 
 @media (max-width: 480px) {
-    .edit-container{
-        width: 80%;
-    }
+    
     .edit-form-container {
         padding: 1rem;
+        width: 90%;
     }
 
     .edit-details-container label span {
@@ -513,7 +512,7 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
 
     .edit-controls-container button {
         font-size: 1rem;
-        padding: 8px 16px;
+        padding: 4px 8px
     }
 
     .edit-controls-container button#update {
@@ -522,11 +521,12 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
     }
 
     .edit-controls-container button#delete {
-        margin-left: 15px;
+        margin-left: 8px;
         padding: 4px 8px;
     }
     .edit-controls-container button#cancel {
         margin-left: 85px;
+        padding: 4px 8px;
         
     }
 }
