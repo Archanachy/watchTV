@@ -7,6 +7,7 @@
     padding: 1.25rem;
     background-color: #f0f2f5;
     font-family: Arial, sans-serif;
+    transition: background-color 0.3s ease;
 }
 
 .edit-form-container {
@@ -15,10 +16,11 @@
     margin: 15px auto;
     background-color: #ffffff;
     padding: 0 2rem 2rem 2rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
     position: relative;
     z-index: 1;
+    transition: box-shadow 0.3s ease;
 }
 
 .edit-header-container {
@@ -42,15 +44,17 @@
     margin-bottom: 15px;
     margin-left: auto;
     margin-right: auto;
+    transition: border-color 0.3s ease;
 }
 
 .edit-image-container button {
     background: none;
     border: none;
     font-size: 1rem;
-    color: #66b2ff;
+    color: #007bff;
     cursor: pointer;
     font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 .edit-crop-container {
@@ -66,6 +70,7 @@
     align-items: center;
     justify-content: center;
     margin: 0 auto;
+    transition: background 0.3s ease;
 }
 
 .edit-crop-container img {
@@ -88,6 +93,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background 0.3s ease;
 }
 
 .edit-reactEasyCrop_CropArea {
@@ -117,6 +123,7 @@
     margin-bottom: 15px;
     font-weight: bold;
     color: #333;
+    transition: color 0.3s ease;
 }
 
 .edit-details-container label span {
@@ -141,14 +148,16 @@
     color: #333;
     background-color: #ffffff;
     max-width: 100%; /* Ensure inputs do not exceed container width */
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
-.edit-description-count{
+
+.edit-description-count {
     position: absolute;
     right: 57px;
     font-size: 13px;
     opacity: 0.55;
     margin-top: 40px;
-    
+    transition: opacity 0.3s ease;
 }
 
 .edit-details-container input[type="text"],
@@ -174,49 +183,55 @@
 }
 
 .edit-controls-container button {
-    padding: 10px 20px;
+    padding: 10px 10px;
     border: none;
     border-radius: 8px;
     font-size: 1.3rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, box-shadow 0.3s;
     margin: 0;
 }
 
 .edit-controls-container button#update {
     background-color: #007bff;
     color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
 }
 
 .edit-controls-container button#update:disabled {
     background-color: #b0bec5;
     color: #fff;
     cursor: not-allowed;
+    box-shadow: none;
 }
 
 .edit-controls-container button#update:hover:not(:disabled) {
     background-color: #0056b3;
+    box-shadow: 0 6px 8px rgba(0, 86, 179, 0.3);
 }
 
 .edit-controls-container button#delete {
     background-color: #dc3545;
     color: #fff;
     padding: 0 0.46rem;
-    
+    box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
 }
 
 .edit-controls-container button#delete:hover {
     background-color: #a71d2a;
+    box-shadow: 0 6px 8px rgba(167, 29, 42, 0.3);
 }
 
 .edit-controls-container button#cancel {
-    margin-left: 108px;
+    margin-left: 128px;
     background-color: #6c757d;
     color: #fff;
+    box-shadow: 0 4px 6px rgba(108, 117, 125, 0.3);
 }
 
 .edit-controls-container button#cancel:hover {
     background-color: #5a6268;
+    box-shadow: 0 6px 8px rgba(90, 98, 104, 0.3);
 }
 
 .edit-custom-dropdown {
@@ -237,6 +252,7 @@
     align-items: center;
     font-weight: 100;
     color: #333;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .edit-dropdown-arrow {
@@ -254,6 +270,7 @@
     border-radius: 8px;
     background-color: #ffffff;
     z-index: 1000;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .edit-dropdown-options label {
@@ -269,6 +286,7 @@
     border-radius: 15px;
     font-size: 10px;
     position: relative;
+    transition: background-color 0.3s ease;
 }
 
 .edit-max-genres-text {
@@ -283,6 +301,7 @@
     margin-left: 10px;
     cursor: pointer;
     font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 .edit-dropdown-option {
@@ -290,6 +309,7 @@
     cursor: pointer;
     font-weight: normal;
     color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .edit-dropdown-option.selected {
@@ -316,6 +336,7 @@ body.dark-mode .edit-container {
 
 body.dark-mode .edit-form-container {
     background-color: #1c1c1c;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
@@ -333,61 +354,75 @@ body.dark-mode .edit-details-container textarea {
     background-color: #1c1c1c;
     border: 1px solid #444444;
     color: #ededed;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 body.dark-mode .edit-image-container {
     background-color: #2E2E2E;
     border-color: #444444;
     color: #B0BEC5;
+    transition: border-color 0.3s ease;
 }
 
 body.dark-mode .edit-image-container button {
     color: #66b2ff;
+    transition: color 0.3s ease;
 }
 
 body.dark-mode .edit-controls-container button#update {
     background-color: #007bff;
     color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
 }
 
 body.dark-mode .edit-controls-container button#update:disabled {
     background-color: #555555;
     color: #fff;
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 body.dark-mode .edit-controls-container button#update:hover:not(:disabled) {
     background-color: #0056b3;
+    box-shadow: 0 6px 8px rgba(0, 86, 179, 0.3);
 }
 
 body.dark-mode .edit-controls-container button#delete {
     background-color: #dc3545;
+    box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
 }
 
 body.dark-mode .edit-controls-container button#delete:hover {
     background-color: #a71d2a;
+    box-shadow: 0 6px 8px rgba(167, 29, 42, 0.3);
 }
 
 body.dark-mode .edit-controls-container button#cancel {
     background-color: #6c757d;
+    box-shadow: 0 4px 6px rgba(108, 117, 125, 0.3);
 }
 
 body.dark-mode .edit-controls-container button#cancel:hover {
     background-color: #5a6268;
+    box-shadow: 0 6px 8px rgba(90, 98, 104, 0.3);
 }
 
 body.dark-mode .edit-custom-dropdown .edit-dropdown-header {
     background-color: #1c1c1c;
     border: 1px solid #3c3c3c;
     color: #ffffff;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 body.dark-mode .edit-dropdown-options {
     background-color: #222222;
     border: 1px solid #3c3c3c;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 body.dark-mode .edit-dropdown-option {
     color: #ffffff;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body.dark-mode .edit-dropdown-option.selected {
@@ -448,14 +483,26 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
         margin-left: 0;
     }
 
-    .edit-controls-container button#delete {
-        margin-left: 1.4rem;
-        
+    .edit-controls-container {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
     }
 
+    .edit-controls-container button {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .edit-controls-container button#delete {
+        margin-left: 0;
+    }
 }
 
 @media (max-width: 480px) {
+    .edit-container{
+        width: 80%;
+    }
     .edit-form-container {
         padding: 1rem;
     }
@@ -464,18 +511,24 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
         width: 80px;
     }
 
-    
-
     .edit-controls-container button {
         font-size: 1rem;
         padding: 8px 16px;
     }
 
-    .edit-controls-container button#delete {
-        margin-left: 2.4rem;
-        padding: 0 8px;
+    .edit-controls-container button#update {
+        
+        padding: 4px 8px;
     }
 
+    .edit-controls-container button#delete {
+        margin-left: 15px;
+        padding: 4px 8px;
+    }
+    .edit-controls-container button#cancel {
+        margin-left: 85px;
+        
+    }
 }
 
 @media (max-width: 320px) {
@@ -486,21 +539,20 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
     .edit-details-container label span {
         width: 70px;
     }
-    
 
     .edit-controls-container button {
         font-size: 0.9rem;
         padding: 6px 12px;
     }
 
-    .edit-container input{
+    .edit-container input {
         font-size: 0.6rem;
         width: 100%;
         max-width: 100px !important;
     }
 
     .edit-controls-container button#delete {
-        margin-left: 3.3rem;
+        margin-left: 0;
         padding: 0 6px;
     }
 }

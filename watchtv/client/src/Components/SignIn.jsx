@@ -9,10 +9,10 @@ function SignIn() {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ phone: '', password: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate(); // For redirection
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState({ phone: false, password: false });
   const [showPassword, setShowPassword] = useState(false);
-  
+
   const clearErrorAfterTimeout = (field) => {
     setTimeout(() => {
       setErrors((prevErrors) => ({ ...prevErrors, [field]: '' }));
@@ -34,13 +34,13 @@ function SignIn() {
       newErrors.password = 'Password must be more than 6 characters.';
       formIsValid = false;
       clearErrorAfterTimeout('password');
-      window.alert(newErrors.password); // Show window alert for password error
+      window.alert(newErrors.password);
     }
 
     setErrors(newErrors);
     if (formIsValid) {
       submitForm();
-    } 
+    }
   };
 
   const handleFocus = (field) => {
@@ -64,17 +64,16 @@ function SignIn() {
         password,
       });
       const { userId, token } = response.data;
-      localStorage.setItem('userId', userId); // Save userId
-      localStorage.setItem('authToken', token); // Save authToken
+      localStorage.setItem('userId', userId);
+      localStorage.setItem('authToken', token);
       console.log('UserId saved:', userId);
 
-      navigate('/dashboard'); // Redirect to the dashboard on success
+      navigate('/dashboard');
     } catch (err) {
       console.error('Error details:', err.response?.data || err.message);
       if (err.response && err.response.data && err.response.data.message) {
         const errorMessage = err.response.data.message.toLowerCase();
 
-        // Update errors and show alert with specific message
         if (errorMessage.includes('phone')) {
           setErrors((prevErrors) => ({
             ...prevErrors,
@@ -119,6 +118,8 @@ function SignIn() {
               onBlur={() => handleBlur('phone')}
               required
               className={errors.phone ? 'signin-input-error' : ''}
+              placeholder=" "
+              inputMode="numeric"
             />
             <label htmlFor="phone">Phone number</label>
             {errors.phone && !isEditing.phone && (
@@ -140,6 +141,8 @@ function SignIn() {
               onBlur={() => handleBlur('password')}
               required
               className={errors.password ? 'signin-input-error' : ''}
+              placeholder=" "
+              autoComplete="current-password"
             />
             <label htmlFor="password">Password</label>
             <div className="signin-password-icon" onClick={toggleShowPassword}>

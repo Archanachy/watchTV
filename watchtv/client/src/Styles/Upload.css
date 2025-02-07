@@ -7,6 +7,7 @@
     padding: 1.25rem;
     background-color: #f0f2f5;
     font-family: Arial, sans-serif;
+    transition: background-color 0.3s ease;
 }
 
 .upload-form-container {
@@ -15,10 +16,11 @@
     margin: 15px auto;
     background-color: #ffffff;
     padding: 0 2rem 2rem 2rem;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 12px;
     position: relative;
     z-index: 1;
+    transition: box-shadow 0.3s ease;
 }
 
 .upload-header-container {
@@ -42,15 +44,17 @@
     margin-bottom: 15px;
     margin-left: auto;
     margin-right: auto;
+    transition: border-color 0.3s ease;
 }
 
 .upload-image-container button {
     background: none;
     border: none;
     font-size: 1rem;
-    color: #66b2ff;
+    color: #007bff;
     cursor: pointer;
     font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 .crop-container {
@@ -66,6 +70,7 @@
     align-items: center;
     justify-content: center;
     margin: 0 auto;
+    transition: background 0.3s ease;
 }
 
 .crop-container img {
@@ -88,6 +93,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: background 0.3s ease;
 }
 
 .reactEasyCrop_CropArea {
@@ -117,6 +123,7 @@
     margin-bottom: 15px;
     font-weight: bold;
     color: #333;
+    transition: color 0.3s ease;
 }
 
 .upload-details-container label span {
@@ -126,7 +133,7 @@
 
 .box-label {
     font-size: 16.5px;
-    min-width: 100px;
+    min-width: 80px;
 }
 
 .upload-details-container input[type="text"],
@@ -141,14 +148,16 @@
     color: #333;
     background-color: #ffffff;
     max-width: 100%; /* Ensure inputs do not exceed container width */
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
-.description-count{
+
+.description-count {
     position: absolute;
     right: 57px;
     font-size: 13px;
     opacity: 0.55;
     margin-top: 40px;
-    
+    transition: opacity 0.3s ease;
 }
 
 .upload-details-container input[type="text"],
@@ -179,34 +188,38 @@
     border-radius: 8px;
     font-size: 1.3rem;
     cursor: pointer;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, box-shadow 0.3s;
     margin: 0;
 }
 
 .upload-controls-container button#save {
     background-color: #007bff;
     color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
 }
 
 .upload-controls-container button#save:disabled {
     background-color: #b0bec5;
     color: #fff;
     cursor: not-allowed;
+    box-shadow: none;
 }
 
 .upload-controls-container button#save:hover:not(:disabled) {
     background-color: #0056b3;
+    box-shadow: 0 6px 8px rgba(0, 86, 179, 0.3);
 }
 
 .upload-controls-container button#cancel {
     background-color: #dc3545;
     color: #fff;
     padding: 0 0.46rem;
-    
+    box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
 }
 
 .upload-controls-container button#cancel:hover {
     background-color: #a71d2a;
+    box-shadow: 0 6px 8px rgba(167, 29, 42, 0.3);
 }
 
 .custom-dropdown {
@@ -227,6 +240,7 @@
     align-items: center;
     font-weight: 100;
     color: #333;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .dropdown-arrow {
@@ -244,6 +258,7 @@
     border-radius: 8px;
     background-color: #ffffff;
     z-index: 1000;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 .dropdown-options label {
@@ -259,6 +274,7 @@
     border-radius: 15px;
     font-size: 10px;
     position: relative;
+    transition: background-color 0.3s ease;
 }
 
 .max-genres-text {
@@ -273,6 +289,7 @@
     margin-left: 10px;
     cursor: pointer;
     font-weight: bold;
+    transition: color 0.3s ease;
 }
 
 .dropdown-option {
@@ -280,6 +297,7 @@
     cursor: pointer;
     font-weight: normal;
     color: #333;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .dropdown-option.selected {
@@ -306,6 +324,7 @@ body.dark-mode .upload-container {
 
 body.dark-mode .upload-form-container {
     background-color: #1c1c1c;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
@@ -323,53 +342,65 @@ body.dark-mode .upload-details-container textarea {
     background-color: #1c1c1c;
     border: 1px solid #444444;
     color: #ededed;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 body.dark-mode .upload-image-container {
     background-color: #2E2E2E;
     border-color: #444444;
     color: #B0BEC5;
+    transition: border-color 0.3s ease;
 }
 
 body.dark-mode .upload-image-container button {
     color: #66b2ff;
+    transition: color 0.3s ease;
 }
 
 body.dark-mode .upload-controls-container button#save {
     background-color: #007bff;
     color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
 }
 
 body.dark-mode .upload-controls-container button#save:disabled {
     background-color: #555555;
     color: #fff;
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 body.dark-mode .upload-controls-container button#save:hover:not(:disabled) {
     background-color: #0056b3;
+    box-shadow: 0 6px 8px rgba(0, 86, 179, 0.3);
 }
 
 body.dark-mode .upload-controls-container button#cancel {
     background-color: #dc3545;
+    box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
 }
 
 body.dark-mode .upload-controls-container button#cancel:hover {
     background-color: #a71d2a;
+    box-shadow: 0 6px 8px rgba(167, 29, 42, 0.3);
 }
 
 body.dark-mode .custom-dropdown .dropdown-header {
     background-color: #1c1c1c;
     border: 1px solid #3c3c3c;
     color: #ffffff;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 body.dark-mode .dropdown-options {
     background-color: #222222;
     border: 1px solid #3c3c3c;
+    transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
 body.dark-mode .dropdown-option {
     color: #ffffff;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body.dark-mode .dropdown-option.selected {
@@ -432,13 +463,15 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
 
     .upload-controls-container button#cancel {
         margin-left: 1.4rem;
-        
     }
-
 }
 
 @media (max-width: 480px) {
+    .upload-container{
+        padding: 0;
+    }
     .upload-form-container {
+        width: 80%;
         padding: 1rem;
     }
 
@@ -446,18 +479,17 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
         width: 80px;
     }
 
-    
-
     .upload-controls-container button {
         font-size: 1rem;
         padding: 8px 16px;
     }
 
     .upload-controls-container button#cancel {
-        margin-left: 2.4rem;
+        position: relative;
+        right: 38px;
+        margin-left: 0;
         padding: 0 8px;
     }
-
 }
 
 @media (max-width: 320px) {
@@ -468,14 +500,13 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
     .upload-details-container label span {
         width: 70px;
     }
-    
 
     .upload-controls-container button {
         font-size: 0.9rem;
         padding: 6px 12px;
     }
 
-    .upload-container input{
+    .upload-container input {
         font-size: 0.6rem;
         width: 100%;
         max-width: 100px !important;

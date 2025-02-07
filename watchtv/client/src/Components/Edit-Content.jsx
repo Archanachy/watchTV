@@ -358,7 +358,7 @@ function EditContent() {
                     </label>
                 </div>
                 <div className="edit-controls-container">
-                    <button id='update' onClick={handleUpdate} disabled={!isFormValid || uploading}>
+                    <button id='update' onClick={handleUpdate} /*disabled={!isFormValid || uploading}*/>
                         Update
                     </button>
                     <button id='delete' onClick={handleDelete}>
