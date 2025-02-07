@@ -9,6 +9,11 @@ import Profile from './Components/Profile';
 import EditProfile from './Components/Edit-Profile';
 import Search from './Components/Search';
 import Users from './Components/Users';
+import Content from './Components/Content';
+import Rating from './Components/Rating';
+import EditContent from './Components/Edit-Content';
+import Watchlist from './Components/Watchlist';
+
 function App() {
   React.useEffect(() => {
     document.title = "Watch TV"; // Dynamically set the title
@@ -30,6 +35,11 @@ function App() {
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/search" element={<Search />} />
         <Route path="/users" element={<Users />} />
+        <Route path="/content/:contentId" element={<Content />} />
+        <Route path="/rating" element={<Rating />} />
+        <Route path="/edit-content/:contentId" element={<EditContent />} />
+        <Route path="/watchlist" element={<Watchlist />} />
+
 
       
       </Routes>

@@ -1,4 +1,4 @@
-.upload-container {
+.edit-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,7 +10,7 @@
     transition: background-color 0.3s ease;
 }
 
-.upload-form-container {
+.edit-form-container {
     width: 100%;
     max-width: 500px;
     margin: 15px auto;
@@ -23,12 +23,12 @@
     transition: box-shadow 0.3s ease;
 }
 
-.upload-header-container {
+.edit-header-container {
     display: flex;
     justify-content: center;
 }
 
-.upload-image-container {
+.edit-image-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -47,7 +47,7 @@
     transition: border-color 0.3s ease;
 }
 
-.upload-image-container button {
+.edit-image-container button {
     background: none;
     border: none;
     font-size: 1rem;
@@ -57,7 +57,7 @@
     transition: color 0.3s ease;
 }
 
-.crop-container {
+.edit-crop-container {
     position: relative;
     width: 100%;
     max-width: 160px;
@@ -73,13 +73,13 @@
     transition: background 0.3s ease;
 }
 
-.crop-container img {
+.edit-crop-container img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
 }
 
-.remove-image-button {
+.edit-remove-image-button {
     position: absolute;
     top: -4px;
     right: -4px;
@@ -96,7 +96,7 @@
     transition: background 0.3s ease;
 }
 
-.reactEasyCrop_CropArea {
+.edit-reactEasyCrop_CropArea {
     height: 100% !important;
     width: 100% !important;
     position: absolute;
@@ -110,14 +110,14 @@
     overflow: hidden;
 }
 
-.upload-details-container {
+.edit-details-container {
     width: 100%;
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
 }
 
-.upload-details-container label {
+.edit-details-container label {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
@@ -126,20 +126,20 @@
     transition: color 0.3s ease;
 }
 
-.upload-details-container label span {
+.edit-details-container label span {
     width: 140px;
     margin-right: 10px;
 }
 
-.box-label {
+.edit-box-label {
     font-size: 16.5px;
-    min-width: 80px;
+    min-width: 100px;
 }
 
-.upload-details-container input[type="text"],
-.upload-details-container input[type="date"],
-.upload-details-container input[type="number"],
-.upload-details-container textarea {
+.edit-details-container input[type="text"],
+.edit-details-container input[type="date"],
+.edit-details-container input[type="number"],
+.edit-details-container textarea {
     flex: 1;
     padding: 10px;
     border: 1px solid #ccc;
@@ -151,7 +151,7 @@
     transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.description-count {
+.edit-description-count {
     position: absolute;
     right: 57px;
     font-size: 13px;
@@ -160,30 +160,30 @@
     transition: opacity 0.3s ease;
 }
 
-.upload-details-container input[type="text"],
-.upload-details-container input[type="number"] {
+.edit-details-container input[type="text"],
+.edit-details-container input[type="number"] {
     max-width: 400px; /* Set a maximum width for text and number inputs */
 }
 
-.upload-details-container textarea {
+.edit-details-container textarea {
     resize: none;
     max-height: 200px;
     overflow-y: auto;
 }
 
-.upload-details-container input[type="checkbox"] {
+.edit-details-container input[type="checkbox"] {
     margin-right: 10px;
 }
 
-.upload-controls-container {
+.edit-controls-container {
     display: flex;
     justify-content: flex-start;
     width: 100%;
     gap: 62px;
 }
 
-.upload-controls-container button {
-    padding: 10px 20px;
+.edit-controls-container button {
+    padding: 10px 10px;
     border: none;
     border-radius: 8px;
     font-size: 1.3rem;
@@ -192,44 +192,56 @@
     margin: 0;
 }
 
-.upload-controls-container button#save {
+.edit-controls-container button#update {
     background-color: #007bff;
     color: #fff;
     box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
 }
 
-.upload-controls-container button#save:disabled {
+.edit-controls-container button#update:disabled {
     background-color: #b0bec5;
     color: #fff;
     cursor: not-allowed;
     box-shadow: none;
 }
 
-.upload-controls-container button#save:hover:not(:disabled) {
+.edit-controls-container button#update:hover:not(:disabled) {
     background-color: #0056b3;
     box-shadow: 0 6px 8px rgba(0, 86, 179, 0.3);
 }
 
-.upload-controls-container button#cancel {
+.edit-controls-container button#delete {
     background-color: #dc3545;
     color: #fff;
     padding: 0 0.46rem;
     box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
 }
 
-.upload-controls-container button#cancel:hover {
+.edit-controls-container button#delete:hover {
     background-color: #a71d2a;
     box-shadow: 0 6px 8px rgba(167, 29, 42, 0.3);
 }
 
-.custom-dropdown {
+.edit-controls-container button#cancel {
+    margin-left: 128px;
+    background-color: #6c757d;
+    color: #fff;
+    box-shadow: 0 4px 6px rgba(108, 117, 125, 0.3);
+}
+
+.edit-controls-container button#cancel:hover {
+    background-color: #5a6268;
+    box-shadow: 0 6px 8px rgba(90, 98, 104, 0.3);
+}
+
+.edit-custom-dropdown {
     position: relative;
     width: 100%;
     max-width: 350px;
     font-size: 15px;
 }
 
-.dropdown-header {
+.edit-dropdown-header {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
@@ -243,11 +255,11 @@
     transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.dropdown-arrow {
+.edit-dropdown-arrow {
     margin-left: 10px;
 }
 
-.dropdown-options {
+.edit-dropdown-options {
     position: absolute;
     top: 100%;
     left: 0;
@@ -261,11 +273,11 @@
     transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-.dropdown-options label {
+.edit-dropdown-options label {
     margin: 0 !important;
 }
 
-.selected-genre {
+.edit-selected-genre {
     display: inline-flex;
     align-items: center;
     padding: 4px 10px;
@@ -277,14 +289,14 @@
     transition: background-color 0.3s ease;
 }
 
-.max-genres-text {
+.edit-max-genres-text {
     position: absolute;
     color: #6c757d;
     font-size: 14px;
     width: 200px !important;
 }
 
-.selected-genre .remove-genre {
+.edit-selected-genre .edit-remove-genre {
     width: 10px;
     margin-left: 10px;
     cursor: pointer;
@@ -292,7 +304,7 @@
     transition: color 0.3s ease;
 }
 
-.dropdown-option {
+.edit-dropdown-option {
     padding: 10px;
     cursor: pointer;
     font-weight: normal;
@@ -300,29 +312,29 @@
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.dropdown-option.selected {
+.edit-dropdown-option.selected {
     background-color: #007bff;
     color: #fff;
 }
 
-.custom-dropdown .dropdown-header span.dropdown-arrow {
+.edit-custom-dropdown .edit-dropdown-header span.edit-dropdown-arrow {
     width: 5px !important;
 }
 
-.dropdown-option input[type="checkbox"] {
+.edit-dropdown-option input[type="checkbox"] {
     margin-right: 10px;
 }
 
-.dropdown-option:hover {
+.edit-dropdown-option:hover {
     background-color: #b0bec5;
     color: #fff;
 }
 
-body.dark-mode .upload-container {
+body.dark-mode .edit-container {
     background-color: #121212;
 }
 
-body.dark-mode .upload-form-container {
+body.dark-mode .edit-form-container {
     background-color: #1c1c1c;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
@@ -331,84 +343,94 @@ body.dark-mode input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(1);
 }
 
-body.dark-mode .upload-details-container label {
+body.dark-mode .edit-details-container label {
     color: #ededed;
 }
 
-body.dark-mode .upload-details-container input[type="text"],
-body.dark-mode .upload-details-container input[type="date"],
-body.dark-mode .upload-details-container input[type="number"],
-body.dark-mode .upload-details-container textarea {
+body.dark-mode .edit-details-container input[type="text"],
+body.dark-mode .edit-details-container input[type="date"],
+body.dark-mode .edit-details-container input[type="number"],
+body.dark-mode .edit-details-container textarea {
     background-color: #1c1c1c;
     border: 1px solid #444444;
     color: #ededed;
     transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-body.dark-mode .upload-image-container {
+body.dark-mode .edit-image-container {
     background-color: #2E2E2E;
     border-color: #444444;
     color: #B0BEC5;
     transition: border-color 0.3s ease;
 }
 
-body.dark-mode .upload-image-container button {
+body.dark-mode .edit-image-container button {
     color: #66b2ff;
     transition: color 0.3s ease;
 }
 
-body.dark-mode .upload-controls-container button#save {
+body.dark-mode .edit-controls-container button#update {
     background-color: #007bff;
     color: #fff;
     box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
 }
 
-body.dark-mode .upload-controls-container button#save:disabled {
+body.dark-mode .edit-controls-container button#update:disabled {
     background-color: #555555;
     color: #fff;
     cursor: not-allowed;
     box-shadow: none;
 }
 
-body.dark-mode .upload-controls-container button#save:hover:not(:disabled) {
+body.dark-mode .edit-controls-container button#update:hover:not(:disabled) {
     background-color: #0056b3;
     box-shadow: 0 6px 8px rgba(0, 86, 179, 0.3);
 }
 
-body.dark-mode .upload-controls-container button#cancel {
+body.dark-mode .edit-controls-container button#delete {
     background-color: #dc3545;
     box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
 }
 
-body.dark-mode .upload-controls-container button#cancel:hover {
+body.dark-mode .edit-controls-container button#delete:hover {
     background-color: #a71d2a;
     box-shadow: 0 6px 8px rgba(167, 29, 42, 0.3);
 }
 
-body.dark-mode .custom-dropdown .dropdown-header {
+body.dark-mode .edit-controls-container button#cancel {
+    background-color: #6c757d;
+    box-shadow: 0 4px 6px rgba(108, 117, 125, 0.3);
+}
+
+body.dark-mode .edit-controls-container button#cancel:hover {
+    background-color: #5a6268;
+    box-shadow: 0 6px 8px rgba(90, 98, 104, 0.3);
+}
+
+body.dark-mode .edit-custom-dropdown .edit-dropdown-header {
     background-color: #1c1c1c;
     border: 1px solid #3c3c3c;
     color: #ffffff;
     transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-body.dark-mode .dropdown-options {
+body.dark-mode .edit-dropdown-options {
     background-color: #222222;
     border: 1px solid #3c3c3c;
     transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
-body.dark-mode .dropdown-option {
+body.dark-mode .edit-dropdown-option {
     color: #ffffff;
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-body.dark-mode .dropdown-option.selected {
+body.dark-mode .edit-dropdown-option.selected {
     background-color: #2d89ef;
     color: #fff;
 }
 
-body.dark-mode .dropdown-option:hover {
+body.dark-mode .edit-dropdown-option:hover {
     background-color: #007bff;
     color: #fff;
 }
@@ -437,83 +459,100 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
 }
 
 @media (max-width: 768px) {
-    .upload-form-container {
+    .edit-form-container {
         padding: 1.5rem;
     }
 
-    .upload-image-container {
+    .edit-image-container {
         width: 100%;
         max-width: 150px;
         height: auto;
         aspect-ratio: 4 / 5;
     }
 
-    .upload-details-container label span {
+    .edit-details-container label span {
         width: 100px;
     }
 
-    .custom-dropdown {
+    .edit-custom-dropdown {
         max-width: 400px;
     }
 
-    .dropdown-options {
+    .edit-dropdown-options {
         width: 100%;
         margin-left: 0;
     }
 
-    .upload-controls-container button#cancel {
-        margin-left: 1.4rem;
+    .edit-controls-container {
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .edit-controls-container button {
+        width: 100%;
+        max-width: 200px;
+    }
+
+    .edit-controls-container button#delete {
+        margin-left: 0;
     }
 }
 
 @media (max-width: 480px) {
-    .upload-container{
-        padding: 0;
-    }
-    .upload-form-container {
-        width: 80%;
+    
+    .edit-form-container {
         padding: 1rem;
+        width: 90%;
     }
 
-    .upload-details-container label span {
+    .edit-details-container label span {
         width: 80px;
     }
 
-    .upload-controls-container button {
+    .edit-controls-container button {
         font-size: 1rem;
-        padding: 8px 16px;
+        padding: 4px 8px
     }
 
-    .upload-controls-container button#cancel {
-        position: relative;
-        right: 38px;
-        margin-left: 0;
-        padding: 0 8px;
+    .edit-controls-container button#update {
+        
+        padding: 4px 8px;
+    }
+
+    .edit-controls-container button#delete {
+        margin-left: 8px;
+        padding: 4px 8px;
+    }
+    .edit-controls-container button#cancel {
+        margin-left: 85px;
+        padding: 4px 8px;
+        
     }
 }
 
 @media (max-width: 320px) {
-    .upload-form-container {
+    .edit-form-container {
         padding: 0.75rem;
     }
 
-    .upload-details-container label span {
+    .edit-details-container label span {
         width: 70px;
     }
 
-    .upload-controls-container button {
+    .edit-controls-container button {
         font-size: 0.9rem;
         padding: 6px 12px;
     }
 
-    .upload-container input {
+    .edit-container input {
         font-size: 0.6rem;
         width: 100%;
         max-width: 100px !important;
     }
 
-    .upload-controls-container button#cancel {
-        margin-left: 3.3rem;
+    .edit-controls-container button#delete {
+        margin-left: 0;
         padding: 0 6px;
     }
 }

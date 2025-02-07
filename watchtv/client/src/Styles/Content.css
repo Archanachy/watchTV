@@ -1,0 +1,253 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    color: #000;
+}
+
+body.dark-mode {
+    background-color: #121212;
+    color: #ffffff;
+}
+.home {
+    cursor: pointer;
+}
+
+.content-container {
+    
+    margin: 0 30px;
+    overflow-x: hidden;
+}
+
+body.dark-mode .content-container {
+    border-color: #ffffff;
+}
+
+.content-about-container {
+    margin: 10px 0 0 0;
+}
+
+.content-card {
+    display: flex;
+    border-radius: 8px;
+    padding-top: 100px;
+    margin: 20px;
+    background-color: #fff;
+}
+
+body.dark-mode .content-card {
+    background-color: #111111;
+}
+
+.content-left-section {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    
+}
+
+.content-poster {
+    margin-left: 90px;
+    width: 200px;
+    height: 250px;
+    background-color: #ccc;
+    display: flex;
+    justify-content: center;
+    
+    font-size: 14px;
+    font-weight: bold;
+    color: #666;
+    position: relative;
+}
+
+body.dark-mode .content-poster {
+    background-color: #333333;
+    color: #aaaaaa;
+}
+
+.content-image {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 4/5;
+    
+    object-fit: cover;
+}
+
+.content-right-section {
+    flex: 2;
+    padding-left: 20px;
+}
+
+.content-info-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.home-edit-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.home-edit-content button {
+    padding: 8px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+}
+.home-edit-content p{
+    font-size: 20px;
+}
+
+p #home{
+    margin: 0 !important;
+}
+
+.content-name {
+    margin-right: 17px;
+    font-size: 25px;
+    font-weight: bold
+}
+
+.watchlist-btn {
+    margin-left: 95px;
+    width: fit-content;
+    padding: 8px 15px;
+    background-color: white;
+    color: black;
+    border: solid 2px #007bff;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 70px;
+    font-size: 18px;
+}
+
+
+
+.bookmark-icon {
+    font-size: 24px;
+    color: #007bff;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.bookmark-icon:hover {
+    color: #0056b3;
+}
+
+.description {
+    max-width: 450px;
+    font-size: 16px;
+    color: #000;
+    margin: 15px 0;
+}
+
+body.dark-mode .description {
+    color: #ffffff;
+}
+
+.content-stats {
+    margin-left: 90px;
+    
+    margin-top: 65px;
+    display: flex;
+    justify-content: flex-start;
+    color: #222;
+    font-size: 19px;
+    margin-bottom: 40px;
+    flex-direction: column;
+}
+
+.rating span{
+    color: #ccc;
+}
+
+.votes span{
+    color: #ccc;
+}
+
+body.dark-mode .content-stats {
+    color: #dddddd;
+}
+
+.rating-section input {
+    display: none;
+}
+
+#home-kind{
+    font-size: 18px;
+}
+
+
+
+.stars {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .star {
+    cursor: pointer;
+    font-size: 3rem;
+    color: #e4e5e9;
+    transition: color 0.2s;
+  }
+  
+  .star.selected {
+    color: #ffc107;
+  }
+
+  .message {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    z-index: 1000;
+    opacity: 0.9;
+}
+
+.content-profile-picture {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.content-username {
+    margin-left: 90px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+@media (max-width: 600px) {
+    .content-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .content-right-section {
+        padding-left: 0;
+    }
+
+    .stats {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}

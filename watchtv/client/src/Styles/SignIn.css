@@ -22,32 +22,32 @@ body {
   display: flex;
   align-items: center;
   position: absolute;
-  top: 1rem; /* Adjust this value to control the vertical spacing */
-  left: 0.5rem; /* Adjust this value to control the horizontal spacing */
+  top: 1rem;
+  left: 0.5rem;
   color: rgb(0, 217, 255);
-  text-align: left; /* Ensures the text aligns properly */
+  text-align: left;
   font-family: Arial, sans-serif;
 }
 
 .signin-tv-icon {
-  width: 3rem; /* 50px */
+  width: 3rem;
 }
 
 .signin-text-overlay h1 {
-  font-size: 2.1875rem; /* 35px */
+  font-size: 2.1875rem;
   margin: 0;
-  padding-top: 0.375rem; /* 6px */
-  padding-left: 0.9375rem; /* 15px */
+  padding-top: 0.375rem;
+  padding-left: 0.9375rem;
 }
 
 .signin-form-wrapper {
   position: absolute;
   left: 50%;
   top: 50%;
-  border-radius: 0.25rem; /* 4px */
-  padding: 3.125rem; /* 50px */
-  width: 21.875rem; /* 350px */
-  min-height: 31.25rem; /* 500px */
+  border-radius: 0.25rem;
+  padding: 3.125rem;
+  width: 21.875rem;
+  min-height: 31.25rem;
   transform: translate(-50%, -50%);
   background: rgba(0, 0, 0, 0.55);
 }
@@ -60,26 +60,26 @@ body {
 }
 
 .signin-form-wrapper form {
-  margin: 1.5625rem 0 4.0625rem; /* 25px 0 65px */
+  margin: 1.5625rem 0 4.0625rem;
 }
 
 .signin-form-control {
-  height: 3.125rem; /* 50px */
+  height: 3.125rem;
   position: relative;
-  margin-bottom: 2.1875rem; /* 35px */
+  margin-bottom: 2.1875rem;
 }
 
 .signin-form-control input {
   height: 100%;
-  width: 100%; /* Changed to 100% for responsiveness */
+  width: 100%;
   background: rgb(205, 204, 204);
   border: none;
   outline: none;
-  border-radius: 0.25rem; /* 4px */
+  border-radius: 0.25rem;
   color: black;
   font-size: 1rem;
-  padding-left: 1.25rem; /* 20px */
-  box-sizing: border-box; /* Ensure padding is included in width */
+  padding-left: 1.25rem;
+  box-sizing: border-box;
 }
 
 .signin-form-control input:is(:focus, :valid) {
@@ -88,7 +88,7 @@ body {
 
 .signin-form-control label {
   position: absolute;
-  left: 1.25rem; /* 20px */
+  left: 1.25rem;
   top: 50%;
   transform: translateY(-50%);
   font-size: 1.6rem;
@@ -104,15 +104,15 @@ body {
 
 .signin-form-wrapper button {
   width: 100%;
-  padding: 1rem 0; /* 16px 0 */
+  padding: 1rem 0;
   font-size: 1.3rem;
   background: rgb(1, 1, 214);
   color: #fff;
   font-weight: 600;
-  border-radius: 0.25rem; /* 4px */
+  border-radius: 0.25rem;
   border: none;
   outline: none;
-  margin-top: 2.5rem; /* 40px */
+  margin-top: 2.5rem;
   cursor: pointer;
   transition: background 0.1s ease;
 }
@@ -143,12 +143,12 @@ body {
 
 /* New styles for error icon and message */
 .signin-form-control input.signin-input-error {
-  border: 0.0625rem solid red; /* 1px */
+  border: 0.0625rem solid red;
 }
 
 .signin-password-icon {
   position: absolute;
-  right: 1rem; 
+  right: 1rem;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
@@ -157,13 +157,13 @@ body {
 }
 
 .signin-password-icon img {
-  width: 1.125rem; /* 18px */
-  height: 1.125rem; /* 18px */
+  width: 1.125rem;
+  height: 1.125rem;
 }
 
 .signin-error-icon {
   position: absolute;
-  right: 0.625rem; /* 10px */
+  right: 0.625rem;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
@@ -172,9 +172,9 @@ body {
 }
 
 .signin-error-icon img {
-  width: 1.125rem; /* 18px */
-  height: 1.125rem; /* 18px */
-  margin-right: 0.5rem; /* 8px */
+  width: 1.125rem;
+  height: 1.125rem;
+  margin-right: 0.5rem;
 }
 
 .signin-error-message {
@@ -182,12 +182,12 @@ body {
   position: absolute;
   width: 10rem;
   left: 100%;
-  margin-left: 0.9375rem; /* 15px */
+  margin-left: 0.9375rem;
   background-color: rgba(255, 0, 0, 0.8);
   color: white;
-  font-size: 0.75rem; /* 12px */
-  padding: 0.3125rem; /* 5px */
-  border-radius: 0.25rem; /* 4px */
+  font-size: 0.75rem;
+  padding: 0.3125rem;
+  border-radius: 0.25rem;
   z-index: 10;
 }
 
@@ -197,27 +197,48 @@ body {
 }
 
 @media (max-width: 700px) {
-  body::before {
-    display: none;
-  }
-
-  nav, .signin-form-wrapper {
-    padding: 1.25rem; /* 20px */
-  }
-
-  nav a img {
-    width: 8.75rem; /* 140px */
-  }
-
   .signin-form-wrapper {
-    width: 50%;
-    top: 50%;
-    height: 67%;
-    padding: 7%;
+    width: 80%;
+    padding: 2rem;
+  }
+
+  .signin-form-wrapper h2 {
+    font-size: 1.5rem;
   }
 
   .signin-form-wrapper form {
-    margin: 1.5625rem 0 2.5rem; /* 25px 0 40px */
+    margin: 1rem 0 2rem;
+  }
+
+  .signin-form-control {
+    margin-bottom: 1.5rem;
+  }
+
+  .signin-form-control input {
+    font-size: 0.875rem;
+    padding-left: 1rem;
+  }
+
+  .signin-form-control label {
+    font-size: 1.2rem;
+    left: 1rem;
+  }
+
+  .signin-form-control input:is(:focus, :valid)~label {
+    font-size: 0.625rem;
+  }
+
+  .signin-form-wrapper button {
+    font-size: 1rem;
+    padding: 0.75rem 0;
+  }
+
+  .signin-form-wrapper a {
+    font-size: 1rem;
+  }
+
+  .signin-form-help .signin-create {
+    font-size: 1rem;
   }
 }
 
@@ -227,12 +248,12 @@ input[type="password"]::-ms-clear,
 input[type="password"]::-webkit-clear-button,
 input[type="password"]::-webkit-inner-spin-button,
 input[type="password"]::-webkit-outer-spin-button {
-    display: none;
+  display: none;
 }
 
 /* Autofill prevention */
 input:-webkit-autofill {
-    box-shadow: 0 0 0 100px white inset !important;
-    -webkit-box-shadow: 0 0 0 100px white inset !important;
-    -webkit-text-fill-color: #000 !important;
+  box-shadow: 0 0 0 100px white inset !important;
+  -webkit-box-shadow: 0 0 0 100px white inset !important;
+  -webkit-text-fill-color: #000 !important;
 }

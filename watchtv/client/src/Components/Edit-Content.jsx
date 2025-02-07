@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
-import '../Styles/Upload.css';
+import '../Styles/Edit-Content.css';
 import axios from '../api/axios';
 
-function Upload() {
+function EditContent() {
     const navigate = useNavigate();
+    const { contentId } = useParams();
+    const location = useLocation();
     const [image, setImage] = useState(null);
     const [croppedArea, setCroppedArea] = useState(null);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -64,6 +66,28 @@ function Upload() {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    useEffect(() => {
+        // Fetch content details and set state
+        const fetchContentDetails = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/content/${contentId}`);
+                const content = response.data;
+                setTitle(content.title);
+                setDescription(content.description);
+                setDescriptionCount(content.description.length);
+                setReleasedDate(content.released_date);
+                setDuration(content.duration_minutes);
+                setKind([content.kind]);
+                setSelectedGenres(content.genres.map(genre => genre.name));
+                setImage(`${import.meta.env.VITE_API_URL}${content.image_path}`);
+            } catch (error) {
+                console.error('Error fetching content details:', error);
+            }
+        };
+
+        fetchContentDetails();
+    }, [contentId]);
 
     const handleFileUpload = () => {
         fileInputRef.current.click();
@@ -137,7 +161,7 @@ function Upload() {
         validateForm();
     }, [title, description, releasedDate, duration, kind, selectedGenres]);
 
-    const handleSave = async () => {
+    const handleUpdate = async () => {
         if (!image) {
             alert('Please upload an image before saving.');
             return;
@@ -188,19 +212,27 @@ function Upload() {
         }
     };
 
+    const handleDelete = () => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this content?');
+        if (confirmDelete) {
+            // Placeholder for delete functionality
+            alert('Delete functionality is not implemented.');
+        }
+    };
+
     const handleCancel = () => {
-        navigate('/dashboard');
+        navigate(`/content/${contentId}`);
     };
 
     const aspectRatio = 200 / 250;
 
     return (
-        <div className="upload-container">
-            <div className="upload-form-container">
-                <div className="upload-header-container">
-                    <h1>Upload Content</h1>
+        <div className="edit-container">
+            <div className="edit-form-container">
+                <div className="edit-header-container">
+                    <h1>Edit Content</h1>
                 </div>
-                <div className="upload-image-container">
+                <div className="edit-image-container">
                     {image ? (
                         <div className={`crop-container ${image ? 'image-uploaded' : ''}`}>
                             <Cropper
@@ -230,7 +262,7 @@ function Upload() {
                         </button>
                     )}
                 </div>
-                <div className="upload-details-container">
+                <div className="edit-details-container">
                     <label>
                         <span className='box-label'>Title:</span>
                         <input type="text" value={title} onChange={(e) => setTitle(formatTitle(e.target.value))} />
@@ -243,7 +275,6 @@ function Upload() {
                             maxLength={700}
                             placeholder="Describe the content in 10-700 words"
                             onInput={(e) => setDescriptionCount(e.target.value.length)}
-                            
                         />
                         <div className='description-count'>{descriptionCount}/700</div>
                     </label>
@@ -286,7 +317,6 @@ function Upload() {
                                     >
                                         Show
                                     </div>
-                                    
                                 </div>
                             )}
                         </div>
@@ -327,9 +357,12 @@ function Upload() {
                         </div>
                     </label>
                 </div>
-                <div className="upload-controls-container">
-                    <button id='save' onClick={handleSave} disabled={!isFormValid || uploading}>
-                        Save
+                <div className="edit-controls-container">
+                    <button id='update' onClick={handleUpdate} /*disabled={!isFormValid || uploading}*/>
+                        Update
+                    </button>
+                    <button id='delete' onClick={handleDelete}>
+                        Delete
                     </button>
                     <button id='cancel' onClick={handleCancel}>
                         Cancel
@@ -340,4 +373,4 @@ function Upload() {
     );
 }
 
-export default Upload;
+export default EditContent;

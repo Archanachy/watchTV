@@ -58,9 +58,101 @@ async function getGenreIdsByNames(genreNames) {
   }
 }
 
+// Delete all genre associations for a given content ID
+async function deleteContentGenres(contentId) {
+  try {
+    const query = 'DELETE FROM content_genre WHERE content_id = $1';
+    await pool.query(query, [contentId]);
+  } catch (error) {
+    console.error('Error deleting content genres:', error.message);
+    throw new Error('Failed to delete old content genres');
+  }
+}
+
+async function updateContentGenres(contentId, genreIds) {
+  try {
+    console.log(`Updating genres for contentId: ${contentId}`);
+    
+    // Remove old associations
+    await deleteContentGenres(contentId);
+    console.log(`Deleted old genres for contentId: ${contentId}`);
+
+    // If there are any new genres, insert them
+    if (genreIds.length > 0) {
+      const query = `
+        INSERT INTO content_genre (content_id, genre_id)
+        VALUES ${genreIds.map((_, index) => `($1, $${index + 2})`).join(', ')};
+      `;
+      const values = [contentId, ...genreIds];
+
+      console.log(`Inserting new genres for contentId: ${contentId}, genres: ${genreIds}`);
+      await pool.query(query, values);
+      console.log(`Inserted new genres successfully.`);
+    }
+  } catch (error) {
+    console.error('Error updating content genres:', error.message);
+    throw new Error('Failed to update content genres');
+  }
+}
+
+
+async function getContentById(contentId) {
+  try {
+    const query = 'SELECT * FROM content WHERE content_id = $1';
+    const result = await pool.query(query, [contentId]);
+    return result.rows[0];
+  } catch (error) { 
+    console.error('Error fetching content by ID:', error.message);
+    throw new Error('Failed to fetch content');
+  }
+}
+
+// (Optional) Update content details in the content table
+async function updateContent({ contentId, title, description, releasedDate, duration, kind, imagePath }) {
+  try {
+    const query = `
+      UPDATE content
+      SET title = $1,
+          description = $2,
+          released_date = $3,
+          duration_minutes = $4,
+          kind = $5,
+          image_path = $6
+      WHERE content_id = $7
+      RETURNING *;
+    `;
+    const values = [title, description, releasedDate, duration, kind, imagePath, contentId];
+    const result = await pool.query(query, values);
+    return result.rows[0];
+  } catch (error) {
+    console.error('Error updating content:', error.message);
+    throw new Error('Failed to update content');
+  }
+}
+
+async function deleteContent(contentId) {
+  try {
+    const query = 'DELETE FROM content WHERE content_id = $1 RETURNING content_id';
+    const result = await pool.query(query, [contentId]);
+    
+    // Return result for further handling (e.g., check if deletion succeeded)
+    return result;
+  }
+  catch (error) {
+    console.error('Error deleting content:', error.message);
+    throw new Error('Failed to delete content');
+  }
+}
+
+
+
 module.exports = {
   checkIfTitleExists,
   insertContent,
   insertContentGenres,
   getGenreIdsByNames,
+  updateContentGenres, 
+  updateContent, 
+  getContentById,  
+  deleteContent,
 };
