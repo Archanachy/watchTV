@@ -42,43 +42,33 @@ const Content = () => {
   }, []);
 
   // ✅ Check if content is in the watchlist
-  // useEffect(() => {
-  //   const checkWatchlistStatus = async () => {
-  //     try {
-  //       const token = localStorage.getItem("token");
-  //       if (!token) return;
+  useEffect(() => {
+    const checkWatchlistStatus = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/watchlist/${contentId}`, {
+          headers:  { Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+        });
 
-  //       const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/watchlist`, {
-  //         headers: { Authorization: `Bearer ${token}` }
-  //       });
+        const watchlist = response.data.watchlist || [];
+        setInWatchlist(watchlist.some(item => item.content_id === parseInt(contentId)));
+      } catch (error) {
+        console.error("Error checking watchlist status:", error);
+      }
+    };
 
-  //       const watchlist = response.data.watchlist || [];
-  //       setInWatchlist(watchlist.some(item => item.content_id === parseInt(contentId)));
-  //     } catch (error) {
-  //       console.error("Error checking watchlist status:", error);
-  //     }
-  //   };
-
-  //   if (contentId) {
-  //     checkWatchlistStatus();
-  //   }
-  // }, [contentId]);
+    if (contentId) {
+      checkWatchlistStatus();
+    }
+  }, [contentId]);
 
   // ✅ Handle watchlist actions
   const handleWatchlist = async () => {
     try {
-      const token = localStorage.getItem("token");
-  
-      if (!token) {
-        console.log("No token found in localStorage.");
-        setMessage("Please log in to manage your watchlist.");
-        return;
-      }
-  
       console.log("Token found:", token); // Debugging
   
       const headers = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
         "Content-Type": "application/json",
       };
   
