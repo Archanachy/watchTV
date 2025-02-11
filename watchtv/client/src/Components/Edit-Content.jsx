@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import Cropper from 'react-easy-crop';
 import '../Styles/Edit-Content.css';
 import axios from '../api/axios';
 
 function EditContent() {
     const navigate = useNavigate();
+    const { contentId } = useParams();
+    const location = useLocation();
     const [image, setImage] = useState(null);
     const [croppedArea, setCroppedArea] = useState(null);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -64,6 +66,28 @@ function EditContent() {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+
+    useEffect(() => {
+        // Fetch content details and set state
+        const fetchContentDetails = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/content/${contentId}`);
+                const content = response.data;
+                setTitle(content.title);
+                setDescription(content.description);
+                setDescriptionCount(content.description.length);
+                setReleasedDate(content.released_date);
+                setDuration(content.duration_minutes);
+                setKind([content.kind]);
+                setSelectedGenres(content.genres.map(genre => genre.name));
+                setImage(`${import.meta.env.VITE_API_URL}${content.image_path}`);
+            } catch (error) {
+                console.error('Error fetching content details:', error);
+            }
+        };
+
+        fetchContentDetails();
+    }, [contentId]);
 
     const handleFileUpload = () => {
         fileInputRef.current.click();
@@ -137,7 +161,7 @@ function EditContent() {
         validateForm();
     }, [title, description, releasedDate, duration, kind, selectedGenres]);
 
-    const handleSave = async () => {
+    const handleUpdate = async () => {
         if (!image) {
             alert('Please upload an image before saving.');
             return;
@@ -197,7 +221,7 @@ function EditContent() {
     };
 
     const handleCancel = () => {
-        navigate('/content');
+        navigate(`/content/${contentId}`);
     };
 
     const aspectRatio = 200 / 250;
@@ -334,8 +358,8 @@ function EditContent() {
                     </label>
                 </div>
                 <div className="edit-controls-container">
-                    <button id='save' onClick={handleSave} disabled={!isFormValid || uploading}>
-                        Save
+                    <button id='update' onClick={handleUpdate} /*disabled={!isFormValid || uploading}*/>
+                        Update
                     </button>
                     <button id='delete' onClick={handleDelete}>
                         Delete

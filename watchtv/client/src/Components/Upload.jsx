@@ -26,8 +26,6 @@ function Upload() {
     const kindDropdownRef = useRef(null);
     const genreDropdownRef = useRef(null);
 
-
-
     const formatTitle = (title) => {
         if (!title) return '';
         return title

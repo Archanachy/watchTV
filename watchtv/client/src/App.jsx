@@ -12,6 +12,7 @@ import Users from './Components/Users';
 import Content from './Components/Content';
 import Rating from './Components/Rating';
 import EditContent from './Components/Edit-Content';
+import Watchlist from './Components/Watchlist';
 
 function App() {
   React.useEffect(() => {
@@ -36,7 +37,8 @@ function App() {
         <Route path="/users" element={<Users />} />
         <Route path="/content/:contentId" element={<Content />} />
         <Route path="/rating" element={<Rating />} />
-        <Route path="/edit-content" element={<EditContent />} />
+        <Route path="/edit-content/:contentId" element={<EditContent />} />
+        <Route path="/watchlist" element={<Watchlist />} />
 
 
       
