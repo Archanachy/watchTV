@@ -75,11 +75,26 @@ const getWatchlist = async (userId) => {
         `;
         const { rows } = await pool.query(query, [userId]);
 
-        return { success: true, watchlist: rows };
+        return rows; // ✅ Return only the watchlist array
     } catch (error) {
         console.error("Database Error:", error.message);
-        return { error: "Could not fetch watchlist" };
+        return []; // ✅ Return empty array instead of an error object
     }
 };
 
-module.exports = { addToWatchlist, removeFromWatchlist, getWatchlist };
+
+const watchlistStatus = async ({ userId, contentId }) => {
+    try {
+        const query = `SELECT * FROM watchlist WHERE user_id = $1 AND content_id = $2;`;
+        const { rows } = await pool.query(query, [userId, contentId]);
+
+        return { inWatchlist: rows.length > 0 };  // ✅ Return a boolean
+    } catch (error) {
+        console.error("Database Error:", error.message);
+        return { error: "Could not fetch watchlist status" };
+    }
+};
+
+
+
+module.exports = { addToWatchlist, removeFromWatchlist, getWatchlist, watchlistStatus };

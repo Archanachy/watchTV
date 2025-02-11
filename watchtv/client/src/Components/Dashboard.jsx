@@ -7,10 +7,9 @@ import axios from '../api/axios';
 import Navbar from './Navbar';
 import { useNavigate } from 'react-router-dom';
 
-function Dashboard() {
+function Dashboard({ selectedGenre, setSelectedGenre }) {
   const [content, setContent] = useState([]);
   const [filterType, setFilterType] = useState('movies');
-  const [selectedGenre, setSelectedGenre] = useState(null);
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideInterval = useRef(null);
@@ -67,10 +66,8 @@ function Dashboard() {
     return () => clearInterval(slideInterval.current);
   }, []);
 
-  const handleWatchlistClick = (e) => {
-    e.preventDefault();
-    navigate('/watchlist');
-  };
+
+
 
   return (
     <div className="dashboard-fullscreen-container">

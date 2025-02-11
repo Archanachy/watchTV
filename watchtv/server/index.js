@@ -20,11 +20,12 @@ const watchlistRoute = require('./routes/watchlistRoute');
 const removeWatchlistRoute = require('./routes/removeWatchlistRoute');
 const getWatchlistRoute = require('./routes/getWatchlistRoute');
 const getParticularContentRoute = require('./routes/getParticularContentRoute');
+const watchlistStatusRoute = require('./routes/watchlistStatus');
 const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5175', // Frontend URL
+  origin: 'http://localhost:5173', // Frontend URL
   methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE','OPTIONS'], // Add all necessary methods
   credentials: true,
 }));
@@ -58,6 +59,7 @@ app.use('/api', watchlistRoute);
 app.use('/api', removeWatchlistRoute);
 app.use('/api', getWatchlistRoute);
 app.use('/api', getParticularContentRoute);
+app.use('/api', watchlistStatusRoute);
 
 // Start server
 const PORT = process.env.PORT || 3002;

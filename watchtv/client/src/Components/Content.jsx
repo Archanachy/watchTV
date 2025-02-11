@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import '../Styles/Content.css';
 import axios from '../api/axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark as faBookmarkSolid, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faBookmark as faBookmarkSolid } from '@fortawesome/free-solid-svg-icons';
 import { faBookmark as faBookmarkRegular } from '@fortawesome/free-regular-svg-icons';
 
 const Content = () => {
@@ -41,79 +41,71 @@ const Content = () => {
     }
   }, []);
 
-  // ✅ Check if content is in the watchlist
   useEffect(() => {
-    const checkWatchlistStatus = async () => {
-      try {
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/watchlist/${contentId}`, {
-          headers:  { Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-        });
+    const fetchWatchlistStatus = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            
 
-        const watchlist = response.data.watchlist || [];
-        setInWatchlist(watchlist.some(item => item.content_id === parseInt(contentId)));
-      } catch (error) {
-        console.error("Error checking watchlist status:", error);
-      }
+            const response = await axios.get(
+                `${import.meta.env.VITE_API_URL}/api/watchlist/${contentId}`,
+                { headers: { "Authorization": `Bearer ${token}` } }
+            );
+
+            console.log("Watchlist API Response:", response.data); // ✅ Debug log
+            setInWatchlist(response.data.inWatchlist);
+        } catch (error) {
+            console.error('Error fetching watchlist status:', error);
+        }
     };
 
     if (contentId) {
-      checkWatchlistStatus();
+        fetchWatchlistStatus();
     }
-  }, [contentId]);
+}, [contentId]);
+
+
+  
 
   // ✅ Handle watchlist actions
   const handleWatchlist = async () => {
     try {
-      console.log("Token found:", token); // Debugging
-  
-      const headers = {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-        "Content-Type": "application/json",
-      };
-  
-      let response;
-      if (inWatchlist) {
-        response = await axios.delete(
-          `${import.meta.env.VITE_API_URL}/api/watchlist/${contentId}`,
-          { headers }
-        );
-  
-        if (response.status === 200) {
-          setInWatchlist(false);
-          setMessage("Removed from Watchlist");
+        const token = localStorage.getItem('token');
+
+
+        let response;
+        if (inWatchlist) {
+            response = await axios.delete(
+                `${import.meta.env.VITE_API_URL}/api/watchlist/${contentId}`,
+                { headers: { "Authorization": `Bearer ${token}` } }
+            );
+            if (response.status === 200) {
+                setInWatchlist(false);
+                setMessage("Removed from Watchlist");
+            }
+        } else {
+            response = await axios.post(
+                `${import.meta.env.VITE_API_URL}/api/watchlist/${contentId}`,
+                {},
+                { headers: { "Authorization": `Bearer ${token}` } }
+            );
+            if (response.status === 201) {
+                setInWatchlist(true);
+                setMessage("Added to Watchlist");
+            }
         }
-      } else {
-        response = await axios.post(
-          `${import.meta.env.VITE_API_URL}/api/watchlist/${contentId}`,
-          {},
-          { headers }
-        );
-  
-        if (response.status === 201) {
-          setInWatchlist(true);
-          setMessage("Added to Watchlist");
-        }
-      }
     } catch (error) {
-      console.error("Error updating watchlist:", error.response?.data || error);
-      setMessage("Could not update watchlist. Please try again.");
+        console.error("Error updating watchlist:", error);
+        setMessage("Could not update watchlist. Please try again.");
     } finally {
-      setTimeout(() => setMessage(''), 3000);
+        setTimeout(() => setMessage(''), 3000);
     }
-  };
+};
+
   
 
   // ✅ Redirects
-  const handleEditContent = (contentId) => {
-    if (typeof contentId === 'object') {
-      console.error('Invalid contentId:', contentId);
-      return;
-    }
-    navigate(`/edit-content/${contentId.toString()}`);
-  };
-  
-  
+  const handleEditContent = () => navigate('/edit-content');
   const handleHome = () => navigate('/dashboard');
 
   // ✅ Show loading state while fetching content
@@ -150,26 +142,6 @@ const Content = () => {
               <FontAwesomeIcon icon={inWatchlist ? faBookmarkSolid : faBookmarkRegular} /> 
               {inWatchlist ? ' Remove from Watchlist' : ' Add to Watchlist'}
             </button>
-            
-            <div className='content-stats'>
-          <p>Released Date: {new Date(content.released_date).toISOString().split('T')[0]}</p>
-          <p>Duration: {content.duration_minutes} minutes</p>
-          <p>Genres: {Array.isArray(content.genres) ? content.genres.map(g => g.name).join(', ') : 'N/A'}</p>
-          <span>Rate: </span>
-          <div className="rating-section">
-            {[1, 2, 3, 4, 5].map((value) => (
-              <span
-                key={value}
-                className={`star ${value <= (hover || rating) ? 'selected' : ''}`}
-                onClick={() => setRating(value)}
-                onMouseEnter={() => setHover(value)}
-                onMouseLeave={() => setHover(null)}
-              >
-                ★
-              </span>
-            ))}
-          </div>
-        </div>
           </div>
           <div className="content-right-section">
             <div className="content-info-section">
@@ -177,20 +149,19 @@ const Content = () => {
                 <span id="home-kind">
                   <span className="home" onClick={handleHome}>Home</span>&middot;<span>{content.kind}</span>
                 </span>
-                {/* <button  onClick={handleEditContent}>Edit Content</button> */}
-                <button className="edit-content" onClick={() => handleEditContent(contentId)}>Edit Content</button>
+                <button className="edit-content" onClick={handleEditContent}>Edit Content</button>
               </div>
             </div>
             <span>
               <span className="content-name">{content.title}</span>
-              <span className="rating"> <FontAwesomeIcon icon={faStar} className="star-icon"/>{content.rating || "N/A"} </span>
+              <span className="rating">⭐ {content.rating || "N/A"}</span>
               <span className="votes">({content.rates || "0"} people rated)</span>
             </span>
             <p className="description">{content.description}</p>
           </div>
         </div>
       </div>
-      {/* <div className="content-stats">
+      <div className="content-stats">
         <div>
           <p>Released Date: {new Date(content.released_date).toISOString().split('T')[0]}</p>
           <p>Duration: {content.duration_minutes} minutes</p>
@@ -210,7 +181,7 @@ const Content = () => {
             ))}
           </div>
         </div>
-      </div> */}
+      </div>
       {message && <div className="message">{message}</div>}
     </div>
   );

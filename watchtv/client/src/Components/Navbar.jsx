@@ -20,6 +20,16 @@ const Navbar = () => {
   const mobileMenuRef = useRef(null);
   const navigate = useNavigate();
 
+  const handleGenreSelect = (genre) => {
+    setSelectedGenre(genre.genre_id);
+    setGenreDropdownVisible(false); 
+  };
+
+  const handleHomeClick = (e) => {
+    e.preventDefault();
+    setSelectedGenre(null); // Reset genre
+  };
+
   useEffect(() => {
     const fetchGenres = async () => {
       try {
@@ -99,11 +109,7 @@ const Navbar = () => {
     };
   }, []);
 
-  const handleGenreSelect = (genre) => {
-    setSelectedGenre(genre.genre_id);
-    setGenreDropdownVisible(false);
-  };
-
+ 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to log out?");
     if (confirmLogout) {
@@ -115,11 +121,6 @@ const Navbar = () => {
     navigate('/profile');
   };
 
-  const handleHomeClick = (e) => {
-    e.preventDefault();
-    setSelectedGenre(null);
-    navigate('/dashboard');
-  };
 
   const handleWatchlistClick = (e) => {
     e.preventDefault();
