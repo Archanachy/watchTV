@@ -21,6 +21,8 @@ const removeWatchlistRoute = require('./routes/removeWatchlistRoute');
 const getWatchlistRoute = require('./routes/getWatchlistRoute');
 const getParticularContentRoute = require('./routes/getParticularContentRoute');
 const watchlistStatusRoute = require('./routes/watchlistStatus');
+const ratingRoute = require('./routes/ratingRoute');
+
 const app = express();
 
 // Middleware
@@ -60,6 +62,7 @@ app.use('/api', removeWatchlistRoute);
 app.use('/api', getWatchlistRoute);
 app.use('/api', getParticularContentRoute);
 app.use('/api', watchlistStatusRoute);
+app.use('/api', ratingRoute);
 
 // Start server
 const PORT = process.env.PORT || 3002;
