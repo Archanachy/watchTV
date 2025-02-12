@@ -22,6 +22,7 @@ const getWatchlistRoute = require('./routes/getWatchlistRoute');
 const getParticularContentRoute = require('./routes/getParticularContentRoute');
 const watchlistStatusRoute = require('./routes/watchlistStatus');
 const ratingRoute = require('./routes/ratingRoute');
+const getContentRated = require('./routes/contentRateRoute');
 
 const app = express();
 
@@ -63,6 +64,7 @@ app.use('/api', getWatchlistRoute);
 app.use('/api', getParticularContentRoute);
 app.use('/api', watchlistStatusRoute);
 app.use('/api', ratingRoute);
+app.use('/api', getContentRated);
 
 // Start server
 const PORT = process.env.PORT || 3002;

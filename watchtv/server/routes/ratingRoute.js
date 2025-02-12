@@ -1,5 +1,5 @@
 const express = require('express');
-const { addRating } = require('../models/rating');
+const { addRating, getExistingRating } = require('../models/rating');
 const { authenticateToken } = require('../middleware/auth');
 const router = express.Router();
 
@@ -18,16 +18,34 @@ router.post('/rating/:contentId', authenticateToken, async (req, res) => {
             return res.status(400).json({ message: 'Invalid Content ID' });
         }
 
-        const result = await addRating({ user_id: userId, content_id: contentId, rating });
+        // Check if the user has already rated this content
+        const existingRating = await getExistingRating(userId, contentId);
 
-        res.status(200).json({
-            message: result.rating ? `Rating updated to ${result.rating}` : 'Rating added successfully',
-            rating: result.rating,
-            content_id: result.content_id,
-            user_id: result.user_id,
-            average_rating: result.average_rating,  // ✅ Added
-            total_ratings: result.total_ratings    // ✅ Added
-        });
+        let result;
+
+        if (existingRating) {
+            // Update the existing rating (no need to increment total_ratings)
+            result = await addRating({ user_id: userId, content_id: contentId, rating });
+            return res.status(200).json({
+                message: `Rating updated successfully`,
+                rating: result.rating,
+                content_id: result.content_id,
+                user_id: result.user_id,
+                average_rating: result.average_rating,
+                total_ratings: result.total_ratings
+            });
+        } else {
+            // Add a new rating and increment total_ratings
+            result = await addRating({ user_id: userId, content_id: contentId, rating });
+            return res.status(200).json({
+                message: 'Rating added successfully',
+                rating: result.rating,
+                content_id: result.content_id,
+                user_id: result.user_id,
+                average_rating: result.average_rating,
+                total_ratings: result.total_ratings
+            });
+        }
     } catch (error) {
         console.error('Error adding rating:', error.message);
         res.status(500).json({ message: 'Could not rate content' });

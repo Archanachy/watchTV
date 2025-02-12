@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from "react-router-dom";
+
 import '../Styles/Search.css';
 
 const Search = () => {
@@ -9,6 +11,8 @@ const Search = () => {
     const [searchResults, setSearchResults] = useState([]);
     const [searchResultsVisible, setSearchResultsVisible] = useState(false);
     const debounceTimeout = useRef(null);
+    const navigate = useNavigate();
+
 
     const handleSearchChange = (e) => {
         const query = e.target.value;
@@ -81,6 +85,9 @@ const Search = () => {
         };
     }, [searchQuery]);
 
+    const handleContentClick = (contentId) => {
+        navigate(`/content/${contentId}`);
+    };
     return (
         <div className="search-container">
             <input
@@ -95,7 +102,7 @@ const Search = () => {
                 <div className="search-container-result">
                     {console.log('Rendering search results container')}
                     {searchResults.map((result, index) => (
-                        <div key={`${result.id}-${index}`} className="search-container-result-item">
+                        <div key={`${result.id}-${index}`} className="search-container-result-item" onClick={() => handleContentClick(result.content_id)}>
                             <img
                                 src={`${import.meta.env.VITE_API_URL}${result.image_path}`}
                                 alt={result.title}
