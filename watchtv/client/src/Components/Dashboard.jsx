@@ -127,7 +127,7 @@ function Dashboard({ selectedGenre, setSelectedGenre }) {
               <div className="block-details">
                 <div className="block-rating">
                   <FontAwesomeIcon icon={faStar} className="star-icon" />
-                  <span>{item.rating || "N/A"}</span>
+                  <span>{Number(item.average_rating) > 0 ? Number(item.average_rating).toFixed(1) : "N/A"}</span>
                   <div className="block-date">{new Date(item.released_date).toISOString().split('T')[0]}</div>
                 </div>
                 <div className="block-name">{item.title}</div>

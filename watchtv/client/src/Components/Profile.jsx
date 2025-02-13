@@ -205,7 +205,7 @@ const Profile = () => {
                   <div className="profile-block-details">
                     <div className="profile-block-rating">
                       <FontAwesomeIcon icon={faStar} className="profile-star-icon" />
-                      <span>{item.rating || "N/A"}</span>
+                      <span>{Number(item.average_rating) > 0 ? Number(item.average_rating).toFixed(1) : "N/A"}</span>
                       <div className="profile-block-date">{new Date(item.released_date).toISOString().split('T')[0]}</div>
                     </div>
                     <div className="profile-block-name">{item.title}</div>

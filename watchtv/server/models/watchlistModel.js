@@ -68,19 +68,27 @@ const removeFromWatchlist = async ({ userId, contentId }) => {
 const getWatchlist = async (userId) => {
     try {
         const query = `
-            SELECT w.content_id, c.title, c.image_path, TO_CHAR(c.released_date, 'YYYY-MM-DD') AS released_date
+            SELECT 
+                w.content_id, 
+                c.title, 
+                c.image_path, 
+                TO_CHAR(c.released_date, 'YYYY-MM-DD') AS released_date, 
+                COALESCE(ROUND(AVG(cr.rating)::numeric, 1), 0) AS average_rating  -- Include average rating
             FROM watchlist w
             JOIN content c ON w.content_id = c.content_id
-            WHERE w.user_id = $1;
+            LEFT JOIN content_ratings cr ON c.content_id = cr.content_id  -- LEFT JOIN for ratings
+            WHERE w.user_id = $1
+            GROUP BY w.content_id, c.title, c.image_path, c.released_date;  -- Group by content fields
         `;
         const { rows } = await pool.query(query, [userId]);
 
-        return rows; // ✅ Return only the watchlist array
+        return rows; // ✅ Return the updated watchlist array with average rating
     } catch (error) {
         console.error("Database Error:", error.message);
         return []; // ✅ Return empty array instead of an error object
     }
 };
+
 
 
 const watchlistStatus = async ({ userId, contentId }) => {

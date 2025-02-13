@@ -12,8 +12,8 @@ const Search = () => {
     const [searchResultsVisible, setSearchResultsVisible] = useState(false);
     const debounceTimeout = useRef(null);
     const navigate = useNavigate();
-
-
+    
+    // Handle search input change
     const handleSearchChange = (e) => {
         const query = e.target.value;
     
@@ -26,8 +26,6 @@ const Search = () => {
         };
     
         const formattedQuery = capitalizeWords(query);
-    
-        console.log('Search query:', formattedQuery);
         setSearchQuery(formattedQuery); // Set the formatted query
     
         if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
@@ -40,13 +38,12 @@ const Search = () => {
             }
         }, 1000); // Debounce time
     };
-    
 
+    // Perform the search request and update results
     const performSearch = async (query) => {
         console.log("Performing search for:", query);
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/search?searchTerm=${query}`);
-            console.log("Search results:", response.data);
             setSearchResults(response.data.data); // Ensure the correct data is set
             setSearchResultsVisible(true); // Ensure the search results container is visible
         } catch (error) {
@@ -54,12 +51,24 @@ const Search = () => {
         }
     };
 
+    // Handle the click on a search result and navigate
+    const handleContentClick = (contentId) => {
+        // Navigate first before clearing results
+        navigate(`/content/${contentId}`);
+        // Clear results after navigation
+        setSearchResults([]);
+        setSearchResultsVisible(false);
+    };
+
+    // Ensure focus and blur handle correctly
     useEffect(() => {
         const handleSearchBlur = (e) => {
-            console.log('Search input blurred (useEffect)');
             if (!e.relatedTarget || !e.relatedTarget.closest('.search-container-result')) {
-                setSearchResults([]);
-                setSearchResultsVisible(false);
+                // Don't clear results if user clicks on the results themselves
+                if (!e.relatedTarget || !e.relatedTarget.closest('.search-container-result-item')) {
+                    setSearchResults([]);
+                    setSearchResultsVisible(false);
+                }
             }
         };
 
@@ -85,9 +94,6 @@ const Search = () => {
         };
     }, [searchQuery]);
 
-    const handleContentClick = (contentId) => {
-        navigate(`/content/${contentId}`);
-    };
     return (
         <div className="search-container">
             <input
@@ -115,7 +121,7 @@ const Search = () => {
                                 </p>
                                 <div className="result-rating">
                                     <FontAwesomeIcon icon={faStar} className="star-icon" />
-                                    <span>{result.rating || 'N/A'}</span>
+                                    <span>{result.average_rating > 0 ? result.average_rating : 'N/A'}</span>
                                 </div>
                             </div>
                         </div>
