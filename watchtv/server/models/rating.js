@@ -72,7 +72,7 @@ const getExistingRating = async (userId, contentId) => {
 const getRatedContent = async (userId) => {
     try {
         const query = `
-            SELECT c.id, c.content_id, c.image_path, c.title, cr.rating, c.released_date 
+            SELECT c.id, c.content_id, c.image_path, c.title, cr.rating,  TO_CHAR(c.released_date, 'YYYY-MM-DD') AS released_date
             FROM content_ratings cr
             JOIN content c ON cr.content_id = c.content_id
             WHERE cr.user_id = $1

@@ -1,5 +1,5 @@
 const express = require('express');
-const  {getProfileById, countTotalUpload}=require('../models/profileModel');
+const  {getProfileById}=require('../models/profileModel');
 const { authenticateToken } = require('../middleware/auth');
 
 const router = express.Router();

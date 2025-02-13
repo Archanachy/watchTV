@@ -15,7 +15,7 @@ function EditContent() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [descriptionCount, setDescriptionCount] = useState(0);
-    const [releasedDate, setReleasedDate] = useState('');
+    const [releasedDate, setReleasedDate] = useState(''); // expects "YYYY-MM-DD"
     const [duration, setDuration] = useState('');
     const [kind, setKind] = useState([]);
     const [genres, setGenres] = useState([]);
@@ -27,14 +27,15 @@ function EditContent() {
     const fileInputRef = useRef(null);
     const kindDropdownRef = useRef(null);
     const genreDropdownRef = useRef(null);
+    const [loading, setLoading] = useState(false);  // Loading state for delete button
 
     const formatTitle = (title) => {
         if (!title) return '';
         return title
-          .split(' ') // Split into words
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter
-          .join(' '); // Rejoin words
-      };
+          .split(' ')
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+    };
 
     useEffect(() => {
         const fetchGenres = async () => {
@@ -76,7 +77,7 @@ function EditContent() {
                 setTitle(content.title);
                 setDescription(content.description);
                 setDescriptionCount(content.description.length);
-                setReleasedDate(content.released_date);
+                setReleasedDate(new Date(content.released_date).toISOString().split('T')[0]);
                 setDuration(content.duration_minutes);
                 setKind([content.kind]);
                 setSelectedGenres(content.genres.map(genre => genre.name));
@@ -130,7 +131,7 @@ function EditContent() {
         if (kind.includes(kindOption)) {
             setKind(kind.filter((k) => k !== kindOption));
         } else {
-            setKind([kindOption]); // Only allow one kind to be selected
+            setKind([kindOption]);
         }
         setIsKindDropdownOpen(false);
         validateForm();
@@ -147,8 +148,8 @@ function EditContent() {
     const validateForm = () => {
         setIsFormValid(
             !!title &&
-            description.length>10 &&
-            description.length<700 &&
+            description.length >= 10 &&
+            description.length < 700 &&
             !!releasedDate &&
             !!duration &&
             kind.length > 0 &&
@@ -166,64 +167,87 @@ function EditContent() {
             alert('Please upload an image before saving.');
             return;
         }
-
+    
         setUploading(true);
         try {
-            // Create FormData for the image and other fields
+    
+            // Fetch current content details for comparison
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/content/${contentId}`);
+            const originalContent = response.data;
+    
+            // Prepare data with only changed fields
             const formData = new FormData();
-            const userId = localStorage.getItem('userId'); // Retrieve userId from localStorage
-
-            // Append all form data
-            formData.append('userId', userId);
-            formData.append('title', title);
-            formData.append('description', description);
-            formData.append('releasedDate', releasedDate);
-            formData.append('duration', duration);
-            formData.append('kind', kind[0]);
-            formData.append('genres', selectedGenres.join(','));
-
-            // Convert the cropped image to a file and append
-            if (image) {
-                const response = await fetch(image);
-                const blob = await response.blob();
+    
+            if (title !== originalContent.title) formData.append('title', title);
+            if (description !== originalContent.description) formData.append('description', description);
+    
+            // Use the release date string as-is; no conversion is needed.
+            const formattedDate = releasedDate || originalContent.released_date;
+            formData.append('releasedDate', formattedDate);
+            console.log("Received releasedDate:", releasedDate);
+            console.log("Formatted releasedDate:", formattedDate);
+    
+            if (duration !== originalContent.duration_minutes) formData.append('duration', duration);
+            if (kind[0] !== originalContent.kind) formData.append('kind', kind[0]);
+            if (selectedGenres.join(',') !== originalContent.genres.map(g => g.name).join(',')) {
+                formData.append('genres', selectedGenres.join(','));
+            }
+    
+            // Only append image if it's changed
+            if (image !== `${import.meta.env.VITE_API_URL}${originalContent.image_path}`) {
+                const imgResponse = await fetch(image);
+                const blob = await imgResponse.blob();
                 const file = new File([blob], 'uploaded_image.jpg', { type: blob.type });
                 formData.append('contentImage', file);
             }
-
-            // Send the form data to the server
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/content`, formData, {
+    
+            // Send the update request
+            await axios.patch(`${import.meta.env.VITE_API_URL}/api/content/${contentId}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure token is stored
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-
-            alert('Content uploaded successfully!');
-            navigate('/dashboard');
+    
+            alert('Content updated successfully!');
+            navigate(`/content/${contentId}`);
         } catch (error) {
-            console.error('Error uploading content:', error);
-            if (error.response && error.response.data && error.response.data.message) {
-                alert(error.response.data.message); // Display server error message
-            } else {
-                alert('An error occurred while uploading content. Please try again.');
-            }
+            console.error('Error updating content:', error);
+            alert(error.response?.data?.message || 'An error occurred while updating content.');
         } finally {
             setUploading(false);
         }
     };
-
-    const handleDelete = () => {
+    
+    const handleDelete = async () => {
         const confirmDelete = window.confirm('Are you sure you want to delete this content?');
-        if (confirmDelete) {
-            // Placeholder for delete functionality
-            alert('Delete functionality is not implemented.');
+        if (!confirmDelete) return; // Exit if user cancels
+    
+        try {
+            // Show a loading state (optional)
+            setLoading(true);
+    
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/content/${contentId}`, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+    
+            alert('Content deleted successfully!');
+            navigate('/dashboard');
+        } catch (error) {
+            console.error('Error deleting content:', error.response?.data || error.message);
+            alert('Failed to delete content. Please try again.');
+        } finally {
+            setLoading(false); // Reset loading state
         }
     };
-
+    
     const handleCancel = () => {
         navigate(`/content/${contentId}`);
     };
-
+    
     const aspectRatio = 200 / 250;
 
     return (
@@ -358,7 +382,7 @@ function EditContent() {
                     </label>
                 </div>
                 <div className="edit-controls-container">
-                    <button id='update' onClick={handleUpdate} /*disabled={!isFormValid || uploading}*/>
+                    <button id='update' onClick={handleUpdate}>
                         Update
                     </button>
                     <button id='delete' onClick={handleDelete}>

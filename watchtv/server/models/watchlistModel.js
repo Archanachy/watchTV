@@ -68,7 +68,7 @@ const removeFromWatchlist = async ({ userId, contentId }) => {
 const getWatchlist = async (userId) => {
     try {
         const query = `
-            SELECT w.content_id, c.title, c.image_path, c.released_date
+            SELECT w.content_id, c.title, c.image_path, TO_CHAR(c.released_date, 'YYYY-MM-DD') AS released_date
             FROM watchlist w
             JOIN content c ON w.content_id = c.content_id
             WHERE w.user_id = $1;

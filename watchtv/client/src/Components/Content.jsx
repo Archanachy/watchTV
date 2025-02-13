@@ -133,7 +133,7 @@ const handleRating = async (value) => {
   };
 
   // ✅ Redirect Functions
-  const handleEditContent = () => navigate('/edit-content');
+  const handleEditContent = () => navigate(`/edit-content/${contentId}`);
   const handleHome = () => navigate('/dashboard');
 
   // ✅ Loading State

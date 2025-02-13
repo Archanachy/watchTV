@@ -30,7 +30,7 @@ async function getProfileById(userId) {
 
 async function getContentByUser(userId) {
 
-    const query=`Select * from content where id=$1`;
+    const query=`Select c.content_id,c.title,c.description, TO_CHAR(c.released_date, 'YYYY-MM-DD') AS released_date,c.duration_minutes,c.kind,c.image_path,c.created_at from content c  where c.id=$1`;
 
     const result=await pool.query(query,[userId]);
 
