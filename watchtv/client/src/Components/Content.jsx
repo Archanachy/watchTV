@@ -42,7 +42,6 @@ const handleRating = async (value) => {
 
     setMessage(response.data.message); // Show success message
   } catch (error) {
-    console.error("Error submitting rating:", error);
     setMessage("Could not submit rating. Please try again.");
   } finally {
     setTimeout(() => setMessage(''), 3000); // Clear message after 3 seconds

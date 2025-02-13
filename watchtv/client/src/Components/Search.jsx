@@ -51,29 +51,24 @@ const Search = () => {
         }
     };
 
-    // Handle the click on a search result and navigate
     const handleContentClick = (contentId) => {
-        // Navigate first before clearing results
         navigate(`/content/${contentId}`);
-        // Clear results after navigation
-        setSearchResults([]);
+        setSearchResults([]); 
         setSearchResultsVisible(false);
     };
-
+    
     // Ensure focus and blur handle correctly
     useEffect(() => {
         const handleSearchBlur = (e) => {
-            if (!e.relatedTarget || !e.relatedTarget.closest('.search-container-result')) {
-                // Don't clear results if user clicks on the results themselves
+            setTimeout(() => {
                 if (!e.relatedTarget || !e.relatedTarget.closest('.search-container-result-item')) {
                     setSearchResults([]);
                     setSearchResultsVisible(false);
                 }
-            }
+            }, 200); // Small delay to allow click to process
         };
-
+        
         const handleSearchFocus = () => {
-            console.log('Search input focused (useEffect)');
             if (searchQuery.trim()) {
                 performSearch(searchQuery.trim());
             }
@@ -93,6 +88,8 @@ const Search = () => {
             }
         };
     }, [searchQuery]);
+  
+
 
     return (
         <div className="search-container">
@@ -106,9 +103,8 @@ const Search = () => {
             <FontAwesomeIcon icon={faSearch} className="search-icon" />
             {searchResultsVisible && searchResults.length > 0 && (
                 <div className="search-container-result">
-                    {console.log('Rendering search results container')}
                     {searchResults.map((result, index) => (
-                        <div key={`${result.id}-${index}`} className="search-container-result-item" onClick={() => handleContentClick(result.content_id)}>
+                        <div key={`${result.content_id}-${index}`} className="search-container-result-item" onClick={() => handleContentClick(result.content_id)}>
                             <img
                                 src={`${import.meta.env.VITE_API_URL}${result.image_path}`}
                                 alt={result.title}

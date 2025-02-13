@@ -184,8 +184,6 @@ function EditContent() {
             // Use the release date string as-is; no conversion is needed.
             const formattedDate = releasedDate || originalContent.released_date;
             formData.append('releasedDate', formattedDate);
-            console.log("Received releasedDate:", releasedDate);
-            console.log("Formatted releasedDate:", formattedDate);
     
             if (duration !== originalContent.duration_minutes) formData.append('duration', duration);
             if (kind[0] !== originalContent.kind) formData.append('kind', kind[0]);
@@ -212,7 +210,6 @@ function EditContent() {
             alert('Content updated successfully!');
             navigate(`/content/${contentId}`);
         } catch (error) {
-            console.error('Error updating content:', error);
             alert(error.response?.data?.message || 'An error occurred while updating content.');
         } finally {
             setUploading(false);
