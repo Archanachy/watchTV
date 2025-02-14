@@ -5,13 +5,12 @@ const router = express.Router();
 
 router.delete('/watchlist/:contentId', authenticateToken, async (req, res) => {
     try {
-        const userId = req.user.userId;  // Extract user ID from token
-        const contentId = parseInt(req.params.contentId, 10); // Convert to integer
-
+        const userId = req.user.userId;
+        const contentId = parseInt(req.params.contentId, 10);
         if (isNaN(contentId)) {
-            return res.status(400).json({ message: "Invalid Content ID" });
+            return res.status(400).json({ message: 'Invalid Content ID' });
         }
-
+        
         const result = await removeFromWatchlist({ userId, contentId });
 
         if (result.error) {

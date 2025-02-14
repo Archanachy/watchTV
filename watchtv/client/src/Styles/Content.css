@@ -10,9 +10,13 @@ body.dark-mode {
     color: #ffffff;
 }
 .home {
+    font-weight: 600;
+    font-size: 27px;
     cursor: pointer;
 }
-
+.home:hover {
+    color: #007bff;
+}
 .content-container {
     
     margin: 0 30px;
@@ -180,6 +184,7 @@ body.dark-mode .content-stats {
 }
 
 #home-kind{
+    color: #777;
     font-size: 18px;
 }
 

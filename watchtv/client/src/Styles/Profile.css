@@ -15,7 +15,6 @@ body.dark-mode {
     margin: 0 30px;
     overflow-x: hidden;
     transition: border-color 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 body.dark-mode .profile-container {
@@ -63,7 +62,6 @@ body.dark-mode .breadcrumb {
     margin: 20px 0;
     background-color: #fff;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 body.dark-mode .profile-card {
@@ -263,9 +261,8 @@ body.dark-mode .stats {
     padding-left: 80px;
     display: flex;
     margin: 20px 0;
-    border-bottom: 1px solid #fff;
+    border-bottom: 1px solid #000;
     transition: border-color 0.3s ease;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
 
 body.dark-mode .tabs {
@@ -289,11 +286,11 @@ body.dark-mode .tabs {
 }
 
 .active-tab {
-    border-bottom: 2px solid #000;
+    border-bottom: 2px solid #000 !important;
 }
 
 body.dark-mode .active-tab {
-    border-bottom-color: #ffffff;
+    border-bottom-color: #ffffff !important;
 }
 
 /* Content Section */
@@ -398,9 +395,12 @@ body.dark-mode .active-tab {
     }
 
     .stats {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
+        margin-top: 180px;
+        align-items: flex-start;
+        text-align: left;
+    }
+    .stats p {
+        margin: 4px 0;
     }
 
     .tabs {

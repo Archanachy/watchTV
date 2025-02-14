@@ -7,18 +7,22 @@ import '../Styles/Dashboard.css';
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = ({setSelectedGenre}) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [profilePic, setProfilePic] = useState(defaultAvatar);
   const [isGenreDropdownVisible, setGenreDropdownVisible] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
   const [genres, setGenres] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState(null);
   const dropdownRef = useRef(null);
   const genredropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
   const navigate = useNavigate();
+
+  const handleGenreSelect = (genre) => {
+    setSelectedGenre(genre.genre_id);
+    setGenreDropdownVisible(false); 
+  };
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -99,11 +103,7 @@ const Navbar = () => {
     };
   }, []);
 
-  const handleGenreSelect = (genre) => {
-    setSelectedGenre(genre.genre_id);
-    setGenreDropdownVisible(false);
-  };
-
+ 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to log out?");
     if (confirmLogout) {
@@ -117,8 +117,9 @@ const Navbar = () => {
 
   const handleHomeClick = (e) => {
     e.preventDefault();
-    setSelectedGenre(null);
     navigate('/dashboard');
+    setSelectedGenre(null);
+    
   };
 
   const handleWatchlistClick = (e) => {

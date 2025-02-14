@@ -15,7 +15,7 @@ function EditContent() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [descriptionCount, setDescriptionCount] = useState(0);
-    const [releasedDate, setReleasedDate] = useState('');
+    const [releasedDate, setReleasedDate] = useState(''); // expects "YYYY-MM-DD"
     const [duration, setDuration] = useState('');
     const [kind, setKind] = useState([]);
     const [genres, setGenres] = useState([]);
@@ -27,14 +27,15 @@ function EditContent() {
     const fileInputRef = useRef(null);
     const kindDropdownRef = useRef(null);
     const genreDropdownRef = useRef(null);
+    const [loading, setLoading] = useState(false);  // Loading state for delete button
 
     const formatTitle = (title) => {
         if (!title) return '';
         return title
-          .split(' ') // Split into words
-          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize the first letter
-          .join(' '); // Rejoin words
-      };
+          .split(' ')
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+          .join(' ');
+    };
 
     useEffect(() => {
         const fetchGenres = async () => {
@@ -76,7 +77,7 @@ function EditContent() {
                 setTitle(content.title);
                 setDescription(content.description);
                 setDescriptionCount(content.description.length);
-                setReleasedDate(content.released_date);
+                setReleasedDate(new Date(content.released_date).toISOString().split('T')[0]);
                 setDuration(content.duration_minutes);
                 setKind([content.kind]);
                 setSelectedGenres(content.genres.map(genre => genre.name));
@@ -130,7 +131,7 @@ function EditContent() {
         if (kind.includes(kindOption)) {
             setKind(kind.filter((k) => k !== kindOption));
         } else {
-            setKind([kindOption]); // Only allow one kind to be selected
+            setKind([kindOption]);
         }
         setIsKindDropdownOpen(false);
         validateForm();
@@ -147,8 +148,8 @@ function EditContent() {
     const validateForm = () => {
         setIsFormValid(
             !!title &&
-            description.length>10 &&
-            description.length<700 &&
+            description.length >= 10 &&
+            description.length < 700 &&
             !!releasedDate &&
             !!duration &&
             kind.length > 0 &&
@@ -166,64 +167,84 @@ function EditContent() {
             alert('Please upload an image before saving.');
             return;
         }
-
+    
         setUploading(true);
         try {
-            // Create FormData for the image and other fields
+    
+            // Fetch current content details for comparison
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/content/${contentId}`);
+            const originalContent = response.data;
+    
+            // Prepare data with only changed fields
             const formData = new FormData();
-            const userId = localStorage.getItem('userId'); // Retrieve userId from localStorage
-
-            // Append all form data
-            formData.append('userId', userId);
-            formData.append('title', title);
-            formData.append('description', description);
-            formData.append('releasedDate', releasedDate);
-            formData.append('duration', duration);
-            formData.append('kind', kind[0]);
-            formData.append('genres', selectedGenres.join(','));
-
-            // Convert the cropped image to a file and append
-            if (image) {
-                const response = await fetch(image);
-                const blob = await response.blob();
+    
+            if (title !== originalContent.title) formData.append('title', title);
+            if (description !== originalContent.description) formData.append('description', description);
+    
+            // Use the release date string as-is; no conversion is needed.
+            const formattedDate = releasedDate || originalContent.released_date;
+            formData.append('releasedDate', formattedDate);
+    
+            if (duration !== originalContent.duration_minutes) formData.append('duration', duration);
+            if (kind[0] !== originalContent.kind) formData.append('kind', kind[0]);
+            if (selectedGenres.join(',') !== originalContent.genres.map(g => g.name).join(',')) {
+                formData.append('genres', selectedGenres.join(','));
+            }
+    
+            // Only append image if it's changed
+            if (image !== `${import.meta.env.VITE_API_URL}${originalContent.image_path}`) {
+                const imgResponse = await fetch(image);
+                const blob = await imgResponse.blob();
                 const file = new File([blob], 'uploaded_image.jpg', { type: blob.type });
                 formData.append('contentImage', file);
             }
-
-            // Send the form data to the server
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/content`, formData, {
+    
+            // Send the update request
+            await axios.patch(`${import.meta.env.VITE_API_URL}/api/content/${contentId}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`, // Ensure token is stored
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             });
-
-            alert('Content uploaded successfully!');
-            navigate('/dashboard');
+    
+            alert('Content updated successfully!');
+            navigate(`/content/${contentId}`);
         } catch (error) {
-            console.error('Error uploading content:', error);
-            if (error.response && error.response.data && error.response.data.message) {
-                alert(error.response.data.message); // Display server error message
-            } else {
-                alert('An error occurred while uploading content. Please try again.');
-            }
+            alert(error.response?.data?.message || 'An error occurred while updating content.');
         } finally {
             setUploading(false);
         }
     };
-
-    const handleDelete = () => {
+    
+    const handleDelete = async () => {
         const confirmDelete = window.confirm('Are you sure you want to delete this content?');
-        if (confirmDelete) {
-            // Placeholder for delete functionality
-            alert('Delete functionality is not implemented.');
+        if (!confirmDelete) return; // Exit if user cancels
+    
+        try {
+            // Show a loading state (optional)
+            setLoading(true);
+    
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/content/${contentId}`, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+    
+            alert('Content deleted successfully!');
+            navigate('/dashboard');
+        } catch (error) {
+            console.error('Error deleting content:', error.response?.data || error.message);
+            alert('Failed to delete content. Please try again.');
+        } finally {
+            setLoading(false); // Reset loading state
         }
     };
-
+    
     const handleCancel = () => {
         navigate(`/content/${contentId}`);
     };
-
+    
     const aspectRatio = 200 / 250;
 
     return (
@@ -234,7 +255,7 @@ function EditContent() {
                 </div>
                 <div className="edit-image-container">
                     {image ? (
-                        <div className={`crop-container ${image ? 'image-uploaded' : ''}`}>
+                        <div className={`edit-crop-container ${image ? 'edit-image-uploaded' : ''}`}>
                             <Cropper
                                 image={image}
                                 crop={crop}
@@ -245,7 +266,7 @@ function EditContent() {
                                 onCropComplete={onCropComplete}
                                 style={{ containerStyle: { width: '100%', height: '100%' } }}
                             />
-                            <button className="remove-image-button" onClick={removeImage}>
+                            <button className="edit-remove-image-button" onClick={removeImage}>
                                 ✖
                             </button>
                         </div>
@@ -264,11 +285,11 @@ function EditContent() {
                 </div>
                 <div className="edit-details-container">
                     <label>
-                        <span className='box-label'>Title:</span>
+                        <span className='edit-box-label'>Title:</span>
                         <input type="text" value={title} onChange={(e) => setTitle(formatTitle(e.target.value))} />
                     </label>
                     <label>
-                        <span className='box-label'>Description:</span>
+                        <span className='edit-box-label'>Description:</span>
                         <textarea
                             value={description}
                             onChange={handleDescriptionChange}
@@ -276,10 +297,10 @@ function EditContent() {
                             placeholder="Describe the content in 10-700 words"
                             onInput={(e) => setDescriptionCount(e.target.value.length)}
                         />
-                        <div className='description-count'>{descriptionCount}/700</div>
+                        <div className='edit-description-count'>{descriptionCount}/700</div>
                     </label>
                     <label>
-                        <span className='box-label'>Release Date:</span>
+                        <span className='edit-box-label'>Release Date:</span>
                         <input
                             type="date"
                             value={releasedDate}
@@ -288,7 +309,7 @@ function EditContent() {
                         />
                     </label>
                     <label>
-                        <span className='box-label'>Duration (in min):</span>
+                        <span className='edit-box-label'>Duration (in min):</span>
                         <input
                             type="number"
                             min="15"
@@ -297,22 +318,22 @@ function EditContent() {
                         />
                     </label>
                     <label>
-                        <span className='box-label'>Kind:</span>
-                        <div className="custom-dropdown" ref={kindDropdownRef}>
-                            <div className="dropdown-header" onClick={toggleKindDropdown}>
+                        <span className='edit-box-label'>Kind:</span>
+                        <div className="edit-custom-dropdown" ref={kindDropdownRef}>
+                            <div className="edit-dropdown-header" onClick={toggleKindDropdown}>
                                 {kind.length > 0 ? kind.join(', ') : 'Select Kind (movie or Tv/web series)'}
-                                <span className="dropdown-arrow">{isKindDropdownOpen ? '▲' : '▼'}</span>
+                                <span className="edit-dropdown-arrow">{isKindDropdownOpen ? '▲' : '▼'}</span>
                             </div>
                             {isKindDropdownOpen && (
-                                <div className="dropdown-options">
+                                <div className="edit-dropdown-options">
                                     <div
-                                        className={`dropdown-option ${kind.includes('Movie') ? 'selected' : ''}`}
+                                        className={`edit-dropdown-option ${kind.includes('Movie') ? 'selected' : ''}`}
                                         onClick={() => handleKindSelect('Movie')}
                                     >
                                         Movie
                                     </div>
                                     <div
-                                        className={`dropdown-option ${kind.includes('Show') ? 'selected' : ''}`}
+                                        className={`edit-dropdown-option ${kind.includes('Show') ? 'selected' : ''}`}
                                         onClick={() => handleKindSelect('Show')}
                                     >
                                         Show
@@ -322,35 +343,35 @@ function EditContent() {
                         </div>
                     </label>
                     <label>
-                        <span className='box-label'>Genres:</span>
-                        <div className="custom-dropdown" ref={genreDropdownRef}>
-                            <div className="dropdown-header" onClick={toggleGenreDropdown}>
+                        <span className='edit-box-label'>Genres:</span>
+                        <div className="edit-custom-dropdown" ref={genreDropdownRef}>
+                            <div className="edit-dropdown-header" onClick={toggleGenreDropdown}>
                                 {selectedGenres.length > 0 ? (
                                     selectedGenres.map((genre) => (
-                                        <div key={genre} className="selected-genre">
+                                        <div key={genre} className="edit-selected-genre">
                                             {genre}
-                                            <span className="remove-genre" onClick={(e) => { e.stopPropagation(); handleGenreSelect(genre); }}>✖</span>
+                                            <span className="edit-remove-genre" onClick={(e) => { e.stopPropagation(); handleGenreSelect(genre); }}>✖</span>
                                         </div>
                                     ))
                                 ) : (
                                     'Max 3 genres'
                                 )}
-                                <span className="dropdown-arrow">{isGenreDropdownOpen ? '▲' : '▼'}</span>
+                                <span className="edit-dropdown-arrow">{isGenreDropdownOpen ? '▲' : '▼'}</span>
                             </div>
                             {isGenreDropdownOpen && (
-                                <div className="dropdown-options">
+                                <div className="edit-dropdown-options">
                                     {genres.length > 0 ? (
                                         genres.map((genre) => (
                                             <div
                                                 key={genre.genre_id}
-                                                className={`dropdown-option ${selectedGenres.includes(genre.name) ? 'selected' : ''}`}
+                                                className={`edit-dropdown-option ${selectedGenres.includes(genre.name) ? 'selected' : ''}`}
                                                 onClick={() => handleGenreSelect(genre.name)}
                                             >
                                                 {genre.name}
                                             </div>
                                         ))
                                     ) : (
-                                        <div className="dropdown-option">No genres available</div>
+                                        <div className="edit-dropdown-option">No genres available</div>
                                     )}
                                 </div>
                             )}
@@ -358,13 +379,13 @@ function EditContent() {
                     </label>
                 </div>
                 <div className="edit-controls-container">
-                    <button id='update' onClick={handleUpdate} /*disabled={!isFormValid || uploading}*/>
+                    <button id='edit-update' onClick={handleUpdate}>
                         Update
                     </button>
-                    <button id='delete' onClick={handleDelete}>
+                    <button id='edit-delete' onClick={handleDelete}>
                         Delete
                     </button>
-                    <button id='cancel' onClick={handleCancel}>
+                    <button id='edit-cancel' onClick={handleCancel}>
                         Cancel
                     </button>
                 </div>

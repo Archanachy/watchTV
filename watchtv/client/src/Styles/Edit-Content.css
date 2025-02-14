@@ -177,43 +177,43 @@
 
 .edit-controls-container {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     width: 100%;
-    gap: 62px;
+    
 }
 
 .edit-controls-container button {
     padding: 10px 10px;
     border: none;
     border-radius: 8px;
-    font-size: 1.3rem;
+    font-size: 20px;
     cursor: pointer;
     transition: background-color 0.3s, box-shadow 0.3s;
     margin: 0;
 }
 
-.edit-controls-container button#update {
+.edit-controls-container button#edit-update {
     background-color: #007bff;
     color: #fff;
     box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
 }
 
-.edit-controls-container button#update:disabled {
+.edit-controls-container button#edit-update:disabled {
     background-color: #b0bec5;
     color: #fff;
     cursor: not-allowed;
     box-shadow: none;
 }
 
-.edit-controls-container button#update:hover:not(:disabled) {
+.edit-controls-container button#edit-update:hover:not(:disabled) {
     background-color: #0056b3;
     box-shadow: 0 6px 8px rgba(0, 86, 179, 0.3);
 }
 
-.edit-controls-container button#delete {
+.edit-controls-container button#edit-delete {
     background-color: #dc3545;
     color: #fff;
-    padding: 0 0.46rem;
+    margin-left: 13%;
     box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3);
 }
 
@@ -222,14 +222,14 @@
     box-shadow: 0 6px 8px rgba(167, 29, 42, 0.3);
 }
 
-.edit-controls-container button#cancel {
-    margin-left: 128px;
+.edit-controls-container button#edit-cancel {
+    margin-left: auto;
     background-color: #6c757d;
     color: #fff;
     box-shadow: 0 4px 6px rgba(108, 117, 125, 0.3);
 }
 
-.edit-controls-container button#cancel:hover {
+.edit-controls-container button#edit-cancel:hover {
     background-color: #5a6268;
     box-shadow: 0 6px 8px rgba(90, 98, 104, 0.3);
 }
@@ -242,13 +242,13 @@
 }
 
 .edit-dropdown-header {
+    gap: 5px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #ffffff;
     cursor: pointer;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     font-weight: 100;
     color: #333;
@@ -256,7 +256,7 @@
 }
 
 .edit-dropdown-arrow {
-    margin-left: 10px;
+    margin-left: auto;
 }
 
 .edit-dropdown-options {
@@ -264,6 +264,7 @@
     top: 100%;
     left: 0;
     width: 100%;
+    gap: 5px;
     max-height: 150px;
     overflow-y: auto;
     border: 1px solid #ccc;
@@ -298,6 +299,7 @@
 
 .edit-selected-genre .edit-remove-genre {
     width: 10px;
+    margin-right: 0;
     margin-left: 10px;
     cursor: pointer;
     font-weight: bold;
@@ -486,7 +488,6 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
     .edit-controls-container {
         flex-direction: row;
         align-items: center;
-        gap: 10px;
     }
 
     .edit-controls-container button {
@@ -494,7 +495,7 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
         max-width: 200px;
     }
 
-    .edit-controls-container button#delete {
+    .edit-controls-container button#edit-delete {
         margin-left: 0;
     }
 }
@@ -515,19 +516,34 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
         padding: 4px 8px
     }
 
-    .edit-controls-container button#update {
+    .edit-controls-container button#edit-update {
+        max-width: 65px;
         
         padding: 4px 8px;
     }
 
-    .edit-controls-container button#delete {
-        margin-left: 8px;
+    .edit-controls-container button#edit-delete {
+        max-width: 65px;
+        margin-left: 14%;
         padding: 4px 8px;
     }
-    .edit-controls-container button#cancel {
-        margin-left: 85px;
+    .edit-controls-container button#edit-cancel {
+        max-width: 65px;
+        margin-left: auto;
         padding: 4px 8px;
         
+    }
+    .edit-custom-dropdown {
+        max-width: 245px;
+        font-size: 8px;
+    }
+    .edit-custom-dropdown .edit-selected-genre {
+        font-size: 7px;
+        padding: 4px 5px;
+    }
+    .edit-custom-dropdown .edit-selected-genre .edit-remove-genre {
+        font-size: 8px;
+        margin: 0 2px;
     }
 }
 
@@ -551,7 +567,7 @@ body.dark-mode input[type="number"]::-ms-outer-spin-button {
         max-width: 100px !important;
     }
 
-    .edit-controls-container button#delete {
+    .edit-controls-container button#edit-delete {
         margin-left: 0;
         padding: 0 6px;
     }

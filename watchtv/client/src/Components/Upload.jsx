@@ -328,10 +328,10 @@ function Upload() {
                     </label>
                 </div>
                 <div className="upload-controls-container">
-                    <button id='save' onClick={handleSave} disabled={!isFormValid || uploading}>
+                    <button id='upload-save' onClick={handleSave} disabled={!isFormValid || uploading}>
                         Save
                     </button>
-                    <button id='cancel' onClick={handleCancel}>
+                    <button id='upload-cancel' onClick={handleCancel}>
                         Cancel
                     </button>
                 </div>

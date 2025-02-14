@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from "react-router-dom";
+
 import '../Styles/Search.css';
 
 const Search = () => {
@@ -9,7 +11,9 @@ const Search = () => {
     const [searchResults, setSearchResults] = useState([]);
     const [searchResultsVisible, setSearchResultsVisible] = useState(false);
     const debounceTimeout = useRef(null);
-
+    const navigate = useNavigate();
+    
+    // Handle search input change
     const handleSearchChange = (e) => {
         const query = e.target.value;
     
@@ -22,8 +26,6 @@ const Search = () => {
         };
     
         const formattedQuery = capitalizeWords(query);
-    
-        console.log('Search query:', formattedQuery);
         setSearchQuery(formattedQuery); // Set the formatted query
     
         if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
@@ -36,13 +38,12 @@ const Search = () => {
             }
         }, 1000); // Debounce time
     };
-    
 
+    // Perform the search request and update results
     const performSearch = async (query) => {
         console.log("Performing search for:", query);
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/search?searchTerm=${query}`);
-            console.log("Search results:", response.data);
             setSearchResults(response.data.data); // Ensure the correct data is set
             setSearchResultsVisible(true); // Ensure the search results container is visible
         } catch (error) {
@@ -50,17 +51,24 @@ const Search = () => {
         }
     };
 
+    const handleContentClick = (contentId) => {
+        navigate(`/content/${contentId}`);
+        setSearchResults([]); 
+        setSearchResultsVisible(false);
+    };
+    
+    // Ensure focus and blur handle correctly
     useEffect(() => {
         const handleSearchBlur = (e) => {
-            console.log('Search input blurred (useEffect)');
-            if (!e.relatedTarget || !e.relatedTarget.closest('.search-container-result')) {
-                setSearchResults([]);
-                setSearchResultsVisible(false);
-            }
+            setTimeout(() => {
+                if (!e.relatedTarget || !e.relatedTarget.closest('.search-container-result-item')) {
+                    setSearchResults([]);
+                    setSearchResultsVisible(false);
+                }
+            }, 200); // Small delay to allow click to process
         };
-
+        
         const handleSearchFocus = () => {
-            console.log('Search input focused (useEffect)');
             if (searchQuery.trim()) {
                 performSearch(searchQuery.trim());
             }
@@ -80,6 +88,8 @@ const Search = () => {
             }
         };
     }, [searchQuery]);
+  
+
 
     return (
         <div className="search-container">
@@ -93,9 +103,8 @@ const Search = () => {
             <FontAwesomeIcon icon={faSearch} className="search-icon" />
             {searchResultsVisible && searchResults.length > 0 && (
                 <div className="search-container-result">
-                    {console.log('Rendering search results container')}
                     {searchResults.map((result, index) => (
-                        <div key={`${result.id}-${index}`} className="search-container-result-item">
+                        <div key={`${result.content_id}-${index}`} className="search-container-result-item" onClick={() => handleContentClick(result.content_id)}>
                             <img
                                 src={`${import.meta.env.VITE_API_URL}${result.image_path}`}
                                 alt={result.title}
@@ -108,7 +117,7 @@ const Search = () => {
                                 </p>
                                 <div className="result-rating">
                                     <FontAwesomeIcon icon={faStar} className="star-icon" />
-                                    <span>{result.rating || 'N/A'}</span>
+                                    <span>{result.average_rating > 0 ? result.average_rating : 'N/A'}</span>
                                 </div>
                             </div>
                         </div>

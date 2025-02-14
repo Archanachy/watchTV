@@ -16,6 +16,9 @@ const Profile = () => {
   const [dateJoined, setDateJoined] = useState("Date");
   const [content, setContent] = useState([]); // State to hold content
   const [totalUpload, setTotalUpload] = useState(0); // State to hold total uploads
+  const [ratedContent, setRatedContent] = useState([]); // State to hold rated content
+  const [totalRated, setTotalRated] = useState(0); // State for total rated content
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,6 +47,31 @@ const Profile = () => {
   
     fetchProfile();
   }, []);
+
+  useEffect(() => {
+    const fetchRatedContent = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/content-rated`, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          }
+        });
+  
+        setRatedContent(response.data.contentRated);
+        setTotalRated(response.data.totalRated); // Store the count
+      } catch (error) {
+        console.error("Error fetching rated content:", error);
+      }
+    };
+  
+    fetchRatedContent();
+  }, []);
+
+  const handleContentClick = (contentId) => {
+    navigate(`/content/${contentId}`);
+  };
 
   useEffect(() => {
     const fetchTotalUpload = async () => {
@@ -139,7 +167,7 @@ const Profile = () => {
           </div>
           <div>
             <p>Total Content Rated</p>
-            <p>0</p>
+            <p>{totalRated}</p>
           </div>
           <div>
             <p>Number of Ratings</p>
@@ -172,12 +200,12 @@ const Profile = () => {
           {activeTab === "Post" && (
             content.length > 0 ? (
               content.map((item, index) => (
-                <div key={`${item.id}-${index}`} className="block">
+                <div key={`${item.id}-${index}`} className="block" onClick={() => handleContentClick(item.content_id)}>
                   <img src={`${import.meta.env.VITE_API_URL}${item.image_path}`} alt={item.title} className="block-image" />
                   <div className="profile-block-details">
                     <div className="profile-block-rating">
                       <FontAwesomeIcon icon={faStar} className="profile-star-icon" />
-                      <span>{item.rating || "N/A"}</span>
+                      <span>{Number(item.average_rating) > 0 ? Number(item.average_rating).toFixed(1) : "N/A"}</span>
                       <div className="profile-block-date">{new Date(item.released_date).toISOString().split('T')[0]}</div>
                     </div>
                     <div className="profile-block-name">{item.title}</div>
@@ -190,11 +218,25 @@ const Profile = () => {
           )}
 
         {activeTab === "Content-Rated" && (
-          <div className="content-rated">
+          ratedContent.length > 0 ? (
+            ratedContent.map((item, index) => (
+              <div key={`${item.id}-${index}`} className="block" onClick={() => handleContentClick(item.content_id)}>
+                <img src={`${import.meta.env.VITE_API_URL}${item.image_path}`} alt={item.title} className="block-image" />
+                <div className="profile-block-details">
+                  <div className="profile-block-rating">
+                    <FontAwesomeIcon icon={faStar} className="profile-star-icon" />
+                    <span>{item.rating || "N/A"}</span>
+                    <div className="profile-block-date">{new Date(item.released_date).toISOString().split('T')[0]}</div>
+                  </div>
+                  <div className="profile-block-name">{item.title}</div>
+                </div>
+              </div>
+            ))
+          ) : (
             <p>No content rated yet.</p>
-            {/* Add content rated details here if available */}
-          </div>
+          )
         )}
+
       </div>
 
     </div>
