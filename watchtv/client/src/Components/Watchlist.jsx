@@ -21,7 +21,6 @@ const Watchlist = () => {
           }
         });
 
-        console.log("Watchlist API Response:", response.data); // ✅ Debug log
         setWatchlist(response.data); // ✅ Set the watchlist correctly
       } catch (error) {
         console.error('Failed to fetch watchlist:', error);

@@ -8,7 +8,27 @@
     background-color: #f0f2f5;
     font-family: Arial, sans-serif;
 }
-
+/* Parent container for existing images */
+.existing-profile-image {
+    /* Match the width/height of your .edit-profile-image-container */
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;  /* Ensures image stays within the circle */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* The <img> itself fills the container and maintains aspect ratio */
+  .existing-profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* or object-fit: contain, but cover usually looks better */
+    border-radius: 50%;
+  }
+  
 .edit-profile-form-container {
     width: 100%;
     max-width: 500px;
