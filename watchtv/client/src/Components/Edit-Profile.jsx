@@ -20,13 +20,12 @@ function EditProfile() {
     const [existingImage, setExistingImage] = useState(null);
     const [loading, setLoading] = useState(false);
 
-
     // Fetch the current user profile when the component mounts
     useEffect(() => {
         const fetchProfile = async () => {
             try {
                 const token = localStorage.getItem('token'); 
-                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`,{
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         'Content-Type': 'multipart/form-data',
@@ -53,18 +52,26 @@ function EditProfile() {
         fileInputRef.current.click();
     };
 
-  
-const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        setSelectedFile(file); // Store file for upload
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setImage(reader.result); // Display preview
-        };
-        reader.readAsDataURL(file);
-    }
-};
+    useEffect(() => {
+        const darkMode = localStorage.getItem("darkMode") === "true";
+        if (darkMode) {
+          document.body.classList.add("dark-mode");
+        } else {
+          document.body.classList.remove("dark-mode");
+        }
+      }, []);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedFile(file); // Store file for upload
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setImage(reader.result); // Display preview
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
         setCroppedArea(croppedAreaPixels);
@@ -78,6 +85,14 @@ const handleImageChange = (e) => {
         setBio(e.target.value);
         setBioCount(e.target.value.length);
     };
+
+    const handleDelete = async () => {
+        if (window.confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
+            navigate('/login');
+        } else {
+            // Do nothing if the user cancels the deletion
+        }
+    }
 
     const handleUpdate = async () => {
         setLoading(true);
@@ -182,10 +197,13 @@ const handleImageChange = (e) => {
                     <div className='profile-bio-count'>{bioCount}/500</div>
                 </div>
                 <div className="edit-profile-controls-container">
-                    <button id="update" onClick={handleUpdate} disabled={loading}>
+                    <button id="profile-update" onClick={handleUpdate} disabled={loading}>
                     {loading ? 'Updating...' : 'Update'}
                     </button>
-                    <button id="cancel" onClick={handleCancel}>
+                    <button id="profile-delete" onClick={handleDelete}>
+                        Delete Me
+                    </button>
+                    <button id="profile-cancel" onClick={handleCancel}>
                         Cancel
                     </button>
                 </div>

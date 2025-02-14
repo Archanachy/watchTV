@@ -36,24 +36,26 @@ const Watchlist = () => {
   return (
     <div className="watchlist-fullscreen-container">
       <Navbar />
-      <div className="View">
-        {watchlist.length > 0 ? (
-          watchlist.map((item) => (
-            <div key={item.content_id} className="block" onClick={() => handleContentClick(item.content_id)}>
-              <img src={`${import.meta.env.VITE_API_URL}${item.image_path}`} alt={item.title} className="block-image" />
-              <div className="block-details">
-                <div className="block-rating">
-                  <FontAwesomeIcon icon={faStar} className="star-icon" />
-                  <span>{item.rating || "N/A"}</span>
-                  <div className="block-date">{new Date(item.released_date).toISOString().split('T')[0]}</div>
+      <div className='watchlist-container'>
+        <div className="View">
+            {watchlist.length > 0 ? (
+            watchlist.map((item) => (
+                <div key={item.content_id} className="block" onClick={() => handleContentClick(item.content_id)}>
+                <img src={`${import.meta.env.VITE_API_URL}${item.image_path}`} alt={item.title} className="block-image" />
+                <div className="block-details">
+                    <div className="block-rating">
+                    <FontAwesomeIcon icon={faStar} className="star-icon" />
+                    <span>{item.rating || "N/A"}</span>
+                    <div className="block-date">{new Date(item.released_date).toISOString().split('T')[0]}</div>
+                    </div>
+                    <div className="block-name">{item.title}</div>
                 </div>
-                <div className="block-name">{item.title}</div>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No items in your watchlist yet!</p>
-        )}
+                </div>
+            ))
+            ) : (
+            <p>No items in your watchlist yet!</p>
+            )}
+        </div>
       </div>
     </div>
   );

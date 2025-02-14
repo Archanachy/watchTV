@@ -141,6 +141,7 @@ const Content = () => {
       <div className="content-about-container">
         <div className="content-card">
           <div className="content-left-section">
+            <div className='content-poster-section'>
             <div className="content-poster">
               <img 
                 src={`${import.meta.env.VITE_API_URL}${content.image_path}`} 
@@ -155,6 +156,7 @@ const Content = () => {
                 className="content-profile-picture" 
               />
               <span>{content.username}</span>
+            </div>
             </div>
             <button className="watchlist-btn" onClick={handleWatchlist}>
               <FontAwesomeIcon icon={inWatchlist ? faBookmarkSolid : faBookmarkRegular} /> 

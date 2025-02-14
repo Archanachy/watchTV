@@ -74,7 +74,7 @@ function Dashboard() {
 
   return (
     <div className="dashboard-fullscreen-container">
-      <Navbar />
+      <Navbar setSelectedGenre={setSelectedGenre}/>
 
       <div className="dashboard-container">
         <div className="Banner">
