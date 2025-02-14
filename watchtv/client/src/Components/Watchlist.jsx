@@ -38,6 +38,7 @@ const Watchlist = () => {
   return (
     <div className="watchlist-fullscreen-container">
       <Navbar />
+      <div className='watchlist-container'>
       <div className="View">
         {watchlist.length > 0 ? (
           watchlist.map((item) => (
@@ -57,6 +58,7 @@ const Watchlist = () => {
           <p>No items in your watchlist yet!</p>
         )}
       </div>
+    </div>
     </div>
   );
 };

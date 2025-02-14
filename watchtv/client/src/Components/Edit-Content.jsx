@@ -255,7 +255,7 @@ function EditContent() {
                 </div>
                 <div className="edit-image-container">
                     {image ? (
-                        <div className={`crop-container ${image ? 'image-uploaded' : ''}`}>
+                        <div className={`edit-crop-container ${image ? 'edit-image-uploaded' : ''}`}>
                             <Cropper
                                 image={image}
                                 crop={crop}
@@ -266,7 +266,7 @@ function EditContent() {
                                 onCropComplete={onCropComplete}
                                 style={{ containerStyle: { width: '100%', height: '100%' } }}
                             />
-                            <button className="remove-image-button" onClick={removeImage}>
+                            <button className="edit-remove-image-button" onClick={removeImage}>
                                 ✖
                             </button>
                         </div>
@@ -285,11 +285,11 @@ function EditContent() {
                 </div>
                 <div className="edit-details-container">
                     <label>
-                        <span className='box-label'>Title:</span>
+                        <span className='edit-box-label'>Title:</span>
                         <input type="text" value={title} onChange={(e) => setTitle(formatTitle(e.target.value))} />
                     </label>
                     <label>
-                        <span className='box-label'>Description:</span>
+                        <span className='edit-box-label'>Description:</span>
                         <textarea
                             value={description}
                             onChange={handleDescriptionChange}
@@ -297,10 +297,10 @@ function EditContent() {
                             placeholder="Describe the content in 10-700 words"
                             onInput={(e) => setDescriptionCount(e.target.value.length)}
                         />
-                        <div className='description-count'>{descriptionCount}/700</div>
+                        <div className='edit-description-count'>{descriptionCount}/700</div>
                     </label>
                     <label>
-                        <span className='box-label'>Release Date:</span>
+                        <span className='edit-box-label'>Release Date:</span>
                         <input
                             type="date"
                             value={releasedDate}
@@ -309,7 +309,7 @@ function EditContent() {
                         />
                     </label>
                     <label>
-                        <span className='box-label'>Duration (in min):</span>
+                        <span className='edit-box-label'>Duration (in min):</span>
                         <input
                             type="number"
                             min="15"
@@ -318,22 +318,22 @@ function EditContent() {
                         />
                     </label>
                     <label>
-                        <span className='box-label'>Kind:</span>
-                        <div className="custom-dropdown" ref={kindDropdownRef}>
-                            <div className="dropdown-header" onClick={toggleKindDropdown}>
+                        <span className='edit-box-label'>Kind:</span>
+                        <div className="edit-custom-dropdown" ref={kindDropdownRef}>
+                            <div className="edit-dropdown-header" onClick={toggleKindDropdown}>
                                 {kind.length > 0 ? kind.join(', ') : 'Select Kind (movie or Tv/web series)'}
-                                <span className="dropdown-arrow">{isKindDropdownOpen ? '▲' : '▼'}</span>
+                                <span className="edit-dropdown-arrow">{isKindDropdownOpen ? '▲' : '▼'}</span>
                             </div>
                             {isKindDropdownOpen && (
-                                <div className="dropdown-options">
+                                <div className="edit-dropdown-options">
                                     <div
-                                        className={`dropdown-option ${kind.includes('Movie') ? 'selected' : ''}`}
+                                        className={`edit-dropdown-option ${kind.includes('Movie') ? 'selected' : ''}`}
                                         onClick={() => handleKindSelect('Movie')}
                                     >
                                         Movie
                                     </div>
                                     <div
-                                        className={`dropdown-option ${kind.includes('Show') ? 'selected' : ''}`}
+                                        className={`edit-dropdown-option ${kind.includes('Show') ? 'selected' : ''}`}
                                         onClick={() => handleKindSelect('Show')}
                                     >
                                         Show
@@ -343,35 +343,35 @@ function EditContent() {
                         </div>
                     </label>
                     <label>
-                        <span className='box-label'>Genres:</span>
-                        <div className="custom-dropdown" ref={genreDropdownRef}>
-                            <div className="dropdown-header" onClick={toggleGenreDropdown}>
+                        <span className='edit-box-label'>Genres:</span>
+                        <div className="edit-custom-dropdown" ref={genreDropdownRef}>
+                            <div className="edit-dropdown-header" onClick={toggleGenreDropdown}>
                                 {selectedGenres.length > 0 ? (
                                     selectedGenres.map((genre) => (
-                                        <div key={genre} className="selected-genre">
+                                        <div key={genre} className="edit-selected-genre">
                                             {genre}
-                                            <span className="remove-genre" onClick={(e) => { e.stopPropagation(); handleGenreSelect(genre); }}>✖</span>
+                                            <span className="edit-remove-genre" onClick={(e) => { e.stopPropagation(); handleGenreSelect(genre); }}>✖</span>
                                         </div>
                                     ))
                                 ) : (
                                     'Max 3 genres'
                                 )}
-                                <span className="dropdown-arrow">{isGenreDropdownOpen ? '▲' : '▼'}</span>
+                                <span className="edit-dropdown-arrow">{isGenreDropdownOpen ? '▲' : '▼'}</span>
                             </div>
                             {isGenreDropdownOpen && (
-                                <div className="dropdown-options">
+                                <div className="edit-dropdown-options">
                                     {genres.length > 0 ? (
                                         genres.map((genre) => (
                                             <div
                                                 key={genre.genre_id}
-                                                className={`dropdown-option ${selectedGenres.includes(genre.name) ? 'selected' : ''}`}
+                                                className={`edit-dropdown-option ${selectedGenres.includes(genre.name) ? 'selected' : ''}`}
                                                 onClick={() => handleGenreSelect(genre.name)}
                                             >
                                                 {genre.name}
                                             </div>
                                         ))
                                     ) : (
-                                        <div className="dropdown-option">No genres available</div>
+                                        <div className="edit-dropdown-option">No genres available</div>
                                     )}
                                 </div>
                             )}
@@ -379,13 +379,13 @@ function EditContent() {
                     </label>
                 </div>
                 <div className="edit-controls-container">
-                    <button id='update' onClick={handleUpdate}>
+                    <button id='edit-update' onClick={handleUpdate}>
                         Update
                     </button>
-                    <button id='delete' onClick={handleDelete}>
+                    <button id='edit-delete' onClick={handleDelete}>
                         Delete
                     </button>
-                    <button id='cancel' onClick={handleCancel}>
+                    <button id='edit-cancel' onClick={handleCancel}>
                         Cancel
                     </button>
                 </div>

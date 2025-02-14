@@ -51,6 +51,10 @@ function EditProfile() {
   }, []);
 
   useEffect(() => {
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    if (darkMode) {
+        document.body.classList.add('dark-mode');
+    }
     fetchProfile();
   }, [fetchProfile]);
 
@@ -124,6 +128,12 @@ function EditProfile() {
   const handleCancel = () => {
     navigate('/profile');
   };
+
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
+        navigate('/signup');
+    } 
+}
 
   return (
     <div className="edit-profile-container">
@@ -215,10 +225,13 @@ function EditProfile() {
 
         {/* Controls */}
         <div className="edit-profile-controls-container">
-          <button id="update" onClick={handleUpdate} disabled={loading}>
+          <button id="profile-update" onClick={handleUpdate} disabled={loading}>
             {loading ? 'Updating...' : 'Update'}
           </button>
-          <button id="cancel" onClick={handleCancel}>
+          <button id='profile-delete' onClick={handleDelete}>
+            Delete Me
+          </button>
+          <button id="profile-cancel" onClick={handleCancel}>
             Cancel
           </button>
         </div>

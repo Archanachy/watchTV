@@ -52,6 +52,10 @@ const handleRating = async (value) => {
 
   // ✅ Fetch Content Data
   useEffect(() => {
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    if (darkMode) {
+        document.body.classList.add('dark-mode');
+    }
     const fetchContent = async () => {
       if (!contentId) return;
 
@@ -68,6 +72,7 @@ const handleRating = async (value) => {
           );
           setRating(ratingResponse.data.rating || null);
         }
+        
       } catch (error) {
         console.error('Error fetching content:', error);
       } finally {
@@ -144,12 +149,14 @@ const handleRating = async (value) => {
       <div className="content-about-container">
         <div className="content-card">
           <div className="content-left-section">
+            <div className='content-poster-section'>
             <div className="content-poster">
               <img src={`${import.meta.env.VITE_API_URL}${content.image_path}`} alt={content.title} className="content-image" />
             </div>
             <div className="content-username">
               <img src={content.profile_picture ? `${import.meta.env.VITE_API_URL}${content.profile_picture}` : "https://picsum.photos/30"} alt="Profile" className="content-profile-picture" />
               <span>{content.username}</span>
+            </div>
             </div>
             <button className="watchlist-btn" onClick={handleWatchlist}>
               <FontAwesomeIcon icon={inWatchlist ? faBookmarkSolid : faBookmarkRegular} /> 
