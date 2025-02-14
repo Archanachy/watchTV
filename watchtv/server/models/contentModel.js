@@ -1,10 +1,10 @@
 const pool = require('../config/database');
 
 // Function to check if a title exists in the database
-async function checkIfTitleExists(title) {
-  const query = 'SELECT 1 FROM content WHERE title = $1 LIMIT 1';
-  const result = await pool.query(query, [title]);
-  return result.rowCount > 0;
+async function checkIfTitleExists(title, contentId) {
+  const query = `SELECT COUNT(*) FROM content WHERE title = $1 AND content_id != $2`;
+  const { rows } = await pool.query(query, [title, contentId]);
+  return rows[0].count > 0;
 }
 
 // Insert content into the content table

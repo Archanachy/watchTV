@@ -20,14 +20,16 @@ const Watchlist = () => {
             "Content-Type": "application/json"
           }
         });
-        setWatchlist(response.data);
+
+        setWatchlist(response.data); // ✅ Set the watchlist correctly
       } catch (error) {
         console.error('Failed to fetch watchlist:', error);
       }
     };
 
     fetchWatchlist();
-  }, []);
+}, []);
+
 
   const handleContentClick = (contentId) => {
     navigate(`/content/${contentId}`);
@@ -36,6 +38,7 @@ const Watchlist = () => {
   return (
     <div className="watchlist-fullscreen-container">
       <Navbar />
+      <div className='watchlist-container'>
       <div className="View">
         {watchlist.length > 0 ? (
           watchlist.map((item) => (
@@ -44,7 +47,7 @@ const Watchlist = () => {
               <div className="block-details">
                 <div className="block-rating">
                   <FontAwesomeIcon icon={faStar} className="star-icon" />
-                  <span>{item.rating || "N/A"}</span>
+                  <span>{Number(item.average_rating) > 0 ? Number(item.average_rating).toFixed(1) : "N/A"}</span>
                   <div className="block-date">{new Date(item.released_date).toISOString().split('T')[0]}</div>
                 </div>
                 <div className="block-name">{item.title}</div>
@@ -55,6 +58,7 @@ const Watchlist = () => {
           <p>No items in your watchlist yet!</p>
         )}
       </div>
+    </div>
     </div>
   );
 };

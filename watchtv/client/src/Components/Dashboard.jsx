@@ -10,10 +10,10 @@ import { useNavigate } from 'react-router-dom';
 function Dashboard() {
   const [content, setContent] = useState([]);
   const [filterType, setFilterType] = useState('movies');
-  const [selectedGenre, setSelectedGenre] = useState(null);
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideInterval = useRef(null);
+  const [selectedGenre, setSelectedGenre] = useState(null);
 
   const images = [
     "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -67,14 +67,12 @@ function Dashboard() {
     return () => clearInterval(slideInterval.current);
   }, []);
 
-  const handleWatchlistClick = (e) => {
-    e.preventDefault();
-    navigate('/watchlist');
-  };
+
+
 
   return (
     <div className="dashboard-fullscreen-container">
-      <Navbar />
+      <Navbar setSelectedGenre={setSelectedGenre}/>
 
       <div className="dashboard-container">
         <div className="Banner">
@@ -130,7 +128,7 @@ function Dashboard() {
               <div className="block-details">
                 <div className="block-rating">
                   <FontAwesomeIcon icon={faStar} className="star-icon" />
-                  <span>{item.rating || "N/A"}</span>
+                  <span>{Number(item.average_rating) > 0 ? Number(item.average_rating).toFixed(1) : "N/A"}</span>
                   <div className="block-date">{new Date(item.released_date).toISOString().split('T')[0]}</div>
                 </div>
                 <div className="block-name">{item.title}</div>

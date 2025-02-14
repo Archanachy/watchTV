@@ -26,11 +26,11 @@ router.patch('/content/:contentId', upload.single('contentImage'), authenticateT
     const contentId = req.params.contentId;
 
     // Check if the title already exists
-    const titleExists = await checkIfTitleExists(title);
-    if (titleExists) {
+    const titleExists = await checkIfTitleExists(title, contentId);
+    if (titleExists && title !== existingContent.title) {
       throw new Error('Title already exists. Please choose a different title.');
     }
-
+    
     // Fetch current content data
     const existingContent = await getContentById(contentId);
     if (!existingContent) {
@@ -78,11 +78,16 @@ router.patch('/content/:contentId', upload.single('contentImage'), authenticateT
       }
     }
 
+    const formattedDate = releasedDate || existingContent.released_date;
+    console.log("Received releasedDate:", releasedDate);
+    console.log("Formatted releasedDate:", formattedDate);
+
+
     const updatedContent = await updateContent({
         contentId,
         title: (title !== undefined && title.trim() !== '') ? title : existingContent.title,
         description: (description !== undefined && description.trim() !== '') ? description : existingContent.description,
-        releasedDate: (releasedDate !== undefined && releasedDate.trim() !== '') ? releasedDate : existingContent.released_date,
+        releasedDate: formattedDate,
         duration: (duration !== undefined && duration.toString().trim() !== '' && !isNaN(parseInt(duration, 10))) ? parseInt(duration, 10) : existingContent.duration_minutes,
         kind: (kind !== undefined && kind.trim() !== '') ? kind : existingContent.kind,
         imagePath, // Either the new image path or the old one

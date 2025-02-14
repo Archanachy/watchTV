@@ -28,18 +28,30 @@ async function getProfileById(userId) {
     }
 }
 
+
 async function getContentByUser(userId) {
+  const query = `
+      SELECT 
+          c.content_id,
+          c.title,
+          TO_CHAR(c.released_date, 'YYYY-MM-DD') AS released_date,
+          c.image_path,
+          COALESCE(ROUND(AVG(cr.rating)::numeric, 1), 0) AS average_rating  -- ✅ Ensure numeric type
+      FROM content c
+      LEFT JOIN content_ratings cr ON c.content_id = cr.content_id
+      WHERE c.id = $1
+      GROUP BY c.content_id, c.title, c.released_date, c.image_path;
+  `;
 
-    const query=`Select * from content where id=$1`;
+  const result = await pool.query(query, [userId]);
 
-    const result=await pool.query(query,[userId]);
-
-    if(result.rows.length===0){
+  if (result.rows.length === 0) {
       throw new Error('No content uploaded!');
-    }
-    return result.rows;
+  }
 
+  return result.rows;
 }
+
 
 /**
  * Update user profile with partial updates
