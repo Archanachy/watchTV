@@ -131,9 +131,27 @@ function EditProfile() {
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
-        navigate('/signup');
-    } 
-}
+      try {
+        const token = localStorage.getItem('token');
+  
+        // Call API to delete the user account
+        await axios.delete(`${import.meta.env.VITE_API_URL}/api/deleteAccount`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+  
+        // Clear local storage and navigate
+        localStorage.removeItem('token');
+        localStorage.removeItem('userId');
+  
+        alert('Your account has been deleted.');
+        navigate('/signup'); // Redirect to signup or homepage
+      } catch (error) {
+        console.error('Error deleting account:', error);
+        alert('Failed to delete your account. Please try again.');
+      }
+    }
+  };
+  
 
   return (
     <div className="edit-profile-container">
