@@ -116,7 +116,7 @@ function EditProfile() {
 
       await fetchProfile();
       alert('Profile updated successfully!');
-      // navigate('/profile'); // optionally navigate
+      navigate('/profile'); 
     } catch (error) {
       console.error('Error updating profile:', error);
       alert('Error updating profile.');

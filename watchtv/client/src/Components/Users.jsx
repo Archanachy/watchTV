@@ -63,6 +63,8 @@ const Users = ({ isDarkMode, token }) => {
               <th>Username</th>
               <th>Phone Number</th>
               <th>Role</th>
+              <th>Total Content Uploaded</th>
+              <th>Total Content Rated</th>
               <th>Delete User</th>
             </tr>
           </thead>
@@ -74,7 +76,7 @@ const Users = ({ isDarkMode, token }) => {
                 <td>{user.phone_number}</td>
                 <td>{user.role}</td> 
                 <td>{user.total_uploads}</td> 
-                <td>{user.}</td> 
+                <td>{user.total_ratings}</td> 
 
                 <td>
                   <button className="delete" onClick={() => handleDelete(user.id)}>

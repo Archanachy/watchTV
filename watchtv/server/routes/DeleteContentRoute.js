@@ -16,6 +16,7 @@ const deleteFile = (filePath) => {
 router.delete('/content/:contentId', authenticateToken, async (req, res) => {
     try {
         const userId = req.user.userId; // Authenticated user's ID from JWT
+        const userRole=req.user.role
         const contentId = req.params.contentId;
 
         // Fetch current content data
@@ -24,10 +25,11 @@ router.delete('/content/:contentId', authenticateToken, async (req, res) => {
             return res.status(404).json({ message: 'Content not found' });
         }
 
-        // Check that the authenticated user is the owner of the content
-        if (parseInt(userId) !== parseInt(existingContent.id)) {
-            return res.status(403).json({ message: 'Unauthorized: you do not own this content' });
+         // Authorization: Allow deletion if user is the owner OR an admin
+         if (userRole !== 'admin' && parseInt(userId) !== parseInt(existingContent.id)) {
+            return res.status(403).json({ message: 'Unauthorized: You do not have permission to delete this content' });
         }
+
 
         // Delete the content from the database
         const result = await deleteContent(contentId);
