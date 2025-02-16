@@ -24,6 +24,8 @@ const watchlistStatusRoute = require('./routes/watchlistStatus');
 const ratingRoute = require('./routes/ratingRoute');
 const getContentRated = require('./routes/contentRateRoute');
 const deleteMyAccount=require('./routes/DeleteMe');
+const getAllUserRoute=require('./routes/getAllUserRoute');
+const deleteAnyUserRoute=require('./routes/deleteAnyUserRoute');
 
 const app = express();
 
@@ -66,7 +68,9 @@ app.use('/api', getParticularContentRoute);
 app.use('/api', watchlistStatusRoute);
 app.use('/api', ratingRoute);
 app.use('/api', getContentRated);
-app.use('/api',deleteMyAccount)
+app.use('/api',deleteMyAccount);
+app.use('/api',getAllUserRoute);
+app.use('/api',deleteAnyUserRoute);
 
 // Start server
 const PORT = process.env.PORT || 3004;
