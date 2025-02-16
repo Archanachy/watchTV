@@ -349,9 +349,6 @@ body.dark-mode .dropdown-item:hover {
   right: 0;
 }
 
-
-
-
 .Popular {
   width: 30%;
   max-height: 100%;
@@ -420,9 +417,11 @@ body.dark-mode .dropdown-item:hover {
   margin-top: 2rem;
 }
 
-.Mov-Shows p {
+.Mov-Shows .M-Stabs {
+  margin-left: 40px;
   font-size: 1.4rem;
   padding: 0.5rem;
+  gap: 55px;
   display: flex;
   align-items: center;
 }
@@ -447,10 +446,17 @@ body.dark-mode .Mov-Shows a {
   width: 1.875rem; /* 30px */
   height: 1.875rem; /* 30px */
   position: relative;
-  margin-left: 3rem; /* 30px */
-  bottom: 0.3rem;
 }
 
+.active-tab {
+  border-bottom: 2px solid #000;
+  color: #007bff;
+}
+
+body.dark-mode .active-tab {
+  border-bottom-color: #ffffff;
+  color: #ffffff;
+}
 .upload-button {
   background-color: #007bff;
   color: #ffffff;
