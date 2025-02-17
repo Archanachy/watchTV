@@ -67,12 +67,9 @@ function Dashboard() {
     return () => clearInterval(slideInterval.current);
   }, []);
 
-
-
-
   return (
     <div className="dashboard-fullscreen-container">
-      <Navbar setSelectedGenre={setSelectedGenre}/>
+      <Navbar setSelectedGenre={setSelectedGenre} setFilterType={setFilterType} />
 
       <div className="dashboard-container">
         <div className="Banner">
@@ -88,7 +85,8 @@ function Dashboard() {
         </div>
 
         <div className="Mov-Shows">
-          <p>
+          <div className='M-Stabs'>
+            <div className={filterType === 'movies' ? 'active-tab' : ''}>
             <img
               src={Movies}
               alt="Movie Icon"
@@ -103,6 +101,8 @@ function Dashboard() {
             >
               Movies
             </a>
+            </div>
+            <div className={filterType === 'shows' ? 'active-tab' : ''}>
             <img
               src={watchtv_icon}
               alt="Show Icon"
@@ -110,6 +110,7 @@ function Dashboard() {
             />
             <a
               href="#"
+
               onClick={(e) => {
                 e.preventDefault();
                 handleFilterChange('shows');
@@ -117,7 +118,8 @@ function Dashboard() {
             >
               Shows
             </a>
-          </p>
+            </div>
+          </div>
           <button className="upload-button" onClick={handleupload}><span>+   </span>Upload</button>
         </div>
 

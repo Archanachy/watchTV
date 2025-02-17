@@ -7,7 +7,7 @@ import '../Styles/Dashboard.css';
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 
-const Navbar = ({setSelectedGenre}) => {
+const Navbar = ({ setSelectedGenre, setFilterType }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [profilePic, setProfilePic] = useState(defaultAvatar);
   const [isGenreDropdownVisible, setGenreDropdownVisible] = useState(false);
@@ -106,7 +106,6 @@ const Navbar = ({setSelectedGenre}) => {
     };
   }, []);
 
- 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to log out?");
     if (confirmLogout) {
@@ -122,7 +121,7 @@ const Navbar = ({setSelectedGenre}) => {
     e.preventDefault();
     navigate('/dashboard');
     setSelectedGenre(null);
-    
+    setFilterType('movies'); // Set filter type to 'movies'
   };
 
   const handleWatchlistClick = (e) => {
@@ -140,7 +139,7 @@ const Navbar = ({setSelectedGenre}) => {
       <div><Search /></div>
 
       <div className={`nav-links ${isMobileMenuVisible ? 'mobile-menu' : ''}`} ref={mobileMenuRef}>
-        <a href='#'onClick={handleHomeClick}>Home</a>
+        <a href='#' onClick={handleHomeClick}>Home</a>
 
         <div className="genre-container" ref={genredropdownRef}>
           <button
@@ -211,4 +210,4 @@ const Navbar = ({setSelectedGenre}) => {
   );
 };
 
-export default Navbar; 
+export default Navbar;
