@@ -27,13 +27,12 @@ function EditProfile() {
   // Fetch current user's profile
   const fetchProfile = useCallback(async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('authToken');
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log("Fetched profile:", response.data);
   
       const profile = response.data.profile;
       setRealName(profile.fullname || '');
@@ -132,7 +131,7 @@ function EditProfile() {
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('authToken');
   
         // Call API to delete the user account
         await axios.delete(`${import.meta.env.VITE_API_URL}/api/deleteAccount`, {
@@ -140,7 +139,7 @@ function EditProfile() {
         });
   
         // Clear local storage and navigate
-        localStorage.removeItem('token');
+        localStorage.removeItem('authToken');
         localStorage.removeItem('userId');
   
         alert('Your account has been deleted.');

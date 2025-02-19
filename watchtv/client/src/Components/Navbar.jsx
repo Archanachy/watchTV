@@ -7,6 +7,25 @@ import '../Styles/Dashboard.css';
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 
+// Helper function to get user role from JWT
+// Helper function to get user role from JWT
+const getUserRoleFromToken = () => {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    console.error('No token found in localStorage');
+    return null; // Return null if no token is found
+  }
+
+  try {
+    const decoded = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+    return decoded.role;
+  } catch (error) {
+    console.error('Error decoding token', error);
+    return null; // Return null if token is invalid
+  }
+};
+
+
 const Navbar = ({ setSelectedGenre, setFilterType }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [profilePic, setProfilePic] = useState(defaultAvatar);
@@ -17,12 +36,18 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
   const dropdownRef = useRef(null);
   const genredropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
+  const [userRole, setUserRole] = useState(null); // Store the user role here
   const navigate = useNavigate();
 
   const handleGenreSelect = (genre) => {
     setSelectedGenre(genre.genre_id);
     setGenreDropdownVisible(false); 
   };
+
+  useEffect(() => {
+    const role = getUserRoleFromToken(); // Get user role from token
+    setUserRole(role);
+  }, []);
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -39,24 +64,22 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
   useEffect(() => {
     // Fetch user profile data
     const fetchUserProfile = async () => {
-        try {
-            const token = localStorage.getItem("token"); 
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile_Pic`, {
-              headers: {
-                "Authorization": `Bearer ${token}`, 
-                "Content-Type": "application/json"
-              }
-            });
-            const profilePicture = response.data.profilePicture;
-            console.log("Profile API Response:", response.data);
-           setProfilePic(profilePicture?`${import.meta.env.VITE_API_URL}${profilePicture}`: defaultAvatar);
-           console.log("Fetched Profile Picture Path:", profilePicture.image_path);
-        } catch (error) {
-            console.error('Error fetching user profile:', error);
-        }
+      const token = localStorage.getItem("authToken");
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile_Pic`, {
+          headers: {
+            "Authorization": `Bearer ${token}`, 
+            "Content-Type": "application/json"
+          }
+        });
+        const profilePicture = response.data.profilePicture;
+        setProfilePic(profilePicture ? `${import.meta.env.VITE_API_URL}${profilePicture}` : defaultAvatar);
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
     };
     fetchUserProfile();
-}, []);
+  }, []);
 
   useEffect(() => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
@@ -109,6 +132,7 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to log out?");
     if (confirmLogout) {
+      localStorage.removeItem("authToken"); // Remove token on logout
       navigate('/signin');
     }
   };
@@ -121,12 +145,17 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
     e.preventDefault();
     navigate('/dashboard');
     setSelectedGenre(null);
-    setFilterType('movies'); // Set filter type to 'movies'
+    setFilterType('movies');
   };
 
   const handleWatchlistClick = (e) => {
     e.preventDefault();
     navigate('/watchlist');
+  };
+
+  const handleUsersClick = (e) => {
+    e.preventDefault();
+    navigate('/users');
   };
 
   return (
@@ -176,7 +205,11 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
           )}
         </div>
 
-        <a href="#" onClick={handleWatchlistClick}>Watchlist</a>
+        {userRole === "admin" ? (
+          <a href="#" onClick={handleUsersClick}>Users</a>
+        ) : (
+          <a href="#" onClick={handleWatchlistClick}>Watchlist</a>
+        )}
 
         <div className="toggle-container">
           <input type="checkbox" id="toggle" onChange={toggleDarkMode} checked={isDarkMode} />

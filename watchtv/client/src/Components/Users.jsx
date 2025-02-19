@@ -62,19 +62,17 @@ const Users = ({ isDarkMode, token }) => {
               <th>User ID</th>
               <th>Username</th>
               <th>Phone Number</th>
-              <th>Role</th>
               <th>Total Content Uploaded</th>
               <th>Total Content Rated</th>
-              <th>Delete User</th>
+              <th className="delete-users">Delete User</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
               <tr key={user.id}>
                 <td>{user.id}</td>
-                <td>{user.username}</td>
+                <td className="users-username">{user.username}</td>
                 <td>{user.phone_number}</td>
-                <td>{user.role}</td> 
                 <td>{user.total_uploads}</td> 
                 <td>{user.total_ratings}</td> 
 
