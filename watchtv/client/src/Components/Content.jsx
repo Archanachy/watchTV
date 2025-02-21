@@ -23,7 +23,7 @@ const handleRating = async (value) => {
     setRating(value); // Instantly update UI before sending request
     setLoading(true); // Start loading state
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('authToken');
     const response = await axios.post(
       `${import.meta.env.VITE_API_URL}/api/rating/${contentId}`,
       { rating: value },
@@ -64,7 +64,7 @@ const handleRating = async (value) => {
         setContent(response.data);
 
         // ✅ Load user's existing rating (if available)
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('authToken');
         if (token) {
           const ratingResponse = await axios.get(
             `${import.meta.env.VITE_API_URL}/api/ratings/${contentId}`,
@@ -86,7 +86,7 @@ const handleRating = async (value) => {
   useEffect(() => {
     const fetchWatchlistStatus = async () => {
       try {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('authToken');
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/watchlist/${contentId}`,
           { headers: { "Authorization": `Bearer ${token}` } }
@@ -105,7 +105,7 @@ const handleRating = async (value) => {
   // ✅ Handle Watchlist
   const handleWatchlist = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem('authToken');
       let response;
 
       if (inWatchlist) {

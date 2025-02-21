@@ -24,7 +24,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem("token"); 
+        const token = localStorage.getItem("authToken"); 
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile`, {
           headers: {
             "Authorization": `Bearer ${token}`, 
@@ -51,7 +51,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchRatedContent = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("authToken");
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/content-rated`, {
           headers: {
             "Authorization": `Bearer ${token}`,
@@ -76,7 +76,7 @@ const Profile = () => {
   useEffect(() => {
     const fetchTotalUpload = async () => {
       try {
-        const token = localStorage.getItem("token"); 
+        const token = localStorage.getItem("authToken"); 
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/totalUpload`, {
             headers: {
               "Authorization": `Bearer ${token}`, 
@@ -85,8 +85,12 @@ const Profile = () => {
           });
 
           const totalUpload = response.data.totalUpload;
-
           setTotalUpload(totalUpload);
+
+          // Fetch content only if the user has uploaded content
+          if (totalUpload > 0) {
+            fetchContent();
+          }
       } catch (error) {
         console.error("Error fetching total upload:", error);
       }
@@ -94,26 +98,20 @@ const Profile = () => {
     fetchTotalUpload();
   }, []); 
 
-  useEffect(() => {
-    const fetchContent = async () => {
-      try {
-        const token = localStorage.getItem("token"); 
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/post`, {
-          headers: {
-            "Authorization": `Bearer ${token}`, 
-            "Content-Type": "application/json"
-          }
-        });
-
-        setContent(response.data.content);
-      } catch (error) {
-        console.error("Error fetching content:", error);
-      }
-    };
-
-    fetchContent();
-  }, []);
-
+  const fetchContent = async () => {
+    try {
+      const token = localStorage.getItem("authToken"); 
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/post`, {
+        headers: {
+          "Authorization": `Bearer ${token}`, 
+          "Content-Type": "application/json"
+        }
+      });
+      setContent(response.data.content);
+    } catch (error) {
+      console.error("Error fetching content:", error);
+    }
+  };
 
   useEffect(() => {
     const darkMode = localStorage.getItem("darkMode") === "true";
@@ -141,23 +139,20 @@ const Profile = () => {
             <div className="breadcrumb" ><span onClick={handleHome}>Home</span></div>
             <div className="avatar">
               <img src={avatar} alt="Avatar" className="avatar-image" />
-              
             </div>
             <div className="real-name">{realName}</div>
           </div>
           <div className="right-section">
-            
-              <div className="profile-info-section">
-                <div className="username-edit-container">
-                  <h2 className="username">{username}</h2>
-                  <button className="edit-button" onClick={handleEditClick}>
-                    Edit Profile
-                  </button>
-                </div>
-                <p className="location">{location}</p>
-                <p className="bio">{bio}</p>
+            <div className="profile-info-section">
+              <div className="username-edit-container">
+                <h2 className="username">{username}</h2>
+                <button className="edit-button" onClick={handleEditClick}>
+                  Edit Profile
+                </button>
               </div>
-            
+              <p className="location">{location}</p>
+              <p className="bio">{bio}</p>
+            </div>
           </div>
         </div>
         <div className="stats">
@@ -170,10 +165,6 @@ const Profile = () => {
             <p>{totalRated}</p>
           </div>
           <div>
-            <p>Number of Ratings</p>
-            <p>0</p>
-          </div>
-          <div>
             <p>Total Content Uploaded</p>
             <p>{totalUpload}</p>
           </div>
@@ -181,7 +172,7 @@ const Profile = () => {
       </div>
 
       <div className="tabs">
-      <a
+        <a
           className={activeTab === "Post" ? "active-tab" : ""}
           onClick={() => setActiveTab("Post")}
         >
@@ -193,29 +184,28 @@ const Profile = () => {
         >
           Content Rated
         </a>
-
       </div>
 
       <div className="profile-View">
-          {activeTab === "Post" && (
-            content.length > 0 ? (
-              content.map((item, index) => (
-                <div key={`${item.id}-${index}`} className="block" onClick={() => handleContentClick(item.content_id)}>
-                  <img src={`${import.meta.env.VITE_API_URL}${item.image_path}`} alt={item.title} className="block-image" />
-                  <div className="profile-block-details">
-                    <div className="profile-block-rating">
-                      <FontAwesomeIcon icon={faStar} className="profile-star-icon" />
-                      <span>{Number(item.average_rating) > 0 ? Number(item.average_rating).toFixed(1) : "N/A"}</span>
-                      <div className="profile-block-date">{new Date(item.released_date).toISOString().split('T')[0]}</div>
-                    </div>
-                    <div className="profile-block-name">{item.title}</div>
+        {activeTab === "Post" && (
+          content.length > 0 ? (
+            content.map((item, index) => (
+              <div key={`${item.id}-${index}`} className="block" onClick={() => handleContentClick(item.content_id)}>
+                <img src={`${import.meta.env.VITE_API_URL}${item.image_path}`} alt={item.title} className="block-image" />
+                <div className="profile-block-details">
+                  <div className="profile-block-rating">
+                    <FontAwesomeIcon icon={faStar} className="profile-star-icon" />
+                    <span>{Number(item.average_rating) > 0 ? Number(item.average_rating).toFixed(1) : "N/A"}</span>
+                    <div className="profile-block-date">{new Date(item.released_date).toISOString().split('T')[0]}</div>
                   </div>
+                  <div className="profile-block-name">{item.title}</div>
                 </div>
-              ))
-            ) : (
-              <p >No content uploaded yet!</p>
-            )
-          )}
+              </div>
+            ))
+          ) : (
+            <p>No content uploaded yet!</p>
+          )
+        )}
 
         {activeTab === "Content-Rated" && (
           ratedContent.length > 0 ? (
@@ -236,9 +226,7 @@ const Profile = () => {
             <p>No content rated yet.</p>
           )
         )}
-
       </div>
-
     </div>
   );
 };

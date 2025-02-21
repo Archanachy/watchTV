@@ -22,6 +22,8 @@ router.patch('/content/:contentId', upload.single('contentImage'), authenticateT
 
   try {
     const userId = req.user.userId; // Authenticated user's ID from JWT
+    const userRole=req.user.role;
+  
     const { title, description, releasedDate, duration, kind, genres } = req.body;
     const contentId = req.params.contentId;
 
@@ -37,11 +39,11 @@ router.patch('/content/:contentId', upload.single('contentImage'), authenticateT
       return res.status(404).json({ message: 'Content not found' });
     }
 
-    // Check that the authenticated user is the owner of the content.
-    if (parseInt(userId) !== parseInt(existingContent.id)) {
-      return res.status(403).json({ message: 'Unauthorized: you do not own this content' });
-    }
-
+       // Authorization: Allow update if user is the owner OR an admin
+       if (userRole !== 'admin' && parseInt(userId) !== parseInt(existingContent.id)) {
+        return res.status(403).json({ message: 'Unauthorized: You do not have permission to update this content' });
+      }
+  
     // Save the old image path for later cleanup (if needed)
     const oldImagePath = existingContent.image_path; // e.g., '/uploads/oldImage.jpg'
     let imagePath = oldImagePath; // Default to the existing image path

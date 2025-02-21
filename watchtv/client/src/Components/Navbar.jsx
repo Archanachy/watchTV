@@ -7,7 +7,26 @@ import '../Styles/Dashboard.css';
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 
-const Navbar = ({setSelectedGenre}) => {
+// Helper function to get user role from JWT
+// Helper function to get user role from JWT
+const getUserRoleFromToken = () => {
+  const token = localStorage.getItem('authToken');
+  if (!token) {
+    console.error('No token found in localStorage');
+    return null; // Return null if no token is found
+  }
+
+  try {
+    const decoded = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
+    return decoded.role;
+  } catch (error) {
+    console.error('Error decoding token', error);
+    return null; // Return null if token is invalid
+  }
+};
+
+
+const Navbar = ({ setSelectedGenre, setFilterType }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [profilePic, setProfilePic] = useState(defaultAvatar);
   const [isGenreDropdownVisible, setGenreDropdownVisible] = useState(false);
@@ -17,12 +36,18 @@ const Navbar = ({setSelectedGenre}) => {
   const dropdownRef = useRef(null);
   const genredropdownRef = useRef(null);
   const mobileMenuRef = useRef(null);
+  const [userRole, setUserRole] = useState(null); // Store the user role here
   const navigate = useNavigate();
 
   const handleGenreSelect = (genre) => {
     setSelectedGenre(genre.genre_id);
     setGenreDropdownVisible(false); 
   };
+
+  useEffect(() => {
+    const role = getUserRoleFromToken(); // Get user role from token
+    setUserRole(role);
+  }, []);
 
   useEffect(() => {
     const fetchGenres = async () => {
@@ -37,12 +62,13 @@ const Navbar = ({setSelectedGenre}) => {
   }, []);
 
   useEffect(() => {
+    // Fetch user profile data
     const fetchUserProfile = async () => {
+      const token = localStorage.getItem("authToken");
       try {
-        const token = localStorage.getItem("token");
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile_Pic`, {
           headers: {
-            "Authorization": `Bearer ${token}`,
+            "Authorization": `Bearer ${token}`, 
             "Content-Type": "application/json"
           }
         });
@@ -103,10 +129,10 @@ const Navbar = ({setSelectedGenre}) => {
     };
   }, []);
 
- 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to log out?");
     if (confirmLogout) {
+      localStorage.removeItem("authToken"); // Remove token on logout
       navigate('/signin');
     }
   };
@@ -119,12 +145,17 @@ const Navbar = ({setSelectedGenre}) => {
     e.preventDefault();
     navigate('/dashboard');
     setSelectedGenre(null);
-    
+    setFilterType('movies');
   };
 
   const handleWatchlistClick = (e) => {
     e.preventDefault();
     navigate('/watchlist');
+  };
+
+  const handleUsersClick = (e) => {
+    e.preventDefault();
+    navigate('/users');
   };
 
   return (
@@ -137,7 +168,7 @@ const Navbar = ({setSelectedGenre}) => {
       <div><Search /></div>
 
       <div className={`nav-links ${isMobileMenuVisible ? 'mobile-menu' : ''}`} ref={mobileMenuRef}>
-        <a href='#'onClick={handleHomeClick}>Home</a>
+        <a href='#' onClick={handleHomeClick}>Home</a>
 
         <div className="genre-container" ref={genredropdownRef}>
           <button
@@ -174,7 +205,11 @@ const Navbar = ({setSelectedGenre}) => {
           )}
         </div>
 
-        <a href="#" onClick={handleWatchlistClick}>Watchlist</a>
+        {userRole === "admin" ? (
+          <a href="#" onClick={handleUsersClick}>Users</a>
+        ) : (
+          <a href="#" onClick={handleWatchlistClick}>Watchlist</a>
+        )}
 
         <div className="toggle-container">
           <input type="checkbox" id="toggle" onChange={toggleDarkMode} checked={isDarkMode} />
@@ -208,4 +243,4 @@ const Navbar = ({setSelectedGenre}) => {
   );
 };
 
-export default Navbar; 
+export default Navbar;
