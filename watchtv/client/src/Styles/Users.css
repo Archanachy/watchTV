@@ -25,6 +25,14 @@ td a {
   color: black;
 }
 
+.users-username{
+  cursor: pointer;
+}
+.users-username:hover{
+  text-decoration: underline;
+   /* color: ; */
+}
+
 th {
   background-color: #f2f2f2;
 }
