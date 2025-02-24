@@ -1,51 +1,56 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Delete } from '../assets/Pictures';
+import { Delete } from "../assets/Pictures";
 import "../Styles/Users.css";
-
-const Users = ({ isDarkMode }) => {
+import axios from "../api/axios";
+import Navbar from "./Navbar";
+const Users = ({ isDarkMode, token }) => {
   const navigate = useNavigate();
-  useEffect(() => {
-    const darkMode = localStorage.getItem('darkMode') === 'true';
-        if (darkMode) {
-            document.body.classList.add('dark-mode');
-        }
-  }, []);
-  const [users, setUsers] = useState([
-    {
-      User_Id: 1,
-      Username: "Ram",
-      Phone_Number: "9845454545",
-      Joined_Date: "2022-01-01",
-      Total_Uploads: 10,
-    },
-    {
-      User_Id: 2,
-      Username: "Shyam",
-      Phone_Number: "97056566565",
-      Joined_Date: "2022-02-01",
-      Total_Uploads: 5,
-    },
-    {
-      User_Id: 3,
-      Username: "Hari",
-      Phone_Number: "9805656565",
-      Joined_Date: "2022-03-01",
-      Total_Uploads: 15,
-    },
-  ]);
-  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const handleDelete = (userId) => {
+  useEffect(() => {
+    const darkMode = localStorage.getItem("darkMode") === "true";
+    if (darkMode) {
+      document.body.classList.add("dark-mode");
+    }
+
+    fetchUsers();
+  }, [token]); // Add token as a dependency in case it changes
+
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/users`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setUsers(response.data);
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to fetch users");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (userId) => {
     const confirmDelete = window.confirm("Are you sure you want to delete this user?");
-    if (confirmDelete) {
-      setUsers(users.filter(user => user.User_Id !== userId));
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/users/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setUsers(users.filter((user) => user.id !== userId)); // Remove deleted user from state
+    } catch (error) {
+      setError(error.response?.data?.message || "Failed to delete user");
     }
   };
 
   return (
-    <div className={`users ${isDarkMode ? 'dark-mode' : ''}`}>
+    <div className={`users ${isDarkMode ? "dark-mode" : ""}`}>
+            <Navbar setSelectedGenre={setSelectedGenre} setFilterType={setFilterType} />
       <h1>Users</h1>
       {loading ? (
         <p>Loading...</p>
@@ -58,22 +63,25 @@ const Users = ({ isDarkMode }) => {
               <th>User ID</th>
               <th>Username</th>
               <th>Phone Number</th>
-              <th>Joined Date</th>
-              <th>Total Uploads</th>
-              <th className="delete-users">Delete Users</th>
+              <th>Role</th>
+              <th>Total Content Uploaded</th>
+              <th>Total Content Rated</th>
+              <th className="delete-users">Delete User</th>
             </tr>
           </thead>
           <tbody>
             {users.map((user) => (
-              <tr key={user.User_Id}>
-                <td>{user.User_Id}</td>
-                <td><a href="#">{user.Username}</a></td>
-                <td>{user.Phone_Number}</td>
-                <td>{user.Joined_Date}</td>
-                <td>{user.Total_Uploads}</td>
+              <tr key={user.id}>
+                <td>{user.id}</td>
+                <td className="username">{user.username}</td>
+                <td>{user.phone_number}</td>
+                <td>{user.role}</td> 
+                <td>{user.total_uploads}</td> 
+                <td>{user.total_ratings}</td> 
+
                 <td>
-                  <button className="delete" onClick={() => handleDelete(user.User_Id)}>
-                    <img src={Delete} alt="Delete"  />
+                  <button className="delete" onClick={() => handleDelete(user.id)}>
+                    <img src={Delete} alt="Delete" />
                   </button>
                 </td>
               </tr>

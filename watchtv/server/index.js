@@ -23,18 +23,21 @@ const getParticularContentRoute = require('./routes/getParticularContentRoute');
 const watchlistStatusRoute = require('./routes/watchlistStatus');
 const ratingRoute = require('./routes/ratingRoute');
 const getContentRated = require('./routes/contentRateRoute');
+const deleteMyAccount=require('./routes/DeleteMe');
+const getAllUserRoute=require('./routes/getAllUserRoute');
+const deleteAnyUserRoute=require('./routes/deleteAnyUserRoute');
 
 const app = express();
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5174', // Frontend URL
+  origin: 'http://localhost:5173', // Frontend URL
   methods: ['GET', 'POST', 'PUT','PATCH', 'DELETE','OPTIONS'], // Add all necessary methods
   credentials: true,
 }));
 
 app.use('/uploads', cors({
-  origin: 'http://localhost:5174', // Allow your frontend URL to access the uploads folder
+  origin: 'http://localhost:5173', // Allow your frontend URL to access the uploads folder
   methods: ['GET'],
 }), express.static(path.join(__dirname, 'uploads')));
 
@@ -65,6 +68,9 @@ app.use('/api', getParticularContentRoute);
 app.use('/api', watchlistStatusRoute);
 app.use('/api', ratingRoute);
 app.use('/api', getContentRated);
+app.use('/api',deleteMyAccount);
+app.use('/api',getAllUserRoute);
+app.use('/api',deleteAnyUserRoute);
 
 // Start server
 const PORT = process.env.PORT || 3004;

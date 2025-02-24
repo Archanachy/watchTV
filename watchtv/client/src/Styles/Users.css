@@ -29,6 +29,13 @@ th {
   background-color: #f2f2f2;
 }
 
+.username {
+  cursor: pointer;
+}
+.username:hover {
+  text-decoration: underline;
+}
+
 .delete-users {
   color: red; /* Set the "Delete Users" text color to red */
 }

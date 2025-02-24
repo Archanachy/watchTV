@@ -37,23 +37,26 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
   }, []);
 
   useEffect(() => {
+    // Fetch user profile data
     const fetchUserProfile = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile_Pic`, {
-          headers: {
-            "Authorization": `Bearer ${token}`,
-            "Content-Type": "application/json"
-          }
-        });
-        const profilePicture = response.data.profilePicture;
-        setProfilePic(profilePicture ? `${import.meta.env.VITE_API_URL}${profilePicture}` : defaultAvatar);
-      } catch (error) {
-        console.error('Error fetching user profile:', error);
-      }
+        try {
+            const token = localStorage.getItem("token"); 
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile_Pic`, {
+              headers: {
+                "Authorization": `Bearer ${token}`, 
+                "Content-Type": "application/json"
+              }
+            });
+            const profilePicture = response.data.profilePicture;
+            console.log("Profile API Response:", response.data);
+           setProfilePic(profilePicture?`${import.meta.env.VITE_API_URL}${profilePicture}`: defaultAvatar);
+           console.log("Fetched Profile Picture Path:", profilePicture.image_path);
+        } catch (error) {
+            console.error('Error fetching user profile:', error);
+        }
     };
     fetchUserProfile();
-  }, []);
+}, []);
 
   useEffect(() => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
