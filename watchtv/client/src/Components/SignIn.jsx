@@ -66,7 +66,7 @@ function SignIn() {
       const { userId, token } = response.data;
       localStorage.setItem('userId', userId);
       localStorage.setItem('authToken', token);
-      console.log('UserId saved:', userId);
+      
 
       navigate('/dashboard');
     } catch (err) {

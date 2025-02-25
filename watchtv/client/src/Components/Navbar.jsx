@@ -8,7 +8,6 @@ import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 
 // Helper function to get user role from JWT
-// Helper function to get user role from JWT
 const getUserRoleFromToken = () => {
   const token = localStorage.getItem('authToken');
   if (!token) {
