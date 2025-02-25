@@ -26,6 +26,10 @@ const getContentRated = require('./routes/contentRateRoute');
 const deleteMyAccount=require('./routes/DeleteMe');
 const getAllUserRoute=require('./routes/getAllUserRoute');
 const deleteAnyUserRoute=require('./routes/deleteAnyUserRoute');
+const ProfileViewForAdmin=require('./routes/ProfileViewForAdmin');
+const countTotalUploadForAdmin=require('./routes/countTotalUploadAdmin');
+const getContentUploadedByUserForAdmin=require('./routes/getContentUploadedByUserForAdmin');
+const contentRateForAdmin=require('./routes/contentRateRouteForAdmin');
 
 const app = express();
 
@@ -71,6 +75,10 @@ app.use('/api', getContentRated);
 app.use('/api',deleteMyAccount);
 app.use('/api',getAllUserRoute);
 app.use('/api',deleteAnyUserRoute);
+app.use('/api',ProfileViewForAdmin);
+app.use('/api',countTotalUploadForAdmin);
+app.use('/api',getContentUploadedByUserForAdmin);
+app.use('/api',contentRateForAdmin);
 
 // Start server
 const PORT = process.env.PORT || 3002;

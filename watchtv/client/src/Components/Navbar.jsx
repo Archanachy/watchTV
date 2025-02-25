@@ -6,7 +6,8 @@ import Search from './Search';
 import '../Styles/Dashboard.css';
 import axios from '../api/axios';
 import { useNavigate } from 'react-router-dom';
-
+ 
+// Helper function to get user role from JWT
 // Helper function to get user role from JWT
 const getUserRoleFromToken = () => {
   const token = localStorage.getItem('authToken');
@@ -14,7 +15,7 @@ const getUserRoleFromToken = () => {
     console.error('No token found in localStorage');
     return null; // Return null if no token is found
   }
-
+ 
   try {
     const decoded = JSON.parse(atob(token.split('.')[1])); // Decode JWT payload
     return decoded.role;
@@ -23,9 +24,9 @@ const getUserRoleFromToken = () => {
     return null; // Return null if token is invalid
   }
 };
-
-
-const Navbar = ({ setSelectedGenre, setFilterType }) => {
+ 
+ 
+const Navbar = ({ setSelectedGenre, setFilterType, currentPage }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
   const [profilePic, setProfilePic] = useState(defaultAvatar);
   const [isGenreDropdownVisible, setGenreDropdownVisible] = useState(false);
@@ -37,17 +38,17 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
   const mobileMenuRef = useRef(null);
   const [userRole, setUserRole] = useState(null); // Store the user role here
   const navigate = useNavigate();
-
+ 
   const handleGenreSelect = (genre) => {
     setSelectedGenre(genre.genre_id);
-    setGenreDropdownVisible(false); 
+    setGenreDropdownVisible(false);
   };
-
+ 
   useEffect(() => {
     const role = getUserRoleFromToken(); // Get user role from token
     setUserRole(role);
   }, []);
-
+ 
   useEffect(() => {
     const fetchGenres = async () => {
       try {
@@ -59,7 +60,7 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
     };
     fetchGenres();
   }, []);
-
+ 
   useEffect(() => {
     // Fetch user profile data
     const fetchUserProfile = async () => {
@@ -67,7 +68,7 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/profile_Pic`, {
           headers: {
-            "Authorization": `Bearer ${token}`, 
+            "Authorization": `Bearer ${token}`,
             "Content-Type": "application/json"
           }
         });
@@ -79,7 +80,7 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
     };
     fetchUserProfile();
   }, []);
-
+ 
   useEffect(() => {
     const darkMode = localStorage.getItem('darkMode') === 'true';
     setIsDarkMode(darkMode);
@@ -87,7 +88,7 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
       document.body.classList.add('dark-mode');
     }
   }, []);
-
+ 
   const toggleDarkMode = () => {
     setIsDarkMode((prev) => {
       const newDarkMode = !prev;
@@ -96,19 +97,19 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
       return newDarkMode;
     });
   };
-
+ 
   const toggleGenreDropdown = () => {
     setGenreDropdownVisible((prev) => !prev);
   };
-
+ 
   const toggleDropdown = () => {
     setDropdownVisible((prev) => !prev);
   };
-
+ 
   const toggleMobileMenu = () => {
     setIsMobileMenuVisible((prev) => !prev);
   };
-
+ 
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setDropdownVisible(false);
@@ -120,14 +121,14 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
       setIsMobileMenuVisible(false);
     }
   };
-
+ 
   useEffect(() => {
     document.addEventListener('click', handleClickOutside);
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
-
+ 
   const handleLogout = () => {
     const confirmLogout = window.confirm("Are you sure you want to log out?");
     if (confirmLogout) {
@@ -135,41 +136,44 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
       navigate('/signin');
     }
   };
-
+ 
   const handleProfile = () => {
     navigate('/profile');
   };
-
+ 
   const handleHomeClick = (e) => {
     e.preventDefault();
     navigate('/dashboard');
     setSelectedGenre(null);
     setFilterType('movies');
   };
-
+ 
   const handleWatchlistClick = (e) => {
     e.preventDefault();
     navigate('/watchlist');
   };
-
+ 
   const handleUsersClick = (e) => {
     e.preventDefault();
     navigate('/users');
   };
-
+ 
   return (
     <nav className="navbar">
       <div className="dashboard-text-overlay">
         <img src={watchtv} alt="TV icon" className={`dashboard-tv-icon`} />
         <h1>WatchTV</h1>
       </div>
-
-      <div><Search /></div>
-
+ 
+      <div className={`search-container ${currentPage === "users" ? "disabled" : ""}`}>
+        <Search disabled={currentPage === "users"} />
+        {currentPage === "users"}
+      </div>
+ 
       <div className={`nav-links ${isMobileMenuVisible ? 'mobile-menu' : ''}`} ref={mobileMenuRef}>
         <a href='#' onClick={handleHomeClick}>Home</a>
-
-        <div className="genre-container" ref={genredropdownRef}>
+ 
+        <div className={`genre-container ${currentPage === "users" ? "disabled" : ""}`} ref={genredropdownRef}>
           <button
             className="genre-link"
             onClick={(e) => {
@@ -178,6 +182,7 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
             }}
             aria-haspopup="true"
             aria-expanded={isGenreDropdownVisible}
+            disabled={currentPage === "users"}
           >
             Genre
             <span className={`arrow ${isGenreDropdownVisible ? 'up' : 'down'}`}></span>
@@ -189,7 +194,9 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
                   <a href="#" key={genre.genre_id} onClick={(e) => {
                     e.preventDefault();
                     handleGenreSelect(genre);
-                  }}>{genre.name}</a>
+                  }}
+                  disabled={currentPage === "users"}
+                  >{genre.name}</a>
                 ))}
               </div>
               <div className="genre-column">
@@ -202,21 +209,22 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
               </div>
             </div>
           )}
+          {currentPage === "users" }
         </div>
-
+ 
         {userRole === "admin" ? (
           <a href="#" onClick={handleUsersClick}>Users</a>
         ) : (
           <a href="#" onClick={handleWatchlistClick}>Watchlist</a>
         )}
-
+ 
         <div className="toggle-container">
           <input type="checkbox" id="toggle" onChange={toggleDarkMode} checked={isDarkMode} />
           <label htmlFor="toggle" className="toggle-label">
             <span className="toggle-slider"></span>
           </label>
         </div>
-
+ 
         <div className="profile" ref={dropdownRef}>
           <img
             src={profilePic}
@@ -241,5 +249,6 @@ const Navbar = ({ setSelectedGenre, setFilterType }) => {
     </nav>
   );
 };
-
+ 
 export default Navbar;
+ 
