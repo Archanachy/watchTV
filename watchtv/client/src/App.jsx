@@ -14,6 +14,7 @@ import Rating from './Components/Rating';
 import EditContent from './Components/Edit-Content';
 import Watchlist from './Components/Watchlist';
 import AdminUserProfile from './Components/AdminUserProfile';
+import UserProfile from './Components/UserProfile';
 
 function App() {
 
@@ -45,6 +46,7 @@ function App() {
           path="/admin/user-profile/:userId" 
           element={<AdminUserProfile />} 
         />
+      <Route path="/user-profile/:userId" element={<UserProfile />} />
       </Routes>
     </Router>
   );
