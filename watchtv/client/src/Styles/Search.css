@@ -28,8 +28,30 @@
     cursor: pointer;
   }
   
-  .search-container {
-    position: relative;
+.search-container.disabled .search-input,
+.search-container.disabled .search-icon {
+  cursor: not-allowed;
+}
+
+.search-container.disabled .tooltip {
+  visibility: hidden;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position the tooltip above the element */
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.search-container.disabled:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
   }
   
   .search-container-result {
@@ -121,14 +143,10 @@ body.dark-mode .search-input {
     border: 1px solid #555555;
 }
 
-
-
 body.dark-mode .search-container-result {
     background-color: #1f1f1f;
     border: 1px solid #555555;
 }
-
-
 
 body.dark-mode .search-container-result-item {
     border-bottom: 1px solid #555555;
@@ -142,13 +160,9 @@ body.dark-mode .search-container-result-item:hover {
     background-color: #333333; /* Change to desired hover color in dark mode */
 }
 
-
-
 .result-details {
     flex: 1;
 }
-
-
 
 body.dark-mode .result-title {
     color: #ffffff;
@@ -162,8 +176,6 @@ body.dark-mode .result-title {
 body.dark-mode .result-info {
     color: #aaaaaa;
 }
-
-
 
 .star-icon {
     color: #f5c518;
