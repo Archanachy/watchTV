@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 
 import '../Styles/Search.css';
 
-const Search = () => {
+const Search = ({ disabled }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [searchResultsVisible, setSearchResultsVisible] = useState(false);
@@ -15,6 +15,8 @@ const Search = () => {
     
     // Handle search input change
     const handleSearchChange = (e) => {
+        if (disabled) return; // Prevent changes if disabled
+
         const query = e.target.value;
     
         // Capitalize the first letter of each word
@@ -89,18 +91,18 @@ const Search = () => {
         };
     }, [searchQuery]);
   
-
-
     return (
-        <div className="search-container">
+        <div className={`search-container ${disabled ? 'disabled' : ''}`}>
             <input
                 type="text"
                 className="search-input"
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder="Search..."
+                disabled={disabled}
             />
             <FontAwesomeIcon icon={faSearch} className="search-icon" />
+            {disabled }
             {searchResultsVisible && searchResults.length > 0 && (
                 <div className="search-container-result">
                     {searchResults.map((result, index) => (

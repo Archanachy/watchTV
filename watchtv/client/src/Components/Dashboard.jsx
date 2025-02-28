@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
-import { watchtv_icon, Movies } from '../assets/Pictures';
+import { watchtv_icon, Movies, RedOne, squidgame, thegorge, invincible } from '../assets/Pictures';
 import '../Styles/Dashboard.css';
 import axios from '../api/axios';
 import Navbar from './Navbar';
@@ -16,9 +16,11 @@ function Dashboard() {
   const [selectedGenre, setSelectedGenre] = useState(null);
 
   const images = [
-    "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=1770&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://th.bing.com/th/id/OIP.rdE9srFu8KREbfQaTc_ppwHaE6?rs=1&pid=ImgDetMain",
-    "https://images.unsplash.com/photo-1631805249874-3f546d176de4?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bW92aWUlMjBwb3N0ZXJ8ZW58MHx8MHx8fDA%3D"
+    //use RedOne picture instead of link here. 
+    RedOne,
+    squidgame,
+    thegorge,
+    invincible
   ];
 
   const handleContentClick = (contentId) => {
@@ -75,7 +77,7 @@ function Dashboard() {
         <div className="Banner">
           <div className="slider" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
             {images.map((src, index) => (
-              <div className="slide" key={index}>
+              <div className={`slide ${index === currentSlide ? 'active' : ''}`} key={index}>
                 <img src={src} alt={`Slide ${index + 1}`} />
               </div>
             ))}

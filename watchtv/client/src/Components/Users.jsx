@@ -4,18 +4,19 @@ import { Delete } from "../assets/Pictures";
 import "../Styles/Users.css";
 import axios from "../api/axios";
 import Navbar from "./Navbar";
+
 const Users = ({ isDarkMode, token }) => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState("users"); // Add currentPage state
 
   useEffect(() => {
     const darkMode = localStorage.getItem("darkMode") === "true";
     if (darkMode) {
       document.body.classList.add("dark-mode");
     }
-
     fetchUsers();
   }, [token]); // Add token as a dependency in case it changes
 
@@ -49,8 +50,10 @@ const Users = ({ isDarkMode, token }) => {
   };
 
   return (
+    <div>
+            <Navbar currentPage={currentPage} />
+
     <div className={`users ${isDarkMode ? "dark-mode" : ""}`}>
-            <Navbar setSelectedGenre={setSelectedGenre} setFilterType={setFilterType} />
       <h1>Users</h1>
       {loading ? (
         <p>Loading...</p>
@@ -63,7 +66,6 @@ const Users = ({ isDarkMode, token }) => {
               <th>User ID</th>
               <th>Username</th>
               <th>Phone Number</th>
-              <th>Role</th>
               <th>Total Content Uploaded</th>
               <th>Total Content Rated</th>
               <th className="delete-users">Delete User</th>
@@ -73,9 +75,8 @@ const Users = ({ isDarkMode, token }) => {
             {users.map((user) => (
               <tr key={user.id}>
                 <td>{user.id}</td>
-                <td className="username">{user.username}</td>
+                <td className="users-username">{user.username}</td>
                 <td>{user.phone_number}</td>
-                <td>{user.role}</td> 
                 <td>{user.total_uploads}</td> 
                 <td>{user.total_ratings}</td> 
 
@@ -89,6 +90,7 @@ const Users = ({ isDarkMode, token }) => {
           </tbody>
         </table>
       )}
+    </div>
     </div>
   );
 };
