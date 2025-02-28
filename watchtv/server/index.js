@@ -17,15 +17,14 @@ const ProfilePictureRoute = require('./routes/getProfiePic');
 const UpdateContentRoute = require('./routes/UpdateContentRoute');
 const DeleteContentRoute = require('./routes/DeleteContentRoute');
 const watchlistRoute = require('./routes/watchlistRoute');
-const removeWatchlistRoute = require('./routes/removeWatchlistRoute');
-const getWatchlistRoute = require('./routes/getWatchlistRoute');
 const getParticularContentRoute = require('./routes/getParticularContentRoute');
-const watchlistStatusRoute = require('./routes/watchlistStatus');
 const ratingRoute = require('./routes/ratingRoute');
 const getContentRated = require('./routes/contentRateRoute');
 const deleteMyAccount=require('./routes/DeleteMe');
 const getAllUserRoute=require('./routes/getAllUserRoute');
 const deleteAnyUserRoute=require('./routes/deleteAnyUserRoute');
+const AdminUserProfileRoute=require('./routes/AdminUserProfileRoute');
+const PublicUserProfileRoute=require('./routes/PublicUserProfileRoute');
 
 const app = express();
 
@@ -53,7 +52,7 @@ app.use('/api', userLoginRoute);
 app.use('/api', uploadRoutes);
 app.use('/api', genreRoutes);
 app.use('/api', getContentRoutes); 
-app.use('/api',updateProfileRoute);
+app.use('/api', updateProfileRoute);
 app.use('/api', searchRoute);
 app.use('/api', getProfileRoute);
 app.use('/api', getContentUploadedByUser);
@@ -62,15 +61,15 @@ app.use('/api', ProfilePictureRoute);
 app.use('/api', UpdateContentRoute);
 app.use('/api', DeleteContentRoute);
 app.use('/api', watchlistRoute);
-app.use('/api', removeWatchlistRoute);
-app.use('/api', getWatchlistRoute);
 app.use('/api', getParticularContentRoute);
-app.use('/api', watchlistStatusRoute);
 app.use('/api', ratingRoute);
 app.use('/api', getContentRated);
 app.use('/api',deleteMyAccount);
 app.use('/api',getAllUserRoute);
+app.use('/api',AdminUserProfileRoute);
 app.use('/api',deleteAnyUserRoute);
+
+app.use('/api',PublicUserProfileRoute);
 
 // Start server
 const PORT = process.env.PORT || 3002;

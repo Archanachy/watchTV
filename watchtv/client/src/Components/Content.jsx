@@ -18,37 +18,36 @@ const Content = () => {
   const navigate = useNavigate();
 
   // ✅ Handle Rating Submission
-const handleRating = async (value) => {
-  try {
-    setRating(value); // Instantly update UI before sending request
-    setLoading(true); // Start loading state
+  const handleRating = async (value) => {
+    try {
+      setRating(value); // Instantly update UI before sending request
+      setLoading(true); // Start loading state
 
-    const token = localStorage.getItem('authToken');
-    const response = await axios.post(
-      `${import.meta.env.VITE_API_URL}/api/rating/${contentId}`,
-      { rating: value },
-      { headers: { "Authorization": `Bearer ${token}` } }
-    );
+      const token = localStorage.getItem('authToken');
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/rating/${contentId}`,
+        { rating: value },
+        { headers: { "Authorization": `Bearer ${token}` } }
+      );
 
-    // ✅ Update UI with new rating & average rating
-    setContent((prevContent) => ({
-      ...prevContent,
-      average_rating: response.data.average_rating || prevContent.average_rating, // Fallback for undefined
-      total_ratings: response.data.total_ratings || prevContent.total_ratings // Fallback for undefined
-    }));
+      // ✅ Update UI with new rating & average rating
+      setContent((prevContent) => ({
+        ...prevContent,
+        average_rating: response.data.average_rating || prevContent.average_rating, // Fallback for undefined
+        total_ratings: response.data.total_ratings || prevContent.total_ratings // Fallback for undefined
+      }));
 
-    // Update the user's rating after submission
-    setRating(response.data.user_rating || value);  // Using the response from POST or fallback to current value
+      // Update the user's rating after submission
+      setRating(response.data.user_rating || value);  // Using the response from POST or fallback to current value
 
-    setMessage(response.data.message); // Show success message
-  } catch (error) {
-    setMessage("Could not submit rating. Please try again.");
-  } finally {
-    setTimeout(() => setMessage(''), 3000); // Clear message after 3 seconds
-    setLoading(false); // Stop loading state
-  }
-};
-
+      setMessage(response.data.message); // Show success message
+    } catch (error) {
+      setMessage("Could not submit rating. Please try again.");
+    } finally {
+      setTimeout(() => setMessage(''), 3000); // Clear message after 3 seconds
+      setLoading(false); // Stop loading state
+    }
+  };
 
   // ✅ Fetch Content Data
   useEffect(() => {
@@ -62,16 +61,6 @@ const handleRating = async (value) => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/content/${contentId}`);
         setContent(response.data);
-
-        // ✅ Load user's existing rating (if available)
-        const token = localStorage.getItem('authToken');
-        if (token) {
-          const ratingResponse = await axios.get(
-            `${import.meta.env.VITE_API_URL}/api/ratings/${contentId}`,
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
-          setRating(ratingResponse.data.rating || null);
-        }
         
       } catch (error) {
         console.error('Error fetching content:', error);
@@ -140,6 +129,13 @@ const handleRating = async (value) => {
   const handleEditContent = () => navigate(`/edit-content/${contentId}`);
   const handleHome = () => navigate('/dashboard');
 
+  const handleUsernameClick = () => {
+    // We need to use content.id which should be the user ID of the content uploader
+    if (content && content.id) {
+      navigate(`/user-profile/${content.id}`);
+    }
+  };
+
   // ✅ Loading State
   if (loading) return <p>Loading...</p>;
   if (!content) return <p>Content not found.</p>;
@@ -155,7 +151,7 @@ const handleRating = async (value) => {
             </div>
             <div className="content-username">
               <img src={content.profile_picture ? `${import.meta.env.VITE_API_URL}${content.profile_picture}` : "https://picsum.photos/30"} alt="Profile" className="content-profile-picture" />
-              <span>{content.username}</span>
+              <span onClick={() => handleUsernameClick(content.userId)} style={{ cursor: 'pointer', color: 'skyblue' }}>{content.username}</span>
             </div>
             </div>
             <button className="watchlist-btn" onClick={handleWatchlist}>

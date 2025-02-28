@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import {watchtv} from './assets/Pictures';
+import { watchtv } from './assets/Pictures';
 import SignIn from './Components/SignIn';
 import SignUp from './Components/SignUp';
 import Dashboard from './Components/Dashboard';
@@ -13,9 +13,12 @@ import Content from './Components/Content';
 import Rating from './Components/Rating';
 import EditContent from './Components/Edit-Content';
 import Watchlist from './Components/Watchlist';
+import AdminUserProfile from './Components/AdminUserProfile';
+import UserProfile from './Components/UserProfile';
 
 function App() {
-  React.useEffect(() => {
+
+  useEffect(() => {
     document.title = "Watch TV"; // Dynamically set the title
     const link = document.createElement('link');
     link.rel = 'icon';
@@ -39,11 +42,12 @@ function App() {
         <Route path="/rating" element={<Rating />} />
         <Route path="/edit-content/:contentId" element={<EditContent />} />
         <Route path="/watchlist" element={<Watchlist />} />
-
-
-      
+        <Route 
+          path="/admin/user-profile/:userId" 
+          element={<AdminUserProfile />} 
+        />
+      <Route path="/user-profile/:userId" element={<UserProfile />} />
       </Routes>
-      
     </Router>
   );
 }
